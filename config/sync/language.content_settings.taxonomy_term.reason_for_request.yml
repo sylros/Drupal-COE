@@ -1,0 +1,11 @@
+uuid: dd313b0c-2765-417a-bd09-1e7516625f35
+langcode: en
+status: true
+dependencies:
+  config:
+    - taxonomy.vocabulary.reason_for_request
+id: taxonomy_term.reason_for_request
+target_entity_type_id: taxonomy_term
+target_bundle: reason_for_request
+default_langcode: site_default
+language_alterable: false

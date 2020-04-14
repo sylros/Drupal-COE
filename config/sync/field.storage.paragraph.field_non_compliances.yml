@@ -1,0 +1,21 @@
+uuid: 99b69503-b9b2-47c9-b898-489d8568d745
+langcode: en
+status: true
+dependencies:
+  module:
+    - paragraphs
+id: paragraph.field_non_compliances
+field_name: field_non_compliances
+entity_type: paragraph
+type: string
+settings:
+  max_length: 255
+  is_ascii: false
+  case_sensitive: false
+module: core
+locked: false
+cardinality: 1
+translatable: true
+indexes: {  }
+persist_with_no_fields: false
+custom_storage: false

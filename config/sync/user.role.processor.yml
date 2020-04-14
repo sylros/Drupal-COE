@@ -1,0 +1,17 @@
+uuid: e55e72f0-1fcb-405a-bb98-7be0cca78788
+langcode: en
+status: true
+dependencies:
+  module:
+    - lightning_core
+third_party_settings:
+  lightning_core:
+    description: ''
+id: processor
+label: Processor
+weight: 6
+is_admin: null
+permissions:
+  - 'edit any exemption_claim content'
+  - 'edit own exemption_claim content'
+  - 'use evaluate_claim transition make_decision_on_claim'

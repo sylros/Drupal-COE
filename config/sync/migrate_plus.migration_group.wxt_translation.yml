@@ -1,0 +1,14 @@
+uuid: 088d39fd-c7c3-4061-a6b8-7d46f5ab1e9b
+langcode: en
+status: true
+dependencies: {  }
+_core:
+  default_config_hash: Yn-9CLxx_ChLdK2OBKZdsTlkBReHAruFuTGCzqWj7G4
+id: wxt_translation
+label: 'WxT Migrate'
+description: 'Provides default content and related configuration for Drupal WxT.'
+source_type: 'Embedded data'
+module: null
+shared_configuration:
+  source:
+    key: default

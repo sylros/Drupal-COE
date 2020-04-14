@@ -1,0 +1,117 @@
+uuid:
+  -
+    value: 87df80f0-9365-438e-a206-72a989a76cb9
+langcode:
+  -
+    value: en
+type:
+  -
+    target_id: exemption_claim
+    target_type: node_type
+    target_uuid: 915ed699-e913-453e-809e-fa4d18d7684e
+revision_timestamp:
+  -
+    value: '2020-03-09T13:39:48+00:00'
+    format: 'Y-m-d\TH:i:sP'
+revision_uid:
+  -
+    target_id: 0
+    target_type: user
+    target_uuid: 5e4226b0-a88c-4770-87bf-e8aa2b046015
+revision_log: {  }
+status:
+  -
+    value: false
+uid:
+  -
+    target_id: 0
+    target_type: user
+    target_uuid: 5e4226b0-a88c-4770-87bf-e8aa2b046015
+title:
+  -
+    value: 'Exemption Claim'
+created:
+  -
+    value: '2020-01-04T23:11:51+00:00'
+    format: 'Y-m-d\TH:i:sP'
+changed:
+  -
+    value: '2020-03-09T13:39:48+00:00'
+    format: 'Y-m-d\TH:i:sP'
+promote:
+  -
+    value: false
+sticky:
+  -
+    value: false
+default_langcode:
+  -
+    value: true
+revision_translation_affected:
+  -
+    value: true
+moderation_state:
+  -
+    value: draft
+scheduled_transition_date: {  }
+scheduled_transition_state: {  }
+metatag:
+  value:
+    title: 'Exemption Claim'
+    canonical_url: 'http://default/en/node/437'
+path:
+  -
+    alias: null
+    pid: null
+    langcode: en
+content_translation_source:
+  -
+    value: und
+content_translation_outdated:
+  -
+    value: false
+field_claimant_name:
+  -
+    value: crath
+field_date_of_decision:
+  -
+    value: '2019-09-23'
+field_date_of_filing:
+  -
+    value: '2019-12-15'
+field_date_order_iossued:
+  -
+    value: '2019-04-12'
+field_decision_on_claim_validity:
+  -
+    target_type: taxonomy_term
+    target_uuid: f04ae0a4-306e-4eaf-9546-f59ec68cef6a
+field_decision_on_compliance:
+  -
+    target_type: taxonomy_term
+    target_uuid: a0d63b5a-cb3f-409d-845c-62e1c1001b68
+field_expiry_date_of_valid_claim:
+  -
+    value: '2019-03-10'
+field_list_of_sds_non_compliance: {  }
+field_order_issued_:
+  -
+    value: false
+field_product_identifier:
+  -
+    value: phoprudris
+field_registry_number:
+  -
+    value: 110
+field_status_of_the_order:
+  -
+    value: uofr
+_content_sync:
+  entity_type: node
+  entity_dependencies:
+    user:
+      - user.user.5e4226b0-a88c-4770-87bf-e8aa2b046015
+      - user.user.5e4226b0-a88c-4770-87bf-e8aa2b046015
+    taxonomy_term:
+      - taxonomy_term.validity_of_claim.f04ae0a4-306e-4eaf-9546-f59ec68cef6a
+      - taxonomy_term.complience.a0d63b5a-cb3f-409d-845c-62e1c1001b68

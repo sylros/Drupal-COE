@@ -1,0 +1,14 @@
+uuid: a01758b6-df62-4345-b16b-0547ca25ff86
+langcode: en
+status: true
+dependencies: {  }
+_core:
+  default_config_hash: v3jWwrPbIcP7Hl2E5apHIgqU6o4GGCXnTITpXAtcyCM
+id: welcome
+label: Welcome
+description: ''
+use_admin_theme: false
+path: /welcome
+access_logic: and
+access_conditions: {  }
+parameters: {  }

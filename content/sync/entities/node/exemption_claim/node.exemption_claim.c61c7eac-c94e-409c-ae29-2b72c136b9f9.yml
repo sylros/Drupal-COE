@@ -1,0 +1,117 @@
+uuid:
+  -
+    value: c61c7eac-c94e-409c-ae29-2b72c136b9f9
+langcode:
+  -
+    value: en
+type:
+  -
+    target_id: exemption_claim
+    target_type: node_type
+    target_uuid: 915ed699-e913-453e-809e-fa4d18d7684e
+revision_timestamp:
+  -
+    value: '2020-03-09T13:39:48+00:00'
+    format: 'Y-m-d\TH:i:sP'
+revision_uid:
+  -
+    target_id: 0
+    target_type: user
+    target_uuid: 5e4226b0-a88c-4770-87bf-e8aa2b046015
+revision_log: {  }
+status:
+  -
+    value: false
+uid:
+  -
+    target_id: 0
+    target_type: user
+    target_uuid: 5e4226b0-a88c-4770-87bf-e8aa2b046015
+title:
+  -
+    value: 'Exemption Claim'
+created:
+  -
+    value: '2019-08-24T19:57:39+00:00'
+    format: 'Y-m-d\TH:i:sP'
+changed:
+  -
+    value: '2020-03-09T13:39:48+00:00'
+    format: 'Y-m-d\TH:i:sP'
+promote:
+  -
+    value: true
+sticky:
+  -
+    value: false
+default_langcode:
+  -
+    value: true
+revision_translation_affected:
+  -
+    value: true
+moderation_state:
+  -
+    value: draft
+scheduled_transition_date: {  }
+scheduled_transition_state: {  }
+metatag:
+  value:
+    title: 'Exemption Claim'
+    canonical_url: 'http://default/en/node/436'
+path:
+  -
+    alias: null
+    pid: null
+    langcode: en
+content_translation_source:
+  -
+    value: und
+content_translation_outdated:
+  -
+    value: false
+field_claimant_name:
+  -
+    value: swa
+field_date_of_decision:
+  -
+    value: '2019-12-13'
+field_date_of_filing:
+  -
+    value: '2019-11-02'
+field_date_order_iossued:
+  -
+    value: '2019-07-13'
+field_decision_on_claim_validity:
+  -
+    target_type: taxonomy_term
+    target_uuid: 1784bf62-3555-402e-9e8c-dca435806c42
+field_decision_on_compliance:
+  -
+    target_type: taxonomy_term
+    target_uuid: a9babb42-9325-4014-9390-d5579bdead92
+field_expiry_date_of_valid_claim:
+  -
+    value: '2019-10-13'
+field_list_of_sds_non_compliance: {  }
+field_order_issued_:
+  -
+    value: true
+field_product_identifier:
+  -
+    value: chadr
+field_registry_number:
+  -
+    value: 700
+field_status_of_the_order:
+  -
+    value: slikejebro
+_content_sync:
+  entity_type: node
+  entity_dependencies:
+    user:
+      - user.user.5e4226b0-a88c-4770-87bf-e8aa2b046015
+      - user.user.5e4226b0-a88c-4770-87bf-e8aa2b046015
+    taxonomy_term:
+      - taxonomy_term.validity_of_claim.1784bf62-3555-402e-9e8c-dca435806c42
+      - taxonomy_term.complience.a9babb42-9325-4014-9390-d5579bdead92

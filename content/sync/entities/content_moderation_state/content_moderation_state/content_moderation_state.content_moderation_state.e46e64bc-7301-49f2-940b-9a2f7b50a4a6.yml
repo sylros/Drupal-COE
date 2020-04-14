@@ -1,0 +1,38 @@
+uuid:
+  -
+    value: e46e64bc-7301-49f2-940b-9a2f7b50a4a6
+langcode:
+  -
+    value: en
+uid:
+  -
+    target_type: user
+    target_uuid: bb62e23f-3131-48e7-95de-18c9c53ee857
+workflow:
+  -
+    target_id: evaluate_claim
+    target_type: workflow
+    target_uuid: 93283c9e-525c-4a3a-9d03-aa996c616754
+moderation_state:
+  -
+    value: draft
+content_entity_type_id:
+  -
+    value: node
+content_entity_id:
+  -
+    value: 467
+content_entity_revision_id:
+  -
+    value: 468
+default_langcode:
+  -
+    value: true
+revision_translation_affected:
+  -
+    value: true
+_content_sync:
+  entity_type: content_moderation_state
+  entity_dependencies:
+    user:
+      - user.user.bb62e23f-3131-48e7-95de-18c9c53ee857

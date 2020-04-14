@@ -1,0 +1,29 @@
+uuid: e94ec835-7f2e-42ca-94a8-df5b12d8d214
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_decision_on_compliance
+    - node.type.exemption_claim
+    - taxonomy.vocabulary.complience
+id: node.exemption_claim.field_decision_on_compliance
+field_name: field_decision_on_compliance
+entity_type: node
+bundle: exemption_claim
+label: 'Decision on Compliance'
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings:
+  handler: 'default:taxonomy_term'
+  handler_settings:
+    target_bundles:
+      complience: complience
+    sort:
+      field: name
+      direction: asc
+    auto_create: false
+    auto_create_bundle: ''
+field_type: entity_reference

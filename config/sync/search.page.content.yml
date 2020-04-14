@@ -1,0 +1,15 @@
+uuid: 71efb026-a06f-411e-9bb3-33b7e8968652
+langcode: en
+status: true
+dependencies:
+  module:
+    - node
+id: content
+label: Content
+path: claims
+weight: 0
+plugin: node_search
+configuration:
+  rankings:
+    recent: 1
+    relevance: 5

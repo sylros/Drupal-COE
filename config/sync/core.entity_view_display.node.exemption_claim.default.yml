@@ -1,0 +1,149 @@
+uuid: 2c965a49-8496-47c8-ba4f-33a389e35a5c
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.field.node.exemption_claim.field_additional_field
+    - field.field.node.exemption_claim.field_claimant_name
+    - field.field.node.exemption_claim.field_date_of_decision
+    - field.field.node.exemption_claim.field_date_of_filing
+    - field.field.node.exemption_claim.field_date_order_iossued
+    - field.field.node.exemption_claim.field_decision_on_claim_validity
+    - field.field.node.exemption_claim.field_decision_on_compliance
+    - field.field.node.exemption_claim.field_expiry_date_of_valid_claim
+    - field.field.node.exemption_claim.field_list_of_sds_non_compliance
+    - field.field.node.exemption_claim.field_order_issued_
+    - field.field.node.exemption_claim.field_product_identifier
+    - field.field.node.exemption_claim.field_registry_number
+    - field.field.node.exemption_claim.field_status_of_the_order
+    - node.type.exemption_claim
+  module:
+    - datetime
+    - entity_reference_revisions
+    - user
+id: node.exemption_claim.default
+targetEntityType: node
+bundle: exemption_claim
+mode: default
+content:
+  field_additional_field:
+    weight: 114
+    label: above
+    settings:
+      link_to_entity: false
+    third_party_settings: {  }
+    type: string
+    region: content
+  field_claimant_name:
+    weight: 102
+    label: above
+    settings:
+      link_to_entity: false
+    third_party_settings: {  }
+    type: string
+    region: content
+  field_date_of_decision:
+    weight: 106
+    label: above
+    settings:
+      timezone_override: ''
+      format_type: wxt_standard
+    third_party_settings: {  }
+    type: datetime_default
+    region: content
+  field_date_of_filing:
+    weight: 105
+    label: above
+    settings:
+      timezone_override: ''
+      format_type: wxt_standard
+    third_party_settings: {  }
+    type: datetime_default
+    region: content
+  field_date_order_iossued:
+    weight: 110
+    label: above
+    settings:
+      timezone_override: ''
+      format_type: wxt_standard
+    third_party_settings: {  }
+    type: datetime_default
+    region: content
+  field_decision_on_claim_validity:
+    weight: 107
+    label: above
+    settings:
+      link: true
+    third_party_settings: {  }
+    type: entity_reference_label
+    region: content
+  field_decision_on_compliance:
+    weight: 108
+    label: above
+    settings:
+      link: true
+    third_party_settings: {  }
+    type: entity_reference_label
+    region: content
+  field_expiry_date_of_valid_claim:
+    weight: 111
+    label: above
+    settings:
+      timezone_override: ''
+      format_type: wxt_standard
+    third_party_settings: {  }
+    type: datetime_default
+    region: content
+  field_list_of_sds_non_compliance:
+    type: entity_reference_revisions_entity_view
+    weight: 112
+    label: above
+    settings:
+      view_mode: default
+      link: ''
+    third_party_settings: {  }
+    region: content
+  field_order_issued_:
+    weight: 109
+    label: above
+    settings:
+      format: default
+      format_custom_false: ''
+      format_custom_true: ''
+    third_party_settings: {  }
+    type: boolean
+    region: content
+  field_product_identifier:
+    weight: 103
+    label: above
+    settings:
+      link_to_entity: false
+    third_party_settings: {  }
+    type: string
+    region: content
+  field_registry_number:
+    weight: 104
+    label: above
+    settings:
+      thousand_separator: ''
+      prefix_suffix: true
+    third_party_settings: {  }
+    type: number_integer
+    region: content
+  field_status_of_the_order:
+    weight: 113
+    label: above
+    settings:
+      link_to_entity: false
+    third_party_settings: {  }
+    type: string
+    region: content
+  links:
+    weight: 100
+    region: content
+    settings: {  }
+    third_party_settings: {  }
+hidden:
+  content_moderation_control: true
+  langcode: true
+  search_api_excerpt: true

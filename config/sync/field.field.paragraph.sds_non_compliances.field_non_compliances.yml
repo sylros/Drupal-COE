@@ -1,0 +1,19 @@
+uuid: c1ecb6de-dfa3-41f9-a813-5983895e45e8
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.paragraph.field_non_compliances
+    - paragraphs.paragraphs_type.sds_non_compliances
+id: paragraph.sds_non_compliances.field_non_compliances
+field_name: field_non_compliances
+entity_type: paragraph
+bundle: sds_non_compliances
+label: Non-Compliance
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: string

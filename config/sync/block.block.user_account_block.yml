@@ -1,0 +1,39 @@
+uuid: bcb8a5f0-4c92-4f5e-8c12-358f0ef3f44a
+langcode: en
+status: true
+dependencies:
+  module:
+    - user
+    - wxt_library
+  theme:
+    - wxt_bootstrap
+_core:
+  default_config_hash: 8GCJO4MuQrCj0KIZ5iPdCU5Z5YaZskWJVAAA_oDzv_I
+id: user_account_block
+theme: wxt_bootstrap
+region: header
+weight: -6
+provider: null
+plugin: user_account_block
+settings:
+  id: user_account_block
+  label: 'User Account'
+  provider: wxt_library
+  label_display: '0'
+visibility:
+  user_role:
+    id: user_role
+    roles:
+      authenticated: authenticated
+      administrator: administrator
+      reviewer: reviewer
+      processor: processor
+      approver: approver
+    negate: false
+    context_mapping:
+      user: '@user.current_user_context:current_user'
+  panels_title:
+    id: panels_title
+    enabled: 0
+    negate: false
+    context_mapping: {  }

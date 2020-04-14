@@ -1,0 +1,11 @@
+uuid: d3434eed-35ad-4005-bac2-42dd69c79a80
+langcode: en
+status: true
+dependencies:
+  config:
+    - taxonomy.vocabulary.origin_of_request
+id: taxonomy_term.origin_of_request
+target_entity_type_id: taxonomy_term
+target_bundle: origin_of_request
+default_langcode: site_default
+language_alterable: false

@@ -1,0 +1,14 @@
+uuid: 5fdf17b6-f8f7-4ea3-a456-bc855a59b105
+langcode: en
+status: true
+dependencies:
+  config:
+    - user.role.processor
+  module:
+    - user
+id: user_add_role_action.processor
+label: 'Add the Processor role to the selected user(s)'
+type: user
+plugin: user_add_role_action
+configuration:
+  rid: processor

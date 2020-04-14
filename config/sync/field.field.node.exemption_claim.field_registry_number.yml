@@ -1,0 +1,23 @@
+uuid: 6f43951d-debe-468a-a184-6082fd89b41f
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_registry_number
+    - node.type.exemption_claim
+id: node.exemption_claim.field_registry_number
+field_name: field_registry_number
+entity_type: node
+bundle: exemption_claim
+label: 'Registry Number'
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings:
+  min: null
+  max: null
+  prefix: ''
+  suffix: ''
+field_type: integer

@@ -1,0 +1,19 @@
+uuid: 5a1f56bc-d139-46f7-b32d-ce51eb8a8199
+langcode: en
+status: true
+dependencies:
+  module:
+    - lightning_core
+third_party_settings:
+  lightning_core:
+    description: ''
+id: supplier
+label: Supplier
+weight: 5
+is_admin: null
+permissions:
+  - 'create exemption_claim content'
+  - 'edit any exemption_claim content'
+  - 'edit own exemption_claim content'
+  - 'use evaluate_claim transition create_new_draft'
+  - 'use evaluate_claim transition evaluate_claim'

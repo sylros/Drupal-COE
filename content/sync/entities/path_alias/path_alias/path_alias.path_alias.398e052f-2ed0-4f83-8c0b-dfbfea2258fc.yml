@@ -1,0 +1,36 @@
+uuid:
+  -
+    value: 398e052f-2ed0-4f83-8c0b-dfbfea2258fc
+langcode:
+  -
+    value: und
+path:
+  -
+    value: /webform/contact/drafts
+alias:
+  -
+    value: /form/contact/drafts
+status:
+  -
+    value: true
+_content_sync:
+  entity_type: path_alias
+_translations:
+  und:
+    uuid:
+      -
+        value: 398e052f-2ed0-4f83-8c0b-dfbfea2258fc
+    langcode:
+      -
+        value: und
+    path:
+      -
+        value: /webform/contact/drafts
+    alias:
+      -
+        value: /form/contact/drafts
+    status:
+      -
+        value: true
+    _content_sync:
+      entity_type: path_alias

@@ -1,0 +1,55 @@
+uuid:
+  -
+    value: 575596d6-ca8c-4252-8ffc-2acaf50ce390
+langcode:
+  -
+    value: en
+vid:
+  -
+    target_id: complience
+    target_type: taxonomy_vocabulary
+    target_uuid: ad14e38f-df62-43c6-933e-674eed867014
+revision_created:
+  -
+    value: '2020-03-06T16:12:33+00:00'
+    format: 'Y-m-d\TH:i:sP'
+revision_user: {  }
+revision_log_message: {  }
+status:
+  -
+    value: true
+name:
+  -
+    value: N/A
+description:
+  -
+    value: null
+    format: null
+    processed: ''
+weight:
+  -
+    value: 0
+parent:
+  -
+    target_id: 0
+changed:
+  -
+    value: '2020-03-06T16:12:33+00:00'
+    format: 'Y-m-d\TH:i:sP'
+default_langcode:
+  -
+    value: true
+revision_translation_affected:
+  -
+    value: true
+metatag:
+  value:
+    canonical_url: 'http://default/en/taxonomy/term/6'
+path:
+  -
+    alias: null
+    pid: null
+    langcode: en
+_content_sync:
+  entity_type: taxonomy_term
+  entity_dependencies: {  }

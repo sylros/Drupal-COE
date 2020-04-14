@@ -1,0 +1,12 @@
+langcode: en
+status: true
+dependencies: {  }
+id: node
+label: Content
+tags:
+  description: '[node:summary]'
+  canonical_url: '[node:url]'
+  title: '[node:title]'
+_core:
+  default_config_hash: rpwvgyEURXLz_JjgMCrkS1rUv-0k3L79BpO-ReN7fDI
+uuid: c3a5a7af-7730-47d0-8713-a08cf4ebf447

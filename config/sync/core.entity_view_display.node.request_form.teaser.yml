@@ -1,0 +1,41 @@
+uuid: 407b25ea-cdbe-46b5-905a-8719fe515c17
+langcode: en
+status: true
+dependencies:
+  config:
+    - core.entity_view_mode.node.teaser
+    - field.field.node.request_form.field_from_date
+    - field.field.node.request_form.field_origin
+    - field.field.node.request_form.field_reason_for_request
+    - field.field.node.request_form.field_request_email
+    - field.field.node.request_form.field_request_information
+    - field.field.node.request_form.field_requester_name
+    - field.field.node.request_form.field_requester_phone_number
+    - field.field.node.request_form.field_time_frame
+    - field.field.node.request_form.field_to_date
+    - node.type.request_form
+  module:
+    - user
+id: node.request_form.teaser
+targetEntityType: node
+bundle: request_form
+mode: teaser
+content:
+  links:
+    weight: 100
+    settings: {  }
+    third_party_settings: {  }
+    region: content
+hidden:
+  content_moderation_control: true
+  field_from_date: true
+  field_origin: true
+  field_reason_for_request: true
+  field_request_email: true
+  field_request_information: true
+  field_requester_name: true
+  field_requester_phone_number: true
+  field_time_frame: true
+  field_to_date: true
+  langcode: true
+  search_api_excerpt: true

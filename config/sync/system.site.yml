@@ -1,0 +1,16 @@
+name: claims
+mail: patrick.gohard@canada.ca
+slogan: 'Collaborative open source project led by the Government of Canada'
+page:
+  0: ''
+  1: ''
+  front: /welcome
+  403: /system/404
+  404: /system/404
+admin_compact_mode: false
+weight_select_max: 100
+langcode: en
+default_langcode: en
+_core:
+  default_config_hash: uNOHaKWnoIbi-Q7d7NTqX2PeF_cwCaM9tTmwBoM2COA
+uuid: 5e0bbab2-215c-4129-a220-4f2ff72cb8af

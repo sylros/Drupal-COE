@@ -1,0 +1,52 @@
+diff --git a/core/modules/views/config/schema/views.filter.schema.yml b/core/modules/views/config/schema/views.filter.schema.yml
+index 1eb09007ae..0ff7384a3a 100644
+--- a/core/modules/views/config/schema/views.filter.schema.yml
++++ b/core/modules/views/config/schema/views.filter.schema.yml
+@@ -7,6 +7,10 @@ views.filter.*:
+ views.filter.boolean:
+   type: views_filter
+   label: 'Boolean'
++  mapping:
++    null_is_false:
++      type: boolean
++      label: 'Evaluate Null as False.'
+ 
+ views_filter_boolean_string:
+   type: views_filter
+diff --git a/core/modules/views/src/Plugin/views/filter/BooleanOperator.php b/core/modules/views/src/Plugin/views/filter/BooleanOperator.php
+index 81a31880c3..a73a678ea6 100644
+--- a/core/modules/views/src/Plugin/views/filter/BooleanOperator.php
++++ b/core/modules/views/src/Plugin/views/filter/BooleanOperator.php
+@@ -102,8 +102,8 @@ public function init(ViewExecutable $view, DisplayPluginBase $display, array &$o
+     if (isset($this->definition['accept null'])) {
+       $this->accept_null = (bool) $this->definition['accept null'];
+     }
+-    elseif (isset($this->definition['accept_null'])) {
+-      $this->accept_null = (bool) $this->definition['accept_null'];
++    elseif (isset($this->options['null_is_false'])) {
++      $this->accept_null = (bool) $this->options['null_is_false'];
+     }
+     $this->valueOptions = NULL;
+   }
+@@ -143,10 +143,21 @@ protected function defineOptions() {
+     $options = parent::defineOptions();
+ 
+     $options['value']['default'] = FALSE;
++    $options['null_is_false']['default'] = FALSE;
+ 
+     return $options;
+   }
+ 
++  public function buildOptionsForm(&$form, FormStateInterface $form_state) {
++    parent::buildOptionsForm($form, $form_state);
++
++    $form['null_is_false'] = [
++      '#type' => 'checkbox',
++      '#title' => $this->t('Evaluate Null as False'),
++      '#default_value' => $this->options['null_is_false'],
++    ];
++  }
++
+   protected function valueForm(&$form, FormStateInterface $form_state) {
+     if (empty($this->valueOptions)) {
+       // Initialize the array of possible values for this filter.

@@ -1,0 +1,55 @@
+uuid:
+  -
+    value: 1784bf62-3555-402e-9e8c-dca435806c42
+langcode:
+  -
+    value: en
+vid:
+  -
+    target_id: validity_of_claim
+    target_type: taxonomy_vocabulary
+    target_uuid: 00859427-8f50-4dea-8214-923ed4af4f87
+revision_created:
+  -
+    value: '2020-03-06T16:10:34+00:00'
+    format: 'Y-m-d\TH:i:sP'
+revision_user: {  }
+revision_log_message: {  }
+status:
+  -
+    value: true
+name:
+  -
+    value: 'Not Valid'
+description:
+  -
+    value: null
+    format: null
+    processed: ''
+weight:
+  -
+    value: 0
+parent:
+  -
+    target_id: 0
+changed:
+  -
+    value: '2020-03-06T16:10:34+00:00'
+    format: 'Y-m-d\TH:i:sP'
+default_langcode:
+  -
+    value: true
+revision_translation_affected:
+  -
+    value: true
+metatag:
+  value:
+    canonical_url: 'http://default/en/taxonomy/term/2'
+path:
+  -
+    alias: null
+    pid: null
+    langcode: en
+_content_sync:
+  entity_type: taxonomy_term
+  entity_dependencies: {  }

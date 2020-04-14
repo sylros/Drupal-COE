@@ -1,0 +1,30 @@
+uuid: 4ca334c1-90e0-4e85-b087-5bd71ba226c5
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.field.paragraph.sds_non_compliances.field_corrective_measures
+    - field.field.paragraph.sds_non_compliances.field_non_compliances
+    - paragraphs.paragraphs_type.sds_non_compliances
+id: paragraph.sds_non_compliances.default
+targetEntityType: paragraph
+bundle: sds_non_compliances
+mode: default
+content:
+  field_corrective_measures:
+    weight: 1
+    label: above
+    settings: {  }
+    third_party_settings: {  }
+    type: basic_string
+    region: content
+  field_non_compliances:
+    weight: 0
+    label: above
+    settings:
+      link_to_entity: false
+    third_party_settings: {  }
+    type: string
+    region: content
+hidden:
+  search_api_excerpt: true

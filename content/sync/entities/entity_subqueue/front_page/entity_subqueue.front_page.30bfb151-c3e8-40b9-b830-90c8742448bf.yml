@@ -1,0 +1,33 @@
+uuid:
+  -
+    value: 30bfb151-c3e8-40b9-b830-90c8742448bf
+queue:
+  -
+    target_id: front_page
+    target_type: entity_queue
+    target_uuid: 65fc57bb-a2b1-474b-92a3-9f897b8bdcc5
+title:
+  -
+    value: 'Front Page'
+items: {  }
+langcode:
+  -
+    value: en
+uid:
+  -
+    target_id: 0
+    target_type: user
+    target_uuid: 5e4226b0-a88c-4770-87bf-e8aa2b046015
+created:
+  -
+    value: '2020-03-06T15:48:26+00:00'
+    format: 'Y-m-d\TH:i:sP'
+changed:
+  -
+    value: '2020-03-06T15:48:26+00:00'
+    format: 'Y-m-d\TH:i:sP'
+_content_sync:
+  entity_type: entity_subqueue
+  entity_dependencies:
+    user:
+      - user.user.5e4226b0-a88c-4770-87bf-e8aa2b046015

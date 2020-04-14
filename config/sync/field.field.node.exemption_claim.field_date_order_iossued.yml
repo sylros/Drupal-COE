@@ -1,0 +1,21 @@
+uuid: c0a829e5-3047-464c-8585-6cbc5e99588d
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_date_order_iossued
+    - node.type.exemption_claim
+  module:
+    - datetime
+id: node.exemption_claim.field_date_order_iossued
+field_name: field_date_order_iossued
+entity_type: node
+bundle: exemption_claim
+label: 'Date Order Issued'
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: datetime

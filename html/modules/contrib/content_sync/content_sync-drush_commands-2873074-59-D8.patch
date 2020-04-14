@@ -1,0 +1,3201 @@
+diff --git a/composer.json b/composer.json
+new file mode 100644
+index 0000000..03addba
+--- /dev/null
++++ b/composer.json
+@@ -0,0 +1,45 @@
++{
++  "name": "drupal/content_sync",
++  "description": "Content Sync functionality.",
++  "type": "drupal-module",
++  "homepage": "http://drupal.org/project/content_sync",
++  "authors": [
++    {
++      "name": "Blanca.Esqueda",
++      "homepage": "https://www.drupal.org/u/blancaesqueda",
++      "role": "Maintainer"
++    },
++    {
++      "name": "David Gil Hidalgo",
++      "homepage": "https://www.drupal.org/u/dabito",
++      "role": "Maintainer"
++    },
++    {
++      "name": "David Nova",
++      "homepage": "https://www.drupal.org/u/david4lim",
++      "role": "Maintainer"
++    },
++    {
++      "name": "Andrés Moncada",
++      "homepage": "https://www.drupal.org/u/acmoncadab4",
++      "role": "Contributor"
++    },
++    {
++      "name": "See contributors",
++      "homepage": "https://www.drupal.org/node/2865869/committers"
++    }
++  ],
++  "support": {
++    "issues": "http://drupal.org/project/content_sync"
++  },
++  "license": "GPL-2.0+",
++  "minimum-stability": "dev",
++  "suggest": {},
++  "extra": {
++    "drush": {
++      "services": {
++        "drush.services.yml": "^9"
++      }
++    }
++  }
++}
+\ No newline at end of file
+diff --git a/content_sync.batch.inc b/content_sync.batch.inc
+deleted file mode 100755
+index b5b06bc..0000000
+--- a/content_sync.batch.inc
++++ /dev/null
+@@ -1,779 +0,0 @@
+-<?php
+-use Drupal\Core\Entity\ContentEntityType;
+-use Drupal\Core\Serialization\Yaml;
+-use Drupal\Core\Archiver\ArchiveTar;
+-
+-/**
+- * Processes the content single import batch
+- *
+- * @param $data
+- *   The batch content to persist.
+- * @param array $context
+- *   The batch context.
+- */
+-function processContentBatch($data, &$context) {
+-  // Initialize Batch
+-  if ( empty($context['sandbox']) ) {
+-    $context['sandbox']['progress'] = 0;
+-    $context['sandbox']['current_number'] = 0;
+-    if(isset($data['values'])) {
+-      $context['sandbox']['max'] = (int) count($data['values']);
+-    }else{
+-      $context['sandbox']['max'] = 1;
+-    }
+-  }
+-
+-  // In case of multiple values data
+-  $data_entity = $data;
+-  if(isset($data['values'])) {
+-    $data_entity['values'][0] = $data['values'][$context['sandbox']['progress']];
+-  }
+-
+-  _content_sync_entity_to_db($data_entity, '', $context);
+-
+-  if ( $context['sandbox']['progress'] != $context['sandbox']['max'] ) {
+-    $context['finished'] = $context['sandbox']['progress'] / $context['sandbox']['max'];
+-  }
+-}
+-
+-
+-/**
+- * Processes the content sync import batch
+- *
+- * @param $files
+- *   The batch content to persist.
+- * @param $collection
+- *   files division - subfolder.
+- * @param $operation
+- *   The type of import: create, update, delete.
+- * @param array $context
+- *   The batch context.
+- */
+-function processContentDirectoryBatch($files, $collection, $operation, &$context) {
+-  //Initialize Batch
+-  if ( empty($context['sandbox']) ) {
+-    $context['sandbox']['progress'] = 0;
+-    $context['sandbox']['current_number'] = 0;
+-    $context['sandbox']['max'] = (int) count($files);
+-  }
+-
+-  //Get the file to process
+-  $file = $files[$context['sandbox']['progress']];
+-
+-  // Skip site.uuid as it is not a content entity.
+-  if($file == "site.uuid"){
+-    $context['results']['errors'][] = t('File Skipped ') . $file . t(' - site uuid should not be changed');
+-    $context['message'] = "File Skipped: " . $file;
+-    $context['sandbox']['progress']++;
+-    $operation = Null;
+-  }
+-
+-  $directory = content_sync_get_content_directory('sync');
+-
+-  // Validate file YAML format
+-  if (!empty($collection)){
+-    $file_path = $directory . "/".str_replace(".","/",$collection) . "/" . $file . ".yml";
+-  }else{
+-    $file_path = $directory . "/" . $file . ".yml";
+-  }
+-  $info = pathinfo($file_path);
+-  if ( strtolower($info["extension"]) != "yml" ) {
+-    $context['results']['errors'][] = t("File Skipped: ") . $file;
+-    $context['message'] = "File Skipped: " . $file;
+-    $context['sandbox']['progress']++;
+-  }else {
+-
+-    list($entity_type, $entity_bundle, $entity_uuid) = explode('.', $file);
+-
+-    // Skip superuser and current user  -- Avoid batch errors for session lost.
+-    // Get super user uuid
+-    $current_user_uuid = \Drupal\user\Entity\User::load(\Drupal::currentUser()->id())->uuid();
+-    if($current_user_uuid == $entity_uuid){
+-      $context['results'][] = t('File Skipped ') . $file . t(' - current user info should not be updated');
+-      $context['message'] = "File Skipped: " . $file;
+-      $context['sandbox']['progress']++;
+-    }else {
+-      // Get super admin uuid -- assuming it is id 1
+-      $superadmin_user_uuid = \Drupal\user\Entity\User::load(1)->uuid();
+-      if ( $superadmin_user_uuid == $entity_uuid ) {
+-        $context['results'][] = t('File Skipped ') . $file . t(' - super admin user info should not be updated');
+-        $context['message'] = "File Skipped: " . $file;
+-        $context['sandbox']['progress']++;
+-      }else {
+-        if ( $operation == "create" || $operation == "update" ) {
+-          //Load the yml file and decode.
+-          try {
+-            $file_data = file_get_contents($file_path);
+-            $data = Yaml::decode($file_data);
+-          }
+-          catch (\Exception $e) {
+-            $context['results']['errors'][] = t('Error: %message.', ['%message' => $e->getMessage()]);
+-            $data = "";
+-          }
+-          //Verify that the uuid field is the same as the file name
+-          if ( $entity_uuid != $data['values'][0]['uuid'][0]['value'] ||
+-               $entity_type != $data['entity_type'] ||
+-               $entity_bundle != $data['bundle'] ) {
+-            $context['results']['errors'][] = t('File Skipped ') . $file . t(" - Malformed file");
+-            $context['message'] = "File Skipped: " . $file;
+-            $context['sandbox']['progress']++;
+-          }
+-          else {
+-            _content_sync_entity_to_db($data, $file, $context);
+-          }
+-        }
+-        elseif ( $operation == "delete" ) {
+-          $context['results'][] = t("Content Entity Deleted: ") . $file;
+-
+-          $entityRepository = \Drupal::service('entity.repository');
+-          $entity = $entityRepository->loadEntityByUuid($entity_type, $entity_uuid);
+-          if ( !empty($entity) ) {
+-            $entity->delete();
+-          }
+-          $context['message'] = "Entity Deleted: " . $file;
+-          $context['sandbox']['progress']++;
+-        }
+-      }
+-    }
+-  }
+-
+-  if ( $context['sandbox']['progress'] != $context['sandbox']['max'] ) {
+-    $context['finished'] = $context['sandbox']['progress'] / $context['sandbox']['max'];
+-  }
+-}
+-
+-/**
+- * Process a content entity YAML and store to the db
+- * IMPORT Content.
+- *
+- * @param $data
+- *   Content entity data from YAML.
+- * @param $file
+- *   file path.
+- * @param array $context
+- *   The batch context.
+- */
+- function _content_sync_entity_to_db($data, $file, &$context) {
+-   // Entity Type and Field Manager
+-   $entityTypeManager = \Drupal::entityTypeManager();
+-   $entityFieldManager = \Drupal::service('entity_field.manager');
+-   $entityBundles = \Drupal::service("entity_type.bundle.info");
+-   $entityRepository = \Drupal::service('entity.repository');
+-
+-   // Process data only if there is a valid entity type and bundle flag
+-   $valid_entity_type = TRUE;
+-
+-   // Get entity type
+-   if ( isset($data['entity_type']) ) {
+-     $entity_type = $data['entity_type'];
+-   }
+-   // Get entity bundle
+-   if ( isset($data['bundle']) ) {
+-     $entity_bundle = $data['bundle'];
+-   }
+-   // Validate entity_type and bundle
+-   if ( empty($entity_type) || empty($entity_bundle) ) {
+-     $context['results']['errors'][] = t('Entity Type and Bundle are required.') . $file;
+-     //$context['sandbox']['max'] = $context['sandbox']['progress'];
+-     $context['sandbox']['progress']++;
+-     $valid_entity_type = FALSE;
+-   }
+-   elseif ( !empty($entity_type) && !empty($entity_bundle) ) {
+-     // Check that entity type exists and it is a content instance
+-     $instances = $entityTypeManager->getDefinitions();
+-     if ( !(isset($instances[$entity_type]) && $instances[$entity_type] instanceof ContentEntityType) ) {
+-       $context['results']['errors'][] = t('Entity type does not exist or it is not a content instance.') . $file;
+-       $context['sandbox']['progress']++;
+-       $valid_entity_type = FALSE;
+-     }
+-     else {
+-       // Verify that bundle exists
+-       if ( !isset($entityBundles->getBundleInfo($entity_type)[$entity_bundle]) ) {
+-         $context['results']['errors'][] = t('Bundle does not exist, please review the site configuration.') . $file;
+-         $context['sandbox']['progress']++;
+-         $valid_entity_type = FALSE;
+-       }
+-       else {
+-         // Check if there are data to be inserted.
+-         if ( !isset($data['values']) ) {
+-           $context['results']['errors'][] = t('Values to be imported not found, check the YAML file.') . $file;
+-           $context['sandbox']['progress']++;
+-           $valid_entity_type = FALSE;
+-         }
+-       }
+-     }
+-   }
+-
+-   //Process data
+-   if ( $valid_entity_type ) {
+-     // Initialize array of elements to save.
+-     $entity_elements = [];
+-
+-     // Get Entity Fields.
+-     $fields = array_filter(
+-       $entityFieldManager->getFieldDefinitions($entity_type, $entity_bundle), function ($field_definition) {
+-       return $field_definition;
+-     }
+-     );
+-     foreach ($fields as $fieldID => $field) {
+-       $entity_elements[$field->getName()] = $field->getName();
+-     }
+-
+-     // Get Entity Properties - to know the id and bundle fields.
+-     $properties = $entityTypeManager->getDefinitions()[$entity_type]->getKeys();
+-     // Remove property ID as we are gonna use UUID to avoid conflicts.
+-     unset($entity_elements[$properties['id']]);
+-     $entity_elements = array_filter($entity_elements);
+-
+-     // Get arrays of content to be inserted.
+-     $data_value = $data['values'][0];
+-
+-     // Remove vid to avoid conflicts w/revisions.
+-     unset($data_value['vid']);
+-
+-     // Gather Content to import
+-     $record = [];
+-     // Content
+-     $data_value[$properties['bundle']] = $entity_bundle;
+-     foreach ($entity_elements as $elementID => $element) {
+-       // Set value for entity fields -  from import or default.
+-       if ( isset($data_value[$element]) ) {
+-         $record['values'][$element] = $data_value[$element];
+-         // If it is entity reference get the id from the uuid
+-         $element_type = $fields[$element]->getType();
+-         if ( $element_type == "entity_reference" ||
+-           $element_type == "image" ||
+-           $element_type == "file"
+-         ) {
+-           // Get entity type
+-           $reference_type = $fields[$element]->getSettings()['target_type'];
+-           // Loop all the values
+-           if ( is_array($data_value[$element]) ) {
+-             foreach ($data_value[$element] as $er_key => $er_val) {
+-               $entity = $entityRepository->loadEntityByUuid($reference_type, $er_val['target_id']);
+-               unset($record['values'][$element][$er_key]['target_id']);
+-               if ( !empty($entity) ) {
+-                 $record['values'][$element][$er_key]['target_id'] = $entity->id();
+-               }
+-             }
+-           }
+-         }
+-       }
+-     }
+-     //$record['values']['path']['pathauto'] = TRUE;
+-
+-     // Translations
+-     if ( isset($data_value['translations']) && is_array($data_value['translations']) ) {
+-       foreach ($data_value['translations'] as $translations) {
+-         $langcode = $translations['langcode'][0]['value'];
+-         // TODO --- verify if langcode is available in the site
+-         $translations[$properties['bundle']] = $entity_bundle;
+-         foreach ($entity_elements as $elementID => $element) {
+-           if ( isset($translations[$element]) ) {
+-             // Only translatable elements for translations
+-             if ( $fields[$elementID]->isTranslatable() == TRUE ) {
+-               $record['translations'][$langcode][$element] = $translations[$element];
+-               // If it is entity reference get the id from the uuid
+-               $element_type = $fields[$element]->getType();
+-               if ( $element_type == "entity_reference" ||
+-                 $element_type == "image" ||
+-                 $element_type == "file"
+-               ) {
+-                 // Get entity type
+-                 $reference_type = $fields[$element]->getSettings()['target_type'];
+-                 // Loop all the values
+-                 if ( is_array($translations[$element]) ) {
+-                   foreach ($translations[$element] as $er_key => $er_val) {
+-                     $entity = $entityRepository->loadEntityByUuid($reference_type, $er_val['target_id']);
+-                     unset($record['translations'][$langcode][$element][$er_key]['target_id']);
+-                     if ( !empty($entity) ) {
+-                       $record['translations'][$langcode][$element][$er_key]['target_id'] = $entity->id();
+-                     }
+-                   }
+-                 }
+-               }
+-             } // TODO --- Warning about untranslatable fields set on translations.
+-           }
+-         }
+-         //$record['translations'][$langcode]['path']['pathauto'] = TRUE;
+-       }
+-     }
+-
+-     // Flag to detect if the entity exist or is a new one.
+-     $new_entity = TRUE;
+-
+-     // Get the id of the the parent uuid.
+-     if ( isset($record['values']['parent']) ) {
+-       // Load the entity from the UUID
+-       $parent_uuid = $record['values']['parent'];
+-       $entity = $entityRepository->loadEntityByUuid($entity_type, $parent_uuid);
+-       // Set parent only if the parent UUID exist.
+-       unset($record['values']['parent']);
+-       if ( !empty($entity) ) {
+-         // Get the  parent entity id and exchange it for the uuid.
+-         $record['values']['parent'] = $entity->id();
+-       }
+-     }
+-
+-     // Password exception for users
+-     if($entity_type == 'user'){
+-       if(isset($record['values']['pass'][0]['value'])){
+-         $user_password = $record['values']['pass'][0]['value'];
+-       }
+-       unset($record['values']['pass']);
+-     }
+-
+-     // Check the UUID of the entity being imported.
+-     if ( isset($record['values']['uuid'][0]['value']) ) {
+-       // Load the entity from the UUID
+-       $uuid = $record['values']['uuid'][0]['value'];
+-       $entity = $entityRepository->loadEntityByUuid($entity_type, $uuid);
+-       // If the entity exist then update it.
+-       if ( !empty($entity) ) {
+-         // Set the new entity flag as false.
+-         $new_entity = FALSE;
+-         foreach ($entity_elements as $elementID => $element) {
+-           if ( isset($record['values'][$elementID]) ) {
+-             $entity->set($elementID, $record['values'][$elementID]);
+-           }
+-           else {
+-             // Get default value.
+-             $default_value = $fields[$elementID]->getDefaultValue($entity);
+-             $entity->set($elementID, $default_value);
+-           }
+-         }
+-         $entity->Save();
+-       }
+-     }
+-     //  Entity is new, add it.
+-     if ( $new_entity ) {
+-       $entity = $entityTypeManager->getStorage($entity_type)
+-         ->create($record['values']);
+-       $entity->Save();
+-     }
+-
+-     // Password exception for users II
+-     if($entity_type == 'user' && isset($user_password)) {
+-       $query = \Drupal::database()->update('users_field_data');
+-       $query->fields([
+-         'pass' => $user_password
+-       ]);
+-       $query->condition('uid', $entity->id());
+-       $query->execute();
+-
+-       // Store the data for diff
+-       $new_entity = _content_sync_db_to_entity($entity_type,$entity_bundle,$entity->id());
+-       // Create the name
+-       $name = $entity_type . "." . $entity_bundle . "." . $entity->uuid();
+-       $new_entity['values'][0]['pass'][0]['value'] = $user_password;
+-       //Insert/Update Data
+-       $query = \Drupal::database()->delete('cs_db_snapshot');
+-       $query->condition('name', $name);
+-       $query->execute();
+-       $query = \Drupal::database()->insert('cs_db_snapshot');
+-       $query->fields(['collection', 'name', 'data']);
+-       $query->values(['', $name, serialize($new_entity)]);
+-       $query->execute();
+-
+-     }
+-
+-     // Include Translations
+-     $lang_default = $entity->langcode->value;
+-     // Remove translations if they are in the import data the they would be inserted.
+-     foreach ($entity->getTranslationLanguages() as $langcode => $language) {
+-       // Verify that it is not the default langcode.
+-       if ( $langcode != $lang_default ) {
+-         $entity->removeTranslation($langcode);
+-       }
+-     }
+-     if ( isset($record['translations']) && is_array($record['translations']) ) {
+-       // Commented because automatically pathauto has been set.
+-       // \Drupal::service('path.alias_storage')->save("/taxonomy/term/" . $term->id(), "/".$entity_bundle."/".$term->id(), $lancode_original);
+-       foreach ($record['translations'] as $langcode => $translation) {
+-         // Add Translation if it is not the default language
+-         if ( $langcode != $lang_default ) {
+-           $term_translation = $entity->addTranslation($langcode);
+-           foreach ($translation as $itemID => $item) {
+-             $term_translation->$itemID->setValue($item);
+-           }
+-           $term_translation->save();
+-           // Commented because automatically pathauto has been set.
+-           // \Drupal::service('path.alias_storage')->save("/taxonomy/term/" . $term->id(), "/".$entity_bundle."/".$langcode.$term->id(), $langcode);
+-         }
+-       }
+-     }
+-
+-     // Batch Context status.
+-     $context['results'][] = $entity->uuid();
+-     $context['message'] = 'UUID - ' . $entity->uuid();
+-     $context['sandbox']['progress']++;
+-   }
+- }
+-
+-/**
+- * Finish batch.
+- *
+- * Provide information about the Content Batch results.
+- */
+-function finishContentBatch($success, $results, $operations) {
+-  if ( $success ) {
+-    if(isset($results['errors'])) {
+-      $errors = $results['errors'];
+-      unset($results['errors']);
+-    }
+-    //kint($results);
+-    //$results = array_unique($results);
+-    //kint($results);
+-
+-    // Log all the items processed
+-    foreach ($results as $key => $result) {
+-      if($key != 'errors') {
+-        //drupal_set_message(t('Processed UUID @title.', array('@title' => $result)));
+-        \Drupal::logger('content_sync')
+-          ->notice('Processed UUID @title.', [
+-            '@title' => $result,
+-            'link' => 'Import'
+-          ]);
+-      }
+-    }
+-    if ( !empty($errors) ) {
+-      // Log the errors
+-      $errors = array_unique($errors);
+-      foreach ($errors as $error) {
+-      //  drupal_set_message($error, 'error');
+-        \Drupal::logger('content_sync')->error($error, [ 'link' => 'Import']);
+-        // \Drupal::logger('content_sync')->error($error);
+-      }
+-      drupal_set_message(\Drupal::translation()
+-        ->translate('The content was imported with errors. <a href=":content-overview">Logs</a>',[':content-overview' => \Drupal::url('content.overview')]), 'warning');
+-      \Drupal::logger('content_sync')->warning('The content was imported with errors.', [ 'link' => 'Import']);
+-    }
+-    else {
+-      drupal_set_message(\Drupal::translation()->translate('The content was imported successfully. <a href=":content-overview">Logs</a>',[':content-overview' => \Drupal::url('content.overview')]));
+-      \Drupal::logger('content_sync')->notice('The content was imported successfully.', [ 'link' => 'Import']);
+-    }
+-  }
+-  else {
+-    // Log if there was an error.
+-    $message = t('Finished with an error. <a href=":content-overview">Logs</a>',[':content-overview' => \Drupal::url('content.overview')]);
+-    drupal_set_message($message);
+-    \Drupal::logger('content_sync')->error('Finished with an error.', [ 'link' => 'Import']);
+-  }
+-  drupal_flush_all_caches();
+-}
+-
+-
+-
+-/**
+- * Processes the content archive export batch
+- *
+- * @param $files
+- *   The batch content to persist.
+- * @param array $context
+- *   The batch context.
+- */
+-function processContentExportFiles($files, &$context) {
+-  //Initialize ArchiverTar
+-  $archiver = new ArchiveTar(file_directory_temp() . '/content.tar.gz', 'gz');
+-
+-  //Initialize Batch
+-  if ( empty($context['sandbox']) ) {
+-    $context['sandbox']['progress'] = 0;
+-    $context['sandbox']['current_number'] = 0;
+-    $context['sandbox']['max'] = count($files);
+-  }
+-  // Get submitted values
+-  $entity_type = $files[$context['sandbox']['progress']]['entity_type'];
+-  $entity_bundle = $files[$context['sandbox']['progress']]['entity_bundle'];
+-  $entity_id = $files[$context['sandbox']['progress']]['entity_id'];
+-
+-  //Validate that it is a Content Entity
+-  $entityTypeManager = \Drupal::entityTypeManager();
+-  $instances = $entityTypeManager->getDefinitions();
+-  if ( !(isset($instances[$entity_type]) && $instances[$entity_type] instanceof ContentEntityType) ) {
+-    $context['results']['errors'][] = t('Entity type does not exist or it is not a content instance.') . $entity_type;
+-  }
+-  else {
+-    // Generate the YAML file.
+-    $entity = _content_sync_db_to_entity($entity_type,$entity_bundle,$entity_id);
+-    // Create the name
+-    $name = $entity_type . "." . $entity_bundle . "." . $entity['values'][0]['uuid'][0]['value'];
+-    // Create the file.
+-    $archiver->addString("$name.yml", Yaml::encode($entity));
+-    $context['message'] = $name;
+-    $context['results'][] = $name;
+-  }
+-  $context['sandbox']['progress']++;
+-  if ( $context['sandbox']['progress'] != $context['sandbox']['max'] ) {
+-    $context['finished'] = $context['sandbox']['progress'] / $context['sandbox']['max'];
+-  }
+-}
+-
+-/**
+- * Processes the content snapshot batch - when the module is installed
+- *
+- * @param $files
+- *   The batch content to persist.
+- * @param array $context
+- *   The batch context.
+- */
+-function processContentSyncSnapshot($files, &$context) {
+-  //Initialize Batch
+-  if ( empty($context['sandbox']) ) {
+-    $context['sandbox']['progress'] = 0;
+-    $context['sandbox']['current_number'] = 0;
+-    $context['sandbox']['max'] = count($files);
+-  }
+-  // Get submitted values
+-  $entity_type = $files[$context['sandbox']['progress']]['entity_type'];
+-  $entity_bundle = $files[$context['sandbox']['progress']]['entity_bundle'];
+-  $entity_id = $files[$context['sandbox']['progress']]['entity_id'];
+-
+-  //Validate that it is a Content Entity
+-  $entityTypeManager = \Drupal::entityTypeManager();
+-  $instances = $entityTypeManager->getDefinitions();
+-  if ( !(isset($instances[$entity_type]) && $instances[$entity_type] instanceof ContentEntityType) ) {
+-    $context['results']['errors'][] = t('Entity type does not exist or it is not a content instance.') . $entity_type;
+-  }
+-  else {
+-    // Store the data for diff
+-    $entity = $entityTypeManager->getStorage($entity_type)
+-      ->load($entity_id);
+-    // Generate the YAML file.
+-    $serializer_context = [];
+-    $exported_entity = \Drupal::service('content_sync.exporter')->exportEntity($entity, $serializer_context);
+-    // Create the name
+-    $name = $entity_type . "." . $entity->bundle() . "." . $entity->uuid();
+-
+-    // Insert Data
+-    $activeStorage = new Drupal\Core\Config\DatabaseStorage(\Drupal::database(), 'cs_db_snapshot');
+-    $activeStorage->write($name, Yaml::decode($exported_entity));
+-    $context['message'] = $name;
+-    $context['results'][] = $name;
+-  }
+-  $context['sandbox']['progress']++;
+-  if ( $context['sandbox']['progress'] != $context['sandbox']['max'] ) {
+-    $context['finished'] = $context['sandbox']['progress'] / $context['sandbox']['max'];
+-  }
+-}
+-
+-/**
+- * Finish batch.
+- *
+- * Provide information about the Content Batch results.
+- */
+-function finishContentExportBatch($success, $results, $operations) {
+-  if ( $success ) {
+-    $errors = $results['errors'];
+-    unset($results['errors']);
+-    $results = array_unique($results);
+-    // Log all the items processed
+-    foreach ($results as $key => $result) {
+-      if($key != 'errors') {
+-        //drupal_set_message(t('Processed UUID @title.', array('@title' => $result)));
+-        \Drupal::logger('content_sync')
+-          ->info('Processed UUID @title.', [
+-            '@title' => $result,
+-            'link' => 'Export'
+-          ]);
+-      }
+-    }
+-    if ( !empty($errors) ) {
+-      // Log the errors
+-      $errors = array_unique($errors);
+-      foreach ($errors as $error) {
+-        //drupal_set_message($error, 'error');
+-        \Drupal::logger('content_sync')->error($error);
+-      }
+-      // Log the note that the content was exported with errors.
+-      drupal_set_message(\Drupal::translation()->translate('The content was exported with errors. <a href=":content-overview">Logs</a>',[':content-overview' => \Drupal::url('content.overview')]), 'warning');
+-      \Drupal::logger('content_sync')->warning('The content was exported with errors.', [ 'link' => 'Export']);
+-    }
+-    else {
+-      // Log the new created export link if applicable.
+-      drupal_set_message(\Drupal::translation()->translate('The content was exported successfully. <a href=":export-download">Download tar file</a>', [':export-download' => \Drupal::url('content.export_download')]));
+-      \Drupal::logger('content_sync')->info('The content was exported successfully. <a href=":export-download">Download tar file</a>', [':export-download' => \Drupal::url('content.export_download'), 'link' => 'Export']);
+-    }
+-  }
+-  else {
+-    // Log that there was an error
+-    $message = t('Finished with an error.<a href=":content-overview">Logs</a>',[':content-overview' => \Drupal::url('content.overview')]);
+-    drupal_set_message($message);
+-    \Drupal::logger('content_sync')->error('Finished with an error.', [ 'link' => 'Export']);
+-  }
+-}
+-
+-/**
+- * Convert a content entity from the db to an array
+- * EXPORT content.
+- *
+- * @return array $entity
+- *
+- * @param $entity_type
+- *   Content entity type.
+- * @param $entity_bundle
+- *   Content entity bundle.
+- * @param array $entity_id
+- *   Content entity id.
+- */
+-function _content_sync_db_to_entity($entity_type,$entity_bundle,$entity_id){
+-  $entityTypeManager = \Drupal::entityTypeManager();
+-  $entityFieldManager = \Drupal::service('entity_field.manager');
+-
+-  // Get Entity Fields.
+-  $fields = array_filter(
+-    $entityFieldManager->getFieldDefinitions($entity_type, $entity_bundle), function ($field_definition) {
+-    return $field_definition;
+-  }
+-  );
+-
+-  // Initialize array of elements to export.
+-  $entity_elements = [];
+-  foreach ($fields as $fieldID => $field) {
+-    $entity_elements[$field->getName()] = $field->getName();
+-  }
+-
+-  // Get Entity Properties - to know the id and bundle fields.
+-  $properties = $entityTypeManager->getDefinitions()[$entity_type]->getKeys();
+-
+-  // Get data to fill the yaml.
+-  $entity_data = $entityTypeManager->getStorage($entity_type)->load($entity_id);
+-  $entity = [];
+-  $entity['entity_type'] = $entity_type;
+-  $entity['bundle'] = $entity_bundle;
+-
+-  // Remove property ID as we are gonna use UUID to avoid conflicts.
+-  unset($entity_elements[$properties['id']]);
+-  // Remove bundle as it is defined already
+-  unset($entity_elements[$properties['bundle']]);
+-  // Remove vid to avoid conflicts w/versions
+-  unset($entity_elements['vid']);
+-  // Filter array
+-  $entity_elements = array_filter($entity_elements);
+-
+-  //Get entity values
+-  foreach ($entity_elements as $elementID => $element) {
+-    //Include parent UUID if it exist
+-    if ($element == 'parent') {
+-      $parent = $entityTypeManager->getStorage($entity_type)->loadParents($entity_id);
+-      $parent = reset($parent);
+-      if ( !empty($parent) ) {
+-        $entity['values'][0][$element] = $parent->uuid();
+-      }
+-    }else {
+-      $entity['values'][0][$element] = $entity_data->get($element)
+-        ->getValue();
+-    }
+-    //Check if it is an entity reference and use UUID instead of target id.
+-    $element_type = $entity_data->get($element)
+-      ->getFieldDefinition()
+-      ->getType();
+-    if ( $element_type == "entity_reference" ||
+-      $element_type == "image" ||
+-      $element_type == "file"
+-    ) {
+-      if ( $entity_data->get($element)->entity ) {
+-        $reference_type = $entity_data->get($element)->entity->getEntityType()
+-          ->id();
+-        //Loop all the values
+-        foreach ($entity_data->get($element)
+-                   ->getValue() as $er_key => $er_val) {
+-          $entity['values'][0][$element][$er_key]['target_id'] = $entityTypeManager->getStorage($reference_type)
+-            ->load($er_val['target_id'])
+-            ->uuid();
+-        }
+-      }
+-    }
+-  }
+-
+-  // Exception to get the path as it can not be retrieved as regular value.
+-  // Not check for image because gives an error.
+-  if($entity_type != "file") {
+-    $internal_path = "/" . $entity_data->toUrl()->getInternalPath();
+-    // AliasByPath return internal of alias doesn't exist.
+-    $alias = \Drupal::service('path.alias_manager')->getAliasByPath($internal_path);
+-    // Only pass the value is Alias exist.
+-    if($internal_path != $alias){
+-      $entity['values'][0]['path'] = $alias;
+-    }
+-  }
+-
+-  // Include Translations
+-  $lang_default = $entity['values'][0]['langcode'][0]['value'];
+-  foreach ($entity_data->getTranslationLanguages() as $langcode => $language) {
+-    $c = 0;
+-    if ( $entity_data->hasTranslation($langcode) ) {
+-      $entity_data_translation = $entity_data->getTranslation($langcode);
+-      // Verify that it is not the default langcode.
+-      if ( $langcode != $lang_default ) {
+-        foreach ($entity_elements as $elementID => $element) {
+-          // Only translatable elements for translations
+-          if ( $fields[$elementID]->isTranslatable() == TRUE ) {
+-            $entity['values'][0]['translations'][$c][$element] = $entity_data_translation->get($element)
+-              ->getValue();
+-
+-            //Check if it is an entity reference and use UUID instead of target id.
+-            $element_type = $entity_data_translation->get($element)
+-              ->getFieldDefinition()
+-              ->getType();
+-            if ( $element_type == "entity_reference" ||
+-              $element_type == "image" ||
+-              $element_type == "file"
+-            ) {
+-              if ( $entity_data_translation->get($element)->entity ) {
+-                $reference_type = $entity_data_translation->get($element)->entity->getEntityType()
+-                  ->id();
+-                //Loop all the values
+-                foreach ($entity_data_translation->get($element)
+-                           ->getValue() as $er_key => $er_val) {
+-                  $entity['values'][0]['translations'][$c][$element][$er_key]['target_id'] = $entityTypeManager->getStorage($reference_type)
+-                    ->load($er_val['target_id'])
+-                    ->uuid();
+-                }
+-              }
+-            }
+-
+-          }
+-        }
+-        //$entity['translations'][$c]['path'] = $entity_data_translation->toUrl()->getInternalPath();
+-        //$c++;
+-      }
+-    }
+-  }
+-  return $entity;
+-}
+-
+-/**
+- * Generate UUID YAML file
+- * To use for site UUID validation.
+- *
+- * @param $data
+- *   The batch content to persist.
+- * @param array $context
+- *   The batch context.
+- */
+-function generateSiteUUIDFile($data, &$context) {
+-  //Initialize ArchiverTar
+-  $archiver = new ArchiveTar(file_directory_temp() . '/content.tar.gz', 'gz');
+-
+-  //Include Site UUID to YML file
+-  $site_config = \Drupal::config('system.site');
+-  $site_uuid_source = $site_config->get('uuid');
+-  $entity['site_uuid'] = $site_uuid_source;
+-
+-  // Set the name
+-  $name = "site.uuid";
+-  // Create the file.
+-  $archiver->addString("$name.yml", Yaml::encode($entity));
+-
+-  //Save to cs_db_snapshot if being called from installer.
+-  if ($data == 'snapshot'){
+-    // Insert Data
+-    $activeStorage = new Drupal\Core\Config\DatabaseStorage(\Drupal::database(), 'cs_db_snapshot');
+-    $activeStorage->write($name, $entity);
+-  }
+-
+-  $context['message'] = $name;
+-  $context['results'][] = $name;
+-  $context['finished'] = 1;
+-}
+diff --git a/content_sync.module b/content_sync.module
+index 112829d..0c7fe86 100755
+--- a/content_sync.module
++++ b/content_sync.module
+@@ -218,8 +218,10 @@ function content_sync_entity_update(Drupal\Core\Entity\EntityInterface $entity){
+     // Create the name
+     $name = $entity_type . "." . $entity_bundle . "." . $entity->uuid();
+     //Insert/Update Data
+-    $activeStorage = new Drupal\Core\Config\DatabaseStorage(\Drupal::database(), 'cs_db_snapshot');
+-    $activeStorage->write($name, \Drupal\Core\Serialization\Yaml::decode($exported_entity));
++    $activeStorage = new Drupal\content_sync\Content\ContentDatabaseStorage(\Drupal::database(), 'cs_db_snapshot');
++    $activeStorage->cs_write($name, \Drupal\Core\Serialization\Yaml::decode($exported_entity), $entity_type . "." . $entity_bundle);
++    // Invalidate the CS Cache of the entity.
++    $cache = \Drupal::cache('content')->invalidate($entity_type.".".$entity_bundle.":".$name);
+   }
+ }
+ /**
+@@ -246,7 +248,9 @@ function content_sync_entity_delete(Drupal\Core\Entity\EntityInterface $entity){
+     // Update the data for diff
+     $name = $entity_type . "." . $entity_bundle . "." . $entity_uuid;
+     //Delete Data
+-    $activeStorage = new Drupal\Core\Config\DatabaseStorage(\Drupal::database(), 'cs_db_snapshot');
+-    $activeStorage->delete($name);
++    $activeStorage = new Drupal\content_sync\Content\ContentDatabaseStorage(\Drupal::database(), 'cs_db_snapshot');
++    $activeStorage->cs_delete($name);
++    // Invalidate the CS Cache of the entity.
++    $cache = \Drupal::cache('content')->invalidate($entity_type.".".$entity_bundle.":".$name);
+   }
+-}
+\ No newline at end of file
++}
+diff --git a/drush.services.yml b/drush.services.yml
+new file mode 100644
+index 0000000..6560cc1
+--- /dev/null
++++ b/drush.services.yml
+@@ -0,0 +1,6 @@
++services:
++  content_sync.commands:
++    class: \Drupal\content_sync\Commands\ContentSyncCommands
++    arguments: ['@config.manager', '@content.storage', '@content.storage.sync', '@content_sync.manager', '@entity.manager','@entity_type.manager', '@content_sync.exporter', '@module_handler', '@event_dispatcher', '@lock', '@config.typed', '@module_installer', '@theme_handler', '@string_translation']
++    tags:
++      - { name: drush.command }
+diff --git a/src/Commands/ContentSyncCommands.php b/src/Commands/ContentSyncCommands.php
+new file mode 100644
+index 0000000..c458564
+--- /dev/null
++++ b/src/Commands/ContentSyncCommands.php
+@@ -0,0 +1,464 @@
++<?php
++
++namespace Drupal\content_sync\Commands;
++
++use Drupal\content_sync\ContentSyncManagerInterface;
++use Drupal\content_sync\Exporter\ContentExporterInterface;
++use Drupal\content_sync\Form\ContentExportTrait;
++use Drupal\content_sync\Form\ContentImportTrait;
++use Drupal\content_sync\Form\ContentSync;
++use Drupal\config\StorageReplaceDataWrapper;
++use Drupal\Core\Config\ConfigManagerInterface;
++use Drupal\Core\Config\FileStorage;
++use Drupal\content_sync\Content\ContentStorageComparer;
++use Drupal\Core\Config\StorageInterface;
++use Drupal\Core\Config\TypedConfigManagerInterface;
++use Drupal\Core\DependencyInjection\DependencySerializationTrait;
++use Drupal\Core\Entity\ContentEntityInterface;
++use Drupal\Core\Entity\EntityManagerInterface;
++use Drupal\Core\Entity\EntityStorageException;
++use Drupal\Core\Entity\EntityTypeManagerInterface;
++use Drupal\Core\Extension\ModuleHandlerInterface;
++use Drupal\Core\Extension\ModuleInstallerInterface;
++use Drupal\Core\Extension\ThemeHandlerInterface;
++use Drupal\Core\Lock\LockBackendInterface;
++use Drupal\Core\StringTranslation\StringTranslationTrait;
++use Drupal\Core\StringTranslation\TranslationInterface;
++use Drush\Commands\DrushCommands;
++use Drush\Exceptions\UserAbortException;
++use Symfony\Component\Console\Helper\Table;
++use Symfony\Component\Console\Output\OutputInterface;
++use Symfony\Component\EventDispatcher\EventDispatcherInterface;
++
++/**
++ * A Drush commandfile.
++ *
++ * In addition to this file, you need a drush.services.yml
++ * in root of your module, and a composer.json file that provides the name
++ * of the services file to use.
++ *
++ * See these files for an example of injecting Drupal services:
++ *   - http://cgit.drupalcode.org/devel/tree/src/Commands/DevelCommands.php
++ *   - http://cgit.drupalcode.org/devel/tree/drush.services.yml
++ */
++class ContentSyncCommands extends DrushCommands {
++
++  use ContentExportTrait;
++  use ContentImportTrait;
++  use DependencySerializationTrait;
++  use StringTranslationTrait;
++
++
++  protected $configManager;
++
++  protected $contentStorage;
++
++  protected $contentStorageSync;
++
++  protected $contentSyncManager;
++
++  protected $entityManager;
++
++  protected $entityTypeManager;
++
++  protected $contentExporter;
++
++  protected $lock;
++
++  protected $configTyped;
++
++  protected $moduleInstaller;
++
++  protected $themeHandler;
++
++  protected $stringTranslation;
++
++  protected $moduleHandler;
++
++  /**
++   * Gets the configManager.
++   *
++   * @return \Drupal\Core\Config\ConfigManagerInterface
++   *   The configManager.
++   */
++  public function getConfigManager() {
++    return $this->configManager;
++  }
++
++  /**
++   * Gets the contentStorage.
++   *
++   * @return \Drupal\Core\Config\StorageInterface
++   *   The contentStorage.
++   */
++  public function getContentStorage() {
++    return $this->contentStorage;
++  }
++
++  /**
++   * Gets the contentStorageSync.
++   *
++   * @return \Drupal\Core\Config\StorageInterface
++   *   The contentStorageSync.
++   */
++  public function getContentStorageSync() {
++    return $this->contentStorageSync;
++  }
++
++  /**
++   * {@inheritdoc}
++   */
++  protected function getEntityTypeManager() {
++    return $this->entityTypeManager;
++  }
++
++  /**
++   * {@inheritdoc}
++   */
++  protected function getContentExporter() {
++    return $this->contentExporter;
++  }
++
++  /**
++   * {@inheritdoc}
++   */
++  protected function getExportLogger() {
++    return $this->logger('content_sync');
++  }
++
++  /**
++   * ContentSyncCommands constructor.
++   *
++   * @param \Drupal\Core\Config\ConfigManagerInterface $configManager
++   *   The configManager.
++   * @param \Drupal\Core\Config\StorageInterface $contentStorage
++   *   The contentStorage.
++   * @param \Drupal\Core\Config\StorageInterface $contentStorageSync
++   *   The contentStorageSync.
++   * @param \Drupal\content_sync\ContentSyncManagerInterface $contentSyncManager
++   *   The contentSyncManager.
++   * @param \Drupal\Core\Entity\EntityManagerInterface $entityManager
++   *   The entityManager.
++   * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
++   *   The entityTypeManager.
++   * @param \Drupal\content_sync\Exporter\ContentExporterInterface $content_exporter
++   *   The contentExporter.
++   * @param \Drupal\Core\Extension\ModuleHandlerInterface $moduleHandler
++   *   The moduleHandler.
++   * @param \Symfony\Component\EventDispatcher\EventDispatcherInterface $eventDispatcher
++   *   The eventDispatcher.
++   * @param \Drupal\Core\Lock\LockBackendInterface $lock
++   *   The lock.
++   * @param \Drupal\Core\Config\TypedConfigManagerInterface $configTyped
++   *   The configTyped.
++   * @param \Drupal\Core\Extension\ModuleInstallerInterface $moduleInstaller
++   *   The moduleInstaller.
++   * @param \Drupal\Core\Extension\ThemeHandlerInterface $themeHandler
++   *   The themeHandler.
++   * @param \Drupal\Core\StringTranslation\TranslationInterface $stringTranslation
++   *   The stringTranslation.
++   */
++  public function __construct(ConfigManagerInterface $configManager, StorageInterface $contentStorage, StorageInterface $contentStorageSync, ContentSyncManagerInterface $contentSyncManager, EntityManagerInterface $entityManager, EntityTypeManagerInterface $entity_type_manager, ContentExporterInterface $content_exporter, ModuleHandlerInterface $moduleHandler, EventDispatcherInterface $eventDispatcher, LockBackendInterface $lock, TypedConfigManagerInterface $configTyped, ModuleInstallerInterface $moduleInstaller, ThemeHandlerInterface $themeHandler, TranslationInterface $stringTranslation) {
++    parent::__construct();
++    $this->configManager = $configManager;
++    $this->contentStorage = $contentStorage;
++    $this->contentStorageSync = $contentStorageSync;
++    $this->contentSyncManager = $contentSyncManager;
++    $this->entityManager = $entityManager;
++    $this->entityTypeManager = $entity_type_manager;
++    $this->contentExporter = $content_exporter;
++    $this->moduleHandler = $moduleHandler;
++    $this->eventDispatcher = $eventDispatcher;
++    $this->lock = $lock;
++    $this->configTyped = $configTyped;
++    $this->moduleInstaller = $moduleInstaller;
++    $this->themeHandler = $themeHandler;
++    $this->stringTranslation = $stringTranslation;
++  }
++
++  /**
++   * {@inheritdoc}
++   */
++  public static function create(ContainerInterface $container) {
++    return new static(
++      $container->get('config.manager'),
++      $container->get('content.storage'),
++      $container->get('content.storage.sync'),
++      $container->get('content_sync.manager')
++    );
++  }
++
++  /**
++   * Import content from a content directory.
++   *
++   * @param string|null $label
++   *   A content directory label (i.e. a key in \$content_directories array in
++   *   settings.php).
++   * @param array $options
++   *   The command options.
++   *
++   * @command content-sync:import
++   * @interact-config-label
++   * @option entity-types A list of entity type names separated by commas.
++   * @option uuids A list of UUIDs separated by commas.
++   * @option actions A list of Actions separated by commas.
++   * @option skiplist skip the change list before proceed with the import.
++   * @usage drush content-sync-import.
++   * @aliases csi,content-sync-import
++   */
++  public function import($label = NULL, array $options = [
++    'entity-types' => '',
++    'uuids' => '',
++    'actions' => '',
++    'skiplist' => FALSE ]) {
++
++    //Generate comparer with filters.
++    $storage_comparer = new ContentStorageComparer($this->contentStorageSync, $this->contentStorage,  $this->configManager);
++    $change_list = [];
++    $collections = $storage_comparer->getAllCollectionNames();
++    if (!empty($options['entity-types'])){
++      $entity_types = explode(',', $options['entity-types']);
++      $match_collections = [];
++      foreach ($entity_types as $entity_type){
++        $match_collections = $match_collections + preg_grep('/^'.$entity_type.'/', $collections);
++      }
++      $collections = $match_collections;
++    }
++    foreach ($collections as $collection){
++      if (!empty($options['uuids'])){
++        $storage_comparer->createChangelistbyCollectionAndNames($collection, $options['uuids']);
++      }else{
++        $storage_comparer->createChangelistbyCollection($collection);
++      }
++      if (!empty($options['actions'])){
++        $actions = explode(',', $options['actions']);
++        foreach ($actions as $op){
++          if (in_array($op, ['create','update','delete'])){
++            $change_list[$collection][$op] = $storage_comparer->getChangelist($op, $collection);
++          }
++        }
++      }else{
++        $change_list[$collection] = $storage_comparer->getChangelist(NULL, $collection);
++      }
++      $change_list = array_map('array_filter', $change_list);
++      $change_list = array_filter($change_list);
++    }
++    unset($change_list['']);
++
++    // Display the change list.
++    if (empty($options['skiplist'])){
++      //Show differences
++      $this->output()->writeln("Differences of the export directory to the active content:\n");
++      // Print a table with changes in color.
++      $table = self::contentChangesTable($change_list, $this->output());
++      $table->render();
++      // Ask to continue
++      if (!$this->io()->confirm(dt('Do you want to import?'))) {
++        throw new UserAbortException();
++      }
++    }
++    //Process the Import Data
++    $content_to_sync = [];
++    $content_to_delete = [];
++    foreach ($change_list as $collection => $actions) {
++      if (!empty($actions['create'])) {
++        $content_to_sync = array_merge($content_to_sync, $actions['create']);
++      }
++      if (!empty($actions['update'])) {
++        $content_to_sync = array_merge($content_to_sync, $actions['update']);
++      }
++      if (!empty($actions['delete'])) {
++        $content_to_delete = $actions['delete'];
++      }
++    }
++    // Set the Import Batch
++    if (!empty($content_to_sync) || !empty($content_to_delete)) {
++      $batch = $this->generateImportBatch($content_to_sync,
++        $content_to_delete, ['include_files' => 'folder']);
++      batch_set($batch);
++      drush_backend_batch_process();
++    }
++  }
++
++
++  /**
++   * Export Drupal content to a directory.
++   *
++   * @param string|null $label
++   *   A content directory label (i.e. a key in $content_directories array in
++   *   settings.php).
++   *
++   * @param array $options
++   *   The command options.
++   *
++   * @command content-sync:export
++   * @interact-config-label
++   * @option entity-types A list of entity type names separated by commas.
++   * @option uuids A list of UUIDs separated by commas.
++   * @option actions A list of Actions separated by commas.
++   * @option files A value none/base64/folder  -  default folder.
++   * @option include-dependencies export content dependencies.
++   * @option skiplist skip the change list before proceed with the export.
++   * @usage drush content-sync-export.
++   * @aliases cse,content-sync-export.
++   */
++  public function export($label = NULL, array $options = [
++    'entity-types' => '',
++    'uuids' => '',
++    'actions' => '',
++    'files' => '',
++    'include-dependencies' => FALSE,
++    'skiplist' => FALSE ]) {
++
++    //Generate comparer with filters.
++    $storage_comparer = new ContentStorageComparer($this->contentStorage, $this->contentStorageSync, $this->configManager);
++    $change_list = [];
++    $collections = $storage_comparer->getAllCollectionNames();
++    if (!empty($options['entity-types'])){
++      $entity_types = explode(',', $options['entity-types']);
++      $match_collections = [];
++      foreach ($entity_types as $entity_type){
++        $match_collections = $match_collections + preg_grep('/^'.$entity_type.'/', $collections);
++      }
++      $collections = $match_collections;
++    }
++    foreach ($collections as $collection){
++      if (!empty($options['uuids'])){
++        $storage_comparer->createChangelistbyCollectionAndNames($collection, $options['uuids']);
++      }else{
++        $storage_comparer->createChangelistbyCollection($collection);
++      }
++      if (!empty($options['actions'])){
++        $actions = explode(',', $options['actions']);
++        foreach ($actions as $op){
++          if (in_array($op, ['create','update','delete'])){
++            $change_list[$collection][$op] = $storage_comparer->getChangelist($op, $collection);
++          }
++        }
++      }else{
++        $change_list[$collection] = $storage_comparer->getChangelist(NULL, $collection);
++      }
++      $change_list = array_map('array_filter', $change_list);
++      $change_list = array_filter($change_list);
++    }
++    unset($change_list['']);
++
++    // Display the change list.
++    if (empty($options['skiplist'])){
++      //Show differences
++      $this->output()->writeln("Differences of the active content to the export directory:\n");
++      // Print a table with changes in color.
++      $table = self::contentChangesTable($change_list, $this->output());
++      $table->render();
++      // Ask to continue
++      if (!$this->io()->confirm(dt('Do you want to export?'))) {
++        throw new UserAbortException();
++      }
++    }
++
++    //Process the Export.
++    $entities_list = [];
++    foreach ($change_list as $collection => $changes) {
++      //$storage_comparer->getTargetStorage($collection)->deleteAll();
++      foreach ($changes as $change => $contents) {
++        switch ($change) {
++          case 'delete':
++            foreach ($contents as $content) {
++              $storage_comparer->getTargetStorage($collection)->delete($content);
++            }
++            break;
++          case 'update':
++          case 'create':
++            foreach ($contents as $content) {
++              //$data = $storage_comparer->getSourceStorage($collection)->read($content);
++              //$storage_comparer->getTargetStorage($collection)->write($content, $data);
++              $entity = explode('.', $content);
++              $entities_list[] = [
++                'entity_type' => $entity[0],
++                'entity_uuid' => $entity[2],
++              ];
++            }
++            break;
++        }
++      }
++    }
++    // Files options
++    $include_files = 'folder';
++    if (!empty($options['files'])){
++      if($options['files'] == 'folder'){
++        $include_files = 'folder';
++      }elseif($options['files'] == 'base64'){
++        $include_files = 'base64';
++      }else{
++        $include_files = 'none';
++      }
++    }
++    // Set the Export Batch
++    if (!empty($entities_list)) {
++      $batch = $this->generateExportBatch($entities_list,
++        ['export_type' => 'folder',
++         'include_files' => $include_files,
++         'include_dependencies' => $options['include-dependencies']]);
++      batch_set($batch);
++      drush_backend_batch_process();
++    }
++  }
++
++  /**
++   * Builds a table of content changes.
++   *
++   * @param array $content_changes
++   *   An array of changes keyed by collection.
++   * @param \Symfony\Component\Console\Output\OutputInterface $output
++   *   The output.
++   * @param bool $use_color
++   *   If it should use color.
++   *
++   * @return \Symfony\Component\Console\Helper\Table
++   *   A Symfony table object.
++   */
++  public static function contentChangesTable(array $content_changes, OutputInterface $output, $use_color = TRUE) {
++    $rows = [];
++    foreach ($content_changes as $collection => $changes) {
++      if(is_array($changes)){
++      foreach ($changes as $change => $contents) {
++        switch ($change) {
++          case 'delete':
++            $colour = '<fg=white;bg=red>';
++            break;
++
++          case 'update':
++            $colour = '<fg=black;bg=yellow>';
++            break;
++
++          case 'create':
++            $colour = '<fg=white;bg=green>';
++            break;
++
++          default:
++            $colour = "<fg=black;bg=cyan>";
++            break;
++        }
++        if ($use_color) {
++          $prefix = $colour;
++          $suffix = '</>';
++        }
++        else {
++          $prefix = $suffix = '';
++        }
++        foreach ($contents as $content) {
++          $rows[] = [
++            $collection,
++            $content,
++            $prefix . ucfirst($change) . $suffix,
++          ];
++        }
++      }
++    }
++    }
++    $table = new Table($output);
++    $table->setHeaders(['Collection', 'Content Name', 'Operation']);
++    $table->addRows($rows);
++    return $table;
++  }
++}
+diff --git a/src/Content/ContentDatabaseStorage.php b/src/Content/ContentDatabaseStorage.php
+new file mode 100644
+index 0000000..f5795a6
+--- /dev/null
++++ b/src/Content/ContentDatabaseStorage.php
+@@ -0,0 +1,87 @@
++<?php
++
++namespace Drupal\content_sync\Content;
++
++use Drupal\Core\Config\DatabaseStorage as DatabaseStorage;
++use Drupal\Core\Database\Database;
++
++/**
++ * Defines the Database storage.
++ */
++class ContentDatabaseStorage extends DatabaseStorage {
++
++  /**
++   * {@inheritdoc}
++   */
++  public function cs_write($name, array $data, $collection) {
++    $data = $this->encode($data);
++    try {
++      return $this->cs_doWrite($name, $data, $collection);
++    }
++    catch (\Exception $e) {
++      // If there was an exception, try to create the table.
++      if ($this->ensureTableExists()) {
++        return $this->cs_doWrite($name, $data, $collection);
++      }
++      // Some other failure that we can not recover from.
++      throw $e;
++    }
++  }
++
++  /**
++   * Helper method so we can re-try a write.
++   *
++   * @param string $name
++   *   The content name.
++   * @param string $data
++   *   The content data, already dumped to a string.
++   * @param string $collection
++   *   The content collection name, entity type + bundle.
++   *
++   * @return bool
++   */
++  protected function cs_doWrite($name, $data, $collection) {
++    $options = ['return' => Database::RETURN_AFFECTED] + $this->options;
++    $this->connection->delete($this->table, $options)
++      ->condition('name', $name)
++      ->execute();
++
++    return (bool) $this->connection->merge($this->table, $options)
++      ->keys(['collection', 'name'], [$collection, $name])
++      ->fields(['data' => $data])
++      ->execute();
++  }
++
++  /**
++   * {@inheritdoc}
++   */
++  public function cs_read($name) {
++    $data = FALSE;
++    try {
++      $raw = $this->connection->query('SELECT data FROM {' . $this->connection->escapeTable($this->table) . '} WHERE name = :name', [':name' => $name], $this->options)->fetchField();
++      if ($raw !== FALSE) {
++        $data = $this->decode($raw);
++      }
++    }
++    catch (\Exception $e) {
++      // If we attempt a read without actually having the database or the table
++      // available, just return FALSE so the caller can handle it.
++    }
++    return $data;
++  }
++
++  /**
++   * Implements Drupal\Core\Config\StorageInterface::delete().
++   *
++   * @throws PDOException
++   *
++   * @todo Ignore replica targets for data manipulation operations.
++   */
++  public function cs_delete($name) {
++    $options = ['return' => Database::RETURN_AFFECTED] + $this->options;
++    return (bool) $this->connection->delete($this->table, $options)
++      ->condition('name', $name)
++      ->execute();
++  }
++
++}
+diff --git a/src/Content/ContentFileStorageFactory.php b/src/Content/ContentFileStorageFactory.php
+index 7e800e7..9480f19 100644
+--- a/src/Content/ContentFileStorageFactory.php
++++ b/src/Content/ContentFileStorageFactory.php
+@@ -18,7 +18,7 @@ class ContentFileStorageFactory {
+   public static function getActive() {
+     // Load the class from a different namespace.
+     $class = "Drupal\\Core\\Config\\FileStorage";
+-    return new $class(content_sync_get_content_directory(CONFIG_ACTIVE_DIRECTORY));
++    return new $class(content_sync_get_content_directory(CONFIG_ACTIVE_DIRECTORY)."/entities");
+   }
+ 
+   /**
+@@ -29,6 +29,6 @@ class ContentFileStorageFactory {
+   public static function getSync() {
+     // Load the class from a different namespace.
+     $class = "Drupal\\Core\\Config\\FileStorage";
+-    return new $class(content_sync_get_content_directory(CONFIG_SYNC_DIRECTORY));
++    return new $class(content_sync_get_content_directory(CONFIG_SYNC_DIRECTORY)."/entities");
+   }
+ }
+diff --git a/src/Content/ContentStorageComparer.php b/src/Content/ContentStorageComparer.php
+new file mode 100644
+index 0000000..9c35e47
+--- /dev/null
++++ b/src/Content/ContentStorageComparer.php
+@@ -0,0 +1,77 @@
++<?php
++
++namespace Drupal\content_sync\Content;
++
++use Drupal\Core\Config\StorageComparer as StorageComparer;
++use Drupal\Core\Config\StorageInterface;
++
++
++/**
++ * Extends config storage comparer.
++ */
++class ContentStorageComparer extends StorageComparer {
++
++  /**
++   * {@inheritdoc}
++   */
++  public function createChangelistbyCollection($collection) {
++    $this->changelist[$collection] = $this->getEmptyChangelist();
++    $this->getAndSortConfigData($collection);
++    $this->addChangelistCreate($collection);
++    $this->addChangelistUpdate($collection);
++    $this->addChangelistDelete($collection);
++    // Only collections that support configuration entities can have renames.
++    if ($collection == StorageInterface::DEFAULT_COLLECTION) {
++      $this->addChangelistRename($collection);
++    }
++    return $this;
++  }
++
++  /**
++   * {@inheritdoc}
++   */
++  public function createChangelistbyCollectionAndNames($collection, $names) {
++    $this->changelist[$collection] = $this->getEmptyChangelist();
++    if ($this->getAndSortContentDataByCollectionAndNames($collection, $names)){
++      $this->addChangelistCreate($collection);
++      $this->addChangelistUpdate($collection);
++      $this->addChangelistDelete($collection);
++      // Only collections that support configuration entities can have renames.
++      if ($collection == StorageInterface::DEFAULT_COLLECTION) {
++        $this->addChangelistRename($collection);
++      }
++    }
++    return $this;
++  }
++
++  /**
++   * Gets and sorts configuration data from the source and target storages.
++   */
++  protected function getAndSortContentDataByCollectionAndNames($collection, $names) {
++    $names = explode(',', $names);
++    $target_names = [];
++    $source_names = [];
++    foreach($names as $key => $name){
++      $name = $collection.'.'.$name;
++      $source_storage = $this->getSourceStorage($collection);
++      $target_storage = $this->getTargetStorage($collection);
++      if($source_storage->exists($name) ||
++        $target_storage->exists($name) ){
++        $target_names = array_merge($target_names, $target_storage->listAll($name));
++        $source_names = array_merge($source_names, $source_storage->listAll($name));
++      }
++    }
++    $target_names = array_filter($target_names);
++    $source_names = array_filter($source_names);
++    if(!empty($target_names) || !empty($source_names)){
++      // Prime the static caches by reading all the configuration in the source
++      // and target storages.
++      $target_data = $target_storage->readMultiple($target_names);
++      $source_data = $source_storage->readMultiple($source_names);
++      $this->targetNames[$collection] = $target_names;
++      $this->sourceNames[$collection] = $source_names;
++      return true;
++    }
++    return false;
++  }
++}
+diff --git a/src/Content/ContentSyncExport.php b/src/Content/ContentSyncExport.php
+deleted file mode 100644
+index b1f504a..0000000
+--- a/src/Content/ContentSyncExport.php
++++ /dev/null
+@@ -1,212 +0,0 @@
+-<?php
+-
+-namespace Drupal\content_sync\Content;
+-
+-use Drupal\Core\Config\StorageInterface;
+-use Drupal\Core\Entity\ContentEntityType;
+-use Symfony\Component\DependencyInjection\ContainerInterface;
+-
+-/**
+- * Help convert db content entities to YAML.
+- */
+-class ContentSyncExport {
+-
+-  /**
+-   * The active content object.
+-   *
+-   * @var \Drupal\Core\Config\StorageInterface
+-   */
+-  protected $activeStorage;
+-
+-
+-  /**
+-   * Constructs the object.
+-   *
+-   * @param \Drupal\Core\Config\StorageInterface $active_storage
+-   *   The target storage.
+-   */
+-  public function __construct(StorageInterface $active_storage) {
+-    $this->activeStorage = $active_storage;
+-  }
+-
+-  /**
+-   * {@inheritdoc}
+-   */
+-  public static function create(ContainerInterface $container) {
+-    return new static(
+-      $container->get('content.storage.active')
+-    );
+-  }
+-
+-  /**
+-   * Batch worker function.
+-   *
+-   * Need to be in global visibility.
+-   *
+-   * @param $files
+-   *   Entity array.
+-   * @param $context
+-   *   Batch API context array.
+-   */
+-  public function processContentSyncSnapshot($files, &$context) {
+-    //Initialize Batch
+-    if ( empty($context['sandbox']) ) {
+-      $context['sandbox']['progress'] = 0;
+-      $context['sandbox']['current_number'] = 0;
+-      $context['sandbox']['max'] = count($files);
+-    }
+-    // Get submitted values
+-    $entity_type = $files[$context['sandbox']['progress']]['entity_type'];
+-    $entity_bundle = $files[$context['sandbox']['progress']]['entity_bundle'];
+-    $entity_id = $files[$context['sandbox']['progress']]['entity_id'];
+-
+-    //Validate that it is a Content Entity
+-    $entityTypeManager = \Drupal::entityTypeManager();
+-    $instances = $entityTypeManager->getDefinitions();
+-    if ( !(isset($instances[$entity_type]) && $instances[$entity_type] instanceof ContentEntityType) ) {
+-      $context['results']['errors'][] = t('Entity type does not exist or it is not a content instance.') . $entity_type;
+-    }
+-    else {
+-      // Store the data for diff
+-
+-      $entityTypeManager = \Drupal::entityTypeManager();
+-      $entityFieldManager = \Drupal::service('entity_field.manager');
+-
+-      // Get Entity Fields.
+-      $fields = array_filter(
+-        $entityFieldManager->getFieldDefinitions($entity_type, $entity_bundle), function ($field_definition) {
+-        return $field_definition;
+-      }
+-      );
+-
+-      // Initialize array of elements to export.
+-      $entity_elements = [];
+-      foreach ($fields as $fieldID => $field) {
+-        $entity_elements[$field->getName()] = $field->getName();
+-      }
+-
+-      // Get Entity Properties - to know the id and bundle fields.
+-      $properties = $entityTypeManager->getDefinitions()[$entity_type]->getKeys();
+-
+-      // Get data to fill the yaml.
+-      $entity_data = $entityTypeManager->getStorage($entity_type)->load($entity_id);
+-      $entity = [];
+-      $entity['entity_type'] = $entity_type;
+-      $entity['bundle'] = $entity_bundle;
+-
+-      //Include Site UUID
+-      $site_config = \Drupal::config('system.site');
+-      $site_uuid_source = $site_config->get('uuid');
+-      $entity['site_uuid'] = $site_uuid_source;
+-
+-      // Remove property ID as we are gonna use UUID to avoid conflicts.
+-      unset($entity_elements[$properties['id']]);
+-      // Remove bundle as it is defined already
+-      unset($entity_elements[$properties['bundle']]);
+-      // Remove vid to avoid conflicts w/versions
+-      unset($entity_elements['vid']);
+-      // Filter array
+-      $entity_elements = array_filter($entity_elements);
+-
+-      //Get entity values
+-      foreach ($entity_elements as $elementID => $element) {
+-        //Include parent UUID if it exist
+-        if ($element == 'parent') {
+-          $parent = $entityTypeManager->getStorage($entity_type)->loadParents($entity_id);
+-          $parent = reset($parent);
+-          if ( !empty($parent) ) {
+-            $entity['values'][0][$element] = $parent->uuid();
+-          }
+-        }else {
+-          $entity['values'][0][$element] = $entity_data->get($element)
+-            ->getValue();
+-        }
+-        //Check if it is an entity reference and use UUID instead of target id.
+-        $element_type = $entity_data->get($element)
+-          ->getFieldDefinition()
+-          ->getType();
+-        if ( $element_type == "entity_reference" ||
+-          $element_type == "image" ||
+-          $element_type == "file"
+-        ) {
+-          if ( $entity_data->get($element)->entity ) {
+-            $reference_type = $entity_data->get($element)->entity->getEntityType()
+-              ->id();
+-            //Loop all the values
+-            foreach ($entity_data->get($element)
+-                       ->getValue() as $er_key => $er_val) {
+-              $entity['values'][0][$element][$er_key]['target_id'] = $entityTypeManager->getStorage($reference_type)
+-                ->load($er_val['target_id'])
+-                ->uuid();
+-            }
+-          }
+-        }
+-      }
+-      // Exception to get the path as it can not be retrieved as regular value.
+-      // Not set for image because gives an error.
+-      //$current_path = \Drupal::service('path.current')->getPath();
+-      if($entity_type != "file") {
+-        $entity['values'][0]['path'] = "/" . $entity_data->toUrl()->getInternalPath();
+-      }
+-
+-      // Include Translations
+-      $lang_default = $entity['values'][0]['langcode'][0]['value'];
+-      foreach ($entity_data->getTranslationLanguages() as $langcode => $language) {
+-        $c = 0;
+-        if ( $entity_data->hasTranslation($langcode) ) {
+-          $entity_data_translation = $entity_data->getTranslation($langcode);
+-          // Verify that it is not the default langcode.
+-          if ( $langcode != $lang_default ) {
+-            foreach ($entity_elements as $elementID => $element) {
+-              // Only translatable elements for translations
+-              if ( $fields[$elementID]->isTranslatable() == TRUE ) {
+-                $entity['values'][0]['translations'][$c][$element] = $entity_data_translation->get($element)
+-                  ->getValue();
+-
+-                //Check if it is an entity reference and use UUID instead of target id.
+-                $element_type = $entity_data_translation->get($element)
+-                  ->getFieldDefinition()
+-                  ->getType();
+-                if ( $element_type == "entity_reference" ||
+-                  $element_type == "image" ||
+-                  $element_type == "file"
+-                ) {
+-                  if ( $entity_data_translation->get($element)->entity ) {
+-                    $reference_type = $entity_data_translation->get($element)->entity->getEntityType()
+-                      ->id();
+-                    //Loop all the values
+-                    foreach ($entity_data_translation->get($element)
+-                               ->getValue() as $er_key => $er_val) {
+-                      $entity['values'][0]['translations'][$c][$element][$er_key]['target_id'] = $entityTypeManager->getStorage($reference_type)
+-                        ->load($er_val['target_id'])
+-                        ->uuid();
+-                    }
+-                  }
+-                }
+-
+-              }
+-            }
+-            //$entity['translations'][$c]['path'] = $entity_data_translation->toUrl()->getInternalPath();
+-            $c++;
+-          }
+-        }
+-      }
+-
+-
+-      // Create the name
+-      $name = $entity_type . "." . $entity_bundle . "." . $entity['values'][0]['uuid'][0]['value'];
+-
+-      //Write to DB
+-      $this->activeStorage->write($name,$entity);
+-
+-      $context['message'] = $name;
+-      $context['results'][] = $name;
+-    }
+-    $context['sandbox']['progress']++;
+-    if ( $context['sandbox']['progress'] != $context['sandbox']['max'] ) {
+-      $context['finished'] = $context['sandbox']['progress'] / $context['sandbox']['max'];
+-    }
+-  }
+-
+-
+-}
+diff --git a/src/ContentSyncManager.php b/src/ContentSyncManager.php
+index 27cc5fc..426de36 100755
+--- a/src/ContentSyncManager.php
++++ b/src/ContentSyncManager.php
+@@ -2,8 +2,8 @@
+ 
+ namespace Drupal\content_sync;
+ 
+-
+ use Drupal\content_sync\DependencyResolver\ImportQueueResolver;
++use Drupal\content_sync\DependencyResolver\ExportQueueResolver;
+ use Drupal\content_sync\Exporter\ContentExporterInterface;
+ use Drupal\content_sync\Importer\ContentImporterInterface;
+ use Drupal\Core\Entity\EntityTypeManagerInterface;
+@@ -67,7 +67,9 @@ class ContentSyncManager implements ContentSyncManagerInterface {
+   public function generateImportQueue($file_names, $directory) {
+     $queue = [];
+     foreach ($file_names as $file) {
+-      $file_path = $directory . "/" . $file . ".yml";
++      $ids = explode('.', $file);
++      list($entity_type_id, $bundle, $uuid) = $ids;
++      $file_path = $directory . "/" . $entity_type_id . "/" . $bundle . "/" . $file . ".yml";
+       if (!file_exists($file_path) || !$this->isValidFilename($file)) {
+         continue;
+       }
+@@ -84,6 +86,21 @@ class ContentSyncManager implements ContentSyncManagerInterface {
+   }
+ 
+   /**
++   * @param $file_names
++   * @param $directory
++   *
++   * @return array
++   */
++  public function generateExportQueue($decoded_entities, $visited) {
++    $queue = [];
++    if (!empty($decoded_entities)) {
++      $resolver = new ExportQueueResolver();
++      $queue = $resolver->resolve($decoded_entities, $visited);
++    }
++    return $queue;
++  }
++
++  /**
+    * @return \Symfony\Component\Serializer\Serializer
+    */
+   public function getSerializer() {
+@@ -109,4 +126,4 @@ class ContentSyncManager implements ContentSyncManagerInterface {
+     return count($parts) === 3;
+   }
+ 
+-}
+\ No newline at end of file
++}
+diff --git a/src/DependencyResolver/ContentSyncResolverInterface.php b/src/DependencyResolver/ContentSyncResolverInterface.php
+index c703335..dbcf4b7 100755
+--- a/src/DependencyResolver/ContentSyncResolverInterface.php
++++ b/src/DependencyResolver/ContentSyncResolverInterface.php
+@@ -2,8 +2,7 @@
+ 
+ namespace Drupal\content_sync\DependencyResolver;
+ 
+-
+ interface ContentSyncResolverInterface {
+ 
+-  public function resolve(array $normalized_entities);
+-}
+\ No newline at end of file
++  public function resolve(array $normalized_entities, $visited = []);
++}
+diff --git a/src/DependencyResolver/ExportQueueResolver.php b/src/DependencyResolver/ExportQueueResolver.php
+new file mode 100644
+index 0000000..d977f80
+--- /dev/null
++++ b/src/DependencyResolver/ExportQueueResolver.php
+@@ -0,0 +1,84 @@
++<?php
++
++namespace Drupal\content_sync\DependencyResolver;
++
++use Drupal\Core\Serialization\Yaml;
++use Drupal\content_sync\Content\ContentDatabaseStorage;
++
++/**
++ * Class ImportQueueResolver.
++ *
++ * @package Drupal\content_sync\DependencyResolver
++ */
++class ExportQueueResolver implements ContentSyncResolverInterface {
++
++  /**
++   * Builds a graph placing the deepest vertexes at the first place.
++   *
++   * @param array $visited
++   *   Array of vertexes to return.
++   * @param array $identifiers
++   *   Array of entity identifiers to process.
++   * @param array $normalized_entities
++   *   Parsed entities to import.
++   */
++  protected function depthFirstSearch(array &$visited, array $identifiers, array $normalized_entities) {
++    $validate_dependecies = TRUE;
++    foreach ($identifiers as $identifier) {
++      $ids = explode('.', $identifier);
++      list($entity_type_id, $bundle, $uuid) = $ids;
++      // Check if entity was sent on the files to import.
++      if (!empty($normalized_entities[$identifier])) {
++        $entity = $normalized_entities[$identifier];
++        // Check dependencies
++        if (!empty($entity['_content_sync']['entity_dependencies'])) {
++          foreach ($entity['_content_sync']['entity_dependencies'] as $ref_entity_type_id => $references) {
++            if(!is_null($references)){
++              $dependency = $this->depthFirstSearch($visited, $references, $normalized_entities);
++            
++            if ($dependency !== TRUE && !is_null($dependency)){
++               $validate_dependecies = FALSE;
++               $visited['Missing'][$identifier][] = $dependency;
++            }
++            }
++          }
++        }
++        if (!isset($visited[$identifier]) && $validate_dependecies) {
++          $visited[$identifier]['entity_type'] = $entity_type_id;
++          $visited[$identifier]['entity_uuid'] = $uuid;
++          return TRUE;
++        }
++      }else{
++        //Verify if dependency exist in the site and include it.
++        $activeStorage = new ContentDatabaseStorage(\Drupal::database(), 'cs_db_snapshot');
++        $entity = $activeStorage->cs_read($identifier);
++        if($entity){
++          $normalized_entities[$identifier] = $entity;
++          $this->depthFirstSearch($visited,[$identifier], $normalized_entities);
++          return TRUE;
++        }else{
++          $return = $identifier;
++        }
++      }
++    }
++  }
++
++  /**
++   * Creates a queue.
++   *
++   * @param array $normalized_entities
++   *   Parsed entities to import.
++   *
++   * @return array
++   *   Queue to be processed within a batch process.
++   */
++  public function resolve(array $normalized_entities, $visited = []) {
++    foreach ($normalized_entities as $identifier => $entity) {
++      $this->depthFirstSearch($visited, [$identifier], $normalized_entities);
++    }
++
++    // Reverse the array to adjust it to an array_pop-driven iterator.
++    return array_reverse($visited);
++  }
++
++}
+diff --git a/src/DependencyResolver/ImportQueueResolver.php b/src/DependencyResolver/ImportQueueResolver.php
+index 2563059..d0d5bb4 100755
+--- a/src/DependencyResolver/ImportQueueResolver.php
++++ b/src/DependencyResolver/ImportQueueResolver.php
+@@ -2,58 +2,90 @@
+ 
+ namespace Drupal\content_sync\DependencyResolver;
+ 
++use Drupal\Core\Serialization\Yaml;
+ 
+-use Drupal\Component\Graph\Graph;
+-
++/**
++ * Class ImportQueueResolver.
++ *
++ * @package Drupal\content_sync\DependencyResolver
++ */
+ class ImportQueueResolver implements ContentSyncResolverInterface {
+ 
+-  public function resolve(array $normalized_entities) {
+-    $queue = [];
+-    $graph = [];
+-    $uuids = [];
+-    foreach ($normalized_entities as $identifier => $entity) {
++  /**
++   * Builds a graph placing the deepest vertexes at the first place.
++   *
++   * @param array $visited
++   *   Array of vertexes to return.
++   * @param array $identifiers
++   *   Array of entity identifiers to process.
++   * @param array $normalized_entities
++   *   Parsed entities to import.
++   */
++  protected function depthFirstSearch(array &$visited, array $identifiers, array $normalized_entities) {
++    $validate_dependecies = TRUE;
++    foreach ($identifiers as $identifier) {
+       $ids = explode('.', $identifier);
+       list($entity_type_id, $bundle, $uuid) = $ids;
+-      if (!empty($entity['_content_sync']['entity_dependencies'])) {
+-        foreach ($entity['_content_sync']['entity_dependencies'] as $ref_entity_type_id => $references) {
+-          foreach ($references as $reference) {
+-            if (!empty($normalized_entities[$reference])) {
+-              $graph[$identifier]['edges'][$reference] = 1;
++      // Check if entity was sent on the files to import.
++      if (!empty($normalized_entities[$identifier])) {
++        $entity = $normalized_entities[$identifier];
++        // Check dependencies
++        if (!empty($entity['_content_sync']['entity_dependencies'])) {
++          foreach ($entity['_content_sync']['entity_dependencies'] as $ref_entity_type_id => $references) {
++            if(!is_null($references)){
++              $dependency = $this->depthFirstSearch($visited, $references, $normalized_entities);
++            if ($dependency !== TRUE && !is_null($dependency)){
++               $validate_dependecies = FALSE;
++               $visited['Missing'][$identifier][] = $dependency;
++            }
+             }
+           }
+         }
+-      }
+-      else {
+-        $uuids[] = $identifier;
+-        $queue[] = [
+-          'entity_type_id' => $entity_type_id,
+-          'decoded_entity' => $entity,
+-        ];
+-      }
+-
+-    }
+-    $graph = new Graph($graph);
+-    $entities = $graph->searchAndSort();
+-    uasort($entities, 'Drupal\Component\Utility\SortArray::sortByWeightElement');
+-    foreach ($entities as $uuid => $vertex) {
+-      foreach ($vertex['edges'] as $key => $value) {
+-        if (!in_array($key, $uuids) && $uuid != $key) {
+-          $uuids[] = $key;
+-          $ids = explode('.', $key);
+-          $queue[] = [
+-            'entity_type_id' => $ids[0],
+-            'decoded_entity' => $normalized_entities[$key],
++        if (!isset($visited[$identifier]) && $validate_dependecies) {
++          $visited[$identifier] = [
++            'entity_type_id' => $entity_type_id,
++            'decoded_entity' => $entity,
+           ];
++          return TRUE;
+         }
++      }else{
++        //Verify if dependency exist in the site
++        $return = (bool) \Drupal::database()->queryRange('SELECT 1 FROM {cs_db_snapshot} WHERE name = :name', 0, 1, [
++        ':name' => $identifier])->fetchField();
++
++        if (!$return){
++          // Look for the reference in CS folder
++          $file_path = "../content/sync/entities/".$entity_type_id."/".$bundle."/".$identifier.".yml";
++          $entity = file_get_contents($file_path);
++          if($entity){
++            $normalized_entities[$identifier] = Yaml::decode($entity);
++            $this->depthFirstSearch($visited,[$identifier], $normalized_entities);
++            return TRUE;
++          }else{
++            $return = $identifier;
++          }
++        }
++        return $return;
+       }
+-      $uuids[] = $uuid;
+-      $ids = explode('.', $uuid);
+-      $queue[] = [
+-        'entity_type_id' => $ids[0],
+-        'decoded_entity' => $normalized_entities[$uuid],
+-      ];
+     }
+-    return $queue;
+   }
+ 
+-}
+\ No newline at end of file
++  /**
++   * Creates a queue.
++   *
++   * @param array $normalized_entities
++   *   Parsed entities to import.
++   *
++   * @return array
++   *   Queue to be processed within a batch process.
++   */
++  public function resolve(array $normalized_entities, $visited = []) {
++    $visited = [];
++    foreach ($normalized_entities as $identifier => $entity) {
++      $this->depthFirstSearch($visited, [$identifier], $normalized_entities);
++    }
++    // Reverse the array to adjust it to an array_pop-driven iterator.
++    return array_reverse($visited);
++  }
++
++}
+diff --git a/src/Form/ContentExportForm.php b/src/Form/ContentExportForm.php
+index a82924f..67b8faa 100755
+--- a/src/Form/ContentExportForm.php
++++ b/src/Form/ContentExportForm.php
+@@ -2,6 +2,7 @@
+ 
+ namespace Drupal\content_sync\Form;
+ 
++use Drupal\content_sync\ContentSyncManagerInterface;
+ use Drupal\content_sync\Exporter\ContentExporterInterface;
+ use Drupal\Core\Entity\ContentEntityInterface;
+ use Drupal\Core\Entity\EntityTypeManagerInterface;
+@@ -27,21 +28,28 @@ class ContentExportForm extends FormBase {
+   protected $contentExporter;
+ 
+   /**
++   * @var \Drupal\content_sync\ContentSyncManagerInterface
++   */
++  protected $contentSyncManager;
++
++
++  /**
+    * ContentExportForm constructor.
+    */
+-  public function __construct(EntityTypeManagerInterface $entity_type_manager, ContentExporterInterface $content_exporter) {
++  public function __construct(EntityTypeManagerInterface $entity_type_manager, ContentExporterInterface $content_exporter, ContentSyncManagerInterface $content_sync_manager) {
+     $this->entityTypeManager = $entity_type_manager;
+     $this->contentExporter = $content_exporter;
++    $this->contentSyncManager = $content_sync_manager;
+   }
+ 
+   public static function create(ContainerInterface $container) {
+     return new static(
+       $container->get('entity_type.manager'),
+-      $container->get('content_sync.exporter')
++      $container->get('content_sync.exporter'),
++      $container->get('content_sync.manager')
+     );
+   }
+ 
+-
+   /**
+    * {@inheritdoc}
+    */
+@@ -85,10 +93,13 @@ class ContentExportForm extends FormBase {
+       }
+     }
+     if (!empty($entities_list)) {
+-      $batch = $this->generateBatch($entities_list);
++      $serializer_context['export_type'] = 'tar';
++      $serializer_context['include_files'] = 'folder';
++      $batch = $this->generateExportBatch($entities_list, $serializer_context);
+       batch_set($batch);
+     }
+   }
++
+   public function snapshot() {
+     //Set batch operations by entity type/bundle
+     $entities_list = [];
+@@ -108,7 +119,8 @@ class ContentExportForm extends FormBase {
+       }
+     }
+     if (!empty($entities_list)) {
+-      $batch = $this->generateBatch($entities_list, 'snapshot');
++      $serializer_context['export_type'] = 'snapshot';
++      $batch = $this->generateExportBatch($entities_list, $serializer_context);
+       batch_set($batch);
+     }
+   }
+diff --git a/src/Form/ContentExportTrait.php b/src/Form/ContentExportTrait.php
+index 1320c9c..6633d70 100755
+--- a/src/Form/ContentExportTrait.php
++++ b/src/Form/ContentExportTrait.php
+@@ -2,10 +2,12 @@
+ 
+ namespace Drupal\content_sync\Form;
+ 
++use Drupal\content_sync\ContentSyncManagerInterface;
+ use Drupal\Core\Archiver\ArchiveTar;
+-use Drupal\Core\Config\DatabaseStorage;
++use Drupal\content_sync\Content\ContentDatabaseStorage;
+ use Drupal\Core\Entity\ContentEntityType;
+ use Drupal\Core\Serialization\Yaml;
++use Drupal\Core\File\FileSystemInterface;
+ 
+ /**
+  * Defines the content export form.
+@@ -20,21 +22,40 @@ trait ContentExportTrait {
+   /**
+    * @param $entities
+    *
+-   * @param $export_type
+-   * files => YAML files.
+-   * snapshot => cs_db_snapshot table.
++   * @param $serializer_context
++   * export_type:
++   * Tar -> YML to Tar file
++   * Snapshot -> YML to content_sync table.
++   * Directory -> YML to content_sync_directory_entities.
++   *
++   * content_sync_directory_entities:
++   * path for the content sync directory.
++   *
++   * content_sync_directory_files:
++   * path to store media/files.
++   *
++   * content_sync_file_base_64:
++   * Include file as a data in the YAML.
+    *
+    * @return array
+    */
+-  public function generateBatch($entities, $export_type = 'files') {
++  public function generateExportBatch($entities, $serializer_context = []) {
++    $serializer_context['content_sync_directory_entities'] =  content_sync_get_content_directory(CONFIG_SYNC_DIRECTORY)."/entities";
++    if (isset($serializer_context['include_files'])){
++      if ($serializer_context['include_files'] == 'folder'){
++        $serializer_context['content_sync_directory_files'] =  content_sync_get_content_directory(CONFIG_SYNC_DIRECTORY)."/files";
++      }
++      if ($serializer_context['include_files'] == 'base64'){
++        $serializer_context['content_sync_file_base_64'] = TRUE;
++      }
++      unset($serializer_context['include_files']);
++    }
++
+     //Set batch operations by entity type/bundle
+     $operations = [];
+-    $operations[] = [[$this, 'generateSiteUUIDFile'], [0 => $export_type]];
++    $operations[] = [[$this, 'generateSiteUUIDFile'], [0 => $serializer_context]];
+     foreach ($entities as $entity) {
+-      $entity_to_export = [];
+-      $entity['export_type'] = $export_type;
+-      $entity_to_export['values'][] = $entity;
+-      $operations[] = [[$this, 'processContentExportFiles'], $entity_to_export];
++      $operations[] = [[$this, 'processContentExportFiles'], [[$entity], $serializer_context]];
+     }
+     //Set Batch
+     $batch = [
+@@ -44,7 +65,8 @@ trait ContentExportTrait {
+       'progress_message' => $this->t('Completed @current step of @total.'),
+       'error_message' => $this->t('Content export has encountered an error.'),
+     ];
+-    if ($export_type == 'files') {
++    if (isset($serializer_context['export_type'])
++      && $serializer_context['export_type'] == 'tar') {
+       $batch['finished'] = [$this,'finishContentExportBatch'];
+     }
+     return $batch;
+@@ -55,21 +77,22 @@ trait ContentExportTrait {
+    *
+    * @param $files
+    *   The batch content to persist.
++   * @param $serializer_context
+    * @param array $context
+    *   The batch context.
+    */
+-  public function processContentExportFiles($files, &$context) {
++  public function processContentExportFiles($entities, $serializer_context = [], &$context) {
+     //Initialize Batch
+     if (empty($context['sandbox'])) {
+       $context['sandbox']['progress'] = 0;
+       $context['sandbox']['current_number'] = 0;
+-      $context['sandbox']['max'] = count($files);
++      $context['sandbox']['queue'] = $entities;
++      $context['sandbox']['max'] = count($entities);
+     }
++    $item = array_pop($context['sandbox']['queue']);
+ 
+     // Get submitted values
+-    $entity_type = $files[$context['sandbox']['progress']]['entity_type'];
+-    $entity_id = $files[$context['sandbox']['progress']]['entity_id'];
+-    $export_type = $files[$context['sandbox']['progress']]['export_type'];
++    $entity_type = $item['entity_type'];
+ 
+     //Validate that it is a Content Entity
+     $instances = $this->getEntityTypeManager()->getDefinitions();
+@@ -77,30 +100,103 @@ trait ContentExportTrait {
+       $context['results']['errors'][] = $this->t('Entity type does not exist or it is not a content instance.') . $entity_type;
+     }
+     else {
+-      $entity = $this->getEntityTypeManager()->getStorage($entity_type)
+-                     ->load($entity_id);
+-      // Generate the YAML file.
+-      $serializer_context = [];
+-      $exported_entity = $this->getContentExporter()
+-                              ->exportEntity($entity, $serializer_context);
+-      // Create the name
+-      $name = $entity_type . "." . $entity->bundle() . "." . $entity->uuid();
+-
+-      if ($export_type == 'snapshot') {
+-        //Save to cs_db_snapshot table.
+-        $activeStorage = new DatabaseStorage(\Drupal::database(), 'cs_db_snapshot');
+-        $activeStorage->write($name, Yaml::decode($exported_entity));
++      if (isset($item['entity_uuid'])){
++        $entity_id = $item['entity_uuid'];
++        $entity = $this->getEntityTypeManager()->getStorage($entity_type)
++                       ->loadByProperties(['uuid' => $entity_id]);
++        $entity = array_shift($entity);
+       }else{
+-        // Create the file.
+-        $this->getArchiver()->addString("$name.yml", $exported_entity);
+-        $context['message'] = $name;
+-        $context['results'][] = $name;
++        $entity_id = $item['entity_id'];
++        $entity = $this->getEntityTypeManager()->getStorage($entity_type)
++                       ->load($entity_id);
++      }
++
++      //Make sure the entity exist for import
++      if(empty($entity)){
++        $context['results']['errors'][] = $this->t('Entity does not exist:') . $entity_type . "(".$entity_id.")";
++      }else{
++
++        // Create the name
++        $bundle = $entity->bundle();
++        $uuid = $entity->uuid();
++        $name = $entity_type . "." .  $bundle . "." . $uuid;
++
++        if (!isset($context['exported'][$name])) {
++
++          // Generate the YAML file.
++          $exported_entity = $this->getContentExporter()
++                                  ->exportEntity($entity, $serializer_context);
++
++          if (isset($serializer_context['export_type'])){
++            if ($serializer_context['export_type'] == 'snapshot') {
++              //Save to cs_db_snapshot table.
++              $activeStorage = new ContentDatabaseStorage(\Drupal::database(), 'cs_db_snapshot');
++              $activeStorage->cs_write($name, Yaml::decode($exported_entity), $entity_type.'.'.$bundle);
++            }else{
++              // Compate the YAML from the snapshot.
++              // If for some reason is not on our snapshoot then add it.
++              // Or if the new YAML is different the update it.
++              $activeStorage = new ContentDatabaseStorage(\Drupal::database(), 'cs_db_snapshot');
++              $exported_entity_snapshoot = $activeStorage->cs_read($name);
++
++              if (!$exported_entity_snapshoot || Yaml::encode($exported_entity_snapshoot) !== $exported_entity ){
++                //Save to cs_db_snapshot table.
++                $activeStorage->cs_write($name, Yaml::decode($exported_entity), $entity_type.'.'.$bundle);
++              }
++
++              if ($serializer_context['export_type'] == 'tar') {
++                // YAML in Archive .
++                $this->getArchiver()->addString("entities/$entity_type/$bundle/$name.yml", $exported_entity);
++
++                // Include Files to the archiver.
++                if (method_exists($entity, 'getFileUri')
++                    && !empty($serializer_context['content_sync_directory_files']) ) {
++                  $uri = $entity->getFileUri();
++                  $scheme = \Drupal::service('file_system')->uriScheme($uri);
++                  $destination = "{$serializer_context['content_sync_directory_files']}/{$scheme}/";
++                  $destination = str_replace($scheme . '://', $destination, $uri);
++                  $strip_path = str_replace('/files' , '', $serializer_context['content_sync_directory_files'] );
++                  $this->getArchiver()->addModify($destination, '', $strip_path);
++                }
++              }
++              if( $serializer_context['export_type'] == 'folder') {
++                // YAML in a directory.
++                $path = $serializer_context['content_sync_directory_entities']."/$entity_type/$bundle";
++                $destination = $path . "/$name.yml";
++                file_prepare_directory($path, FILE_CREATE_DIRECTORY);
++                $file = file_unmanaged_save_data($exported_entity, $destination, FILE_EXISTS_REPLACE);
++              }
++
++              // Invalidate the CS Cache of the entity.
++              $cache = \Drupal::cache('content')->invalidate($entity_type.".".$bundle.":".$name);
++
++              if($serializer_context['include_dependencies']){
++                //Include Dependencies
++                $context['exported'][$name] = $name;
++                if (!isset($context['sandbox']['dependencies'][$name])) {
++                  $exported_entity = Yaml::decode($exported_entity);
++                  $queue = $this->contentSyncManager->generateExportQueue( [$name => $exported_entity], $context['exported']);
++                  $context['sandbox']['dependencies'] = array_merge((array) $context['sandbox']['dependencies'],$queue);
++                  unset($queue[$name]);
++                  if(!empty($queue)){
++                    // Update the batch operations number
++                    $context['sandbox']['max'] = $context['sandbox']['max'] + count($queue);
++                    $context['sandbox']['queue'] = $queue;
++                  }
++                }
++              }
++            }
++          }
++        }
+       }
+     }
++    $context['message'] = $name;
++    $context['results'][] = $name;
+     $context['sandbox']['progress']++;
+-    if ($context['sandbox']['progress'] != $context['sandbox']['max']) {
+-      $context['finished'] = $context['sandbox']['progress'] / $context['sandbox']['max'];
+-    }
++
++    $context['finished'] = $context['sandbox']['max'] > 0
++                        && $context['sandbox']['progress'] < $context['sandbox']['max'] ?
++                           $context['sandbox']['progress'] / $context['sandbox']['max'] : 1;
+   }
+ 
+   /**
+@@ -112,8 +208,7 @@ trait ContentExportTrait {
+    * @param array $context
+    *   The batch context.
+    */
+-  public function generateSiteUUIDFile($data, &$context) {
+-
++  public function generateSiteUUIDFile($serializer_context, &$context) {
+     //Include Site UUID to YML file
+     $site_config = \Drupal::config('system.site');
+     $site_uuid_source = $site_config->get('uuid');
+@@ -121,16 +216,21 @@ trait ContentExportTrait {
+ 
+     // Set the name
+     $name = "site.uuid";
+-
+-    if ($data == 'snapshot') {
+-      //Save to cs_db_snapshot table.
+-      $activeStorage = new DatabaseStorage(\Drupal::database(), 'cs_db_snapshot');
+-      $activeStorage->write($name, $entity);
+-    }else{
+-      // Create the file.
+-      $this->getArchiver()->addString("$name.yml", Yaml::encode($entity));
++    if (isset($serializer_context['export_type'])){
++      if ($serializer_context['export_type'] == 'snapshot') {
++        //Save to cs_db_snapshot table.
++        $activeStorage = new ContentDatabaseStorage(\Drupal::database(), 'cs_db_snapshot');
++        $activeStorage->write($name, $entity);
++      }elseif( $serializer_context['export_type'] == 'tar') {
++        // Add YAML to the archiver
++        $this->getArchiver()->addString("entities/$name.yml", Yaml::encode($entity));
++      }elseif( $serializer_context['export_type'] == 'folder') {
++        $path = $serializer_context['content_sync_directory_entities'];
++        $destination = $path . "/$name.yml";
++        file_prepare_directory($path, FILE_CREATE_DIRECTORY);
++        $file = file_unmanaged_save_data(Yaml::encode($entity), $destination, FILE_EXISTS_REPLACE);
++      }
+     }
+-
+     $context['message'] = $name;
+     $context['results'][] = $name;
+     $context['finished'] = 1;
+@@ -216,5 +316,4 @@ trait ContentExportTrait {
+    */
+   abstract protected function getExportLogger();
+ 
+-
+ }
+diff --git a/src/Form/ContentImportTrait.php b/src/Form/ContentImportTrait.php
+new file mode 100644
+index 0000000..45733a2
+--- /dev/null
++++ b/src/Form/ContentImportTrait.php
+@@ -0,0 +1,231 @@
++<?php
++
++namespace Drupal\content_sync\Form;
++
++use Drupal\content_sync\ContentSyncManagerInterface;
++use Drupal\Core\Entity\EntityStorageException;
++use Drupal\Core\Config\ConfigManagerInterface;
++use Drupal\Core\Config\StorageInterface;
++use Drupal\Core\Form\FormStateInterface;
++use Drupal\Core\Config\StorageComparer;
++use Drupal\Core\Url;
++use Symfony\Component\DependencyInjection\ContainerInterface;
++use Drupal\Core\Entity\ContentEntityType;
++
++/**
++ * Defines the content import form.
++ */
++trait ContentImportTrait {
++
++  /**
++   * @param $content_to_sync
++   *
++   * @param $content_to_delete
++   *
++   * @param $serializer_context
++   *
++   * content_sync_directory:
++   * path for the content sync directory.
++   *
++   * @return array
++   */
++  public function generateImportBatch($content_to_sync, $content_to_delete, $serializer_context = []) {
++    $serializer_context['content_sync_directory_entities'] =  content_sync_get_content_directory(CONFIG_SYNC_DIRECTORY)."/entities";
++    if (isset($serializer_context['include_files'])){
++      if ($serializer_context['include_files'] == 'folder'){
++        $serializer_context['content_sync_directory_files'] =  content_sync_get_content_directory(CONFIG_SYNC_DIRECTORY)."/files";
++      }
++      if ($serializer_context['include_files'] == 'base64'){
++        $serializer_context['content_sync_file_base_64'] = TRUE;
++      }
++      unset($serializer_context['include_files']);
++    }    
++
++    $operations[] = [[$this, 'deleteContent'], [$content_to_delete, $serializer_context]];
++    $operations[] = [[$this, 'syncContent'], [$content_to_sync, $serializer_context]];
++
++    $batch = [
++      'title' => $this->t('Synchronizing Content...'),
++      'message' => $this->t('Synchronizing Content...'),
++      'operations' => $operations,
++      //'finished' => [$this, 'finishImportBatch'],
++    ];
++    return $batch;
++  }
++
++  /**
++   * Processes the content import to be updated or created batch and persists the importer.
++   *
++   * @param $content_to_sync
++   * @param string $serializer_context
++   * @param array $context
++   *   The batch context.
++   */
++  public function syncContent(array $content_to_sync, $serializer_context = [], &$context) {
++    if (empty($context['sandbox'])) {
++      $directory = $serializer_context['content_sync_directory_entities'];
++      $queue = $this->contentSyncManager->generateImportQueue($content_to_sync, $directory);
++      $context['sandbox']['progress'] = 0;
++      $context['sandbox']['queue'] = $queue;
++      $context['sandbox']['directory'] = $directory;
++      $context['sandbox']['max'] = count($queue);
++    }
++    if (!empty($context['sandbox']['queue'])) {
++      $error = FALSE;
++      $item = array_pop($context['sandbox']['queue']);
++      $decoded_entity = $item['decoded_entity'];
++      $entity_type_id = $item['entity_type_id'];
++      $entity = $this->contentSyncManager->getContentImporter()
++                                         ->importEntity($decoded_entity, $serializer_context);
++      if($entity) {
++        $context['results'][] = TRUE;
++        $context['message'] = $this->t('Imported content @label (@entity_type: @id).', [
++          '@label' => $entity->label(),
++          '@id' => $entity->id(),
++          '@entity_type' => $entity->getEntityTypeId(),
++        ]);
++        // Invalidate the CS Cache of the entity.
++        $bundle = $entity->bundle();
++        $entity_id = $entity->getEntityTypeId();
++        $name = $entity_id . "." .  $bundle . "." . $entity->uuid();
++        $cache = \Drupal::cache('content')->invalidate($entity_id.".".$bundle.":".$name);
++        unset($entity);
++      }
++      else {
++        $error = TRUE;
++      }
++      if ($error) {
++        $context['message'] = $this->t('Error importing content of type @entity_type.', [
++          '@entity_type' => $entity_type_id,
++        ]);
++        if (!isset($context['results']['errors'])) {
++          $context['results']['errors'] = [];
++        }
++        $context['results']['errors'][] = $context['message'];
++      }
++      if ($error) {
++        drupal_set_message($context['message'], 'error');
++      }
++      // We need to count the progress anyway even if an error has occured.
++      $context['sandbox']['progress']++;
++    }
++    $context['finished'] = $context['sandbox']['max'] > 0
++                        && $context['sandbox']['progress'] < $context['sandbox']['max'] ?
++                           $context['sandbox']['progress'] / $context['sandbox']['max'] : 1;
++  }
++
++  /**
++   * Processes the content import to be deleted or created batch and persists the importer.
++   *
++   * @param $content_to_sync
++   * @param string $serializer_context
++   * @param array $context
++   *   The batch context.
++   */
++  public function deleteContent(array $content_to_delete, $serializer_context = [], &$context) {
++    if (empty($context['sandbox'])) {
++      $directory = $serializer_context['content_sync_directory_entities'];
++      $context['sandbox']['progress'] = 0;
++      $context['sandbox']['queue'] = $content_to_delete;
++      $context['sandbox']['directory'] = $directory;
++      $context['sandbox']['max'] = count($content_to_delete);
++    }
++    if (!empty($context['sandbox']['queue'])) {
++      $error = TRUE;
++      $item = array_pop($context['sandbox']['queue']);
++      $ids = explode('.', $item);
++      list($entity_type_id, $bundle, $uuid) = $ids;
++
++      $entity = $this->contentSyncManager->getEntityTypeManager()->getStorage($entity_type_id)
++                                         ->loadByProperties(['uuid' => $uuid]);
++      $entity = array_shift($entity);
++      if (!empty($entity)) {
++
++        // Prevent Anonymous User and Super Admin from being deleted.
++        if ($entity_type_id == 'user' && (
++           (int) $entity->id() === 0 ||
++           (int) $entity->id() === 1)) {
++
++          $message = $this->t('@uuid - Anonymous user or super admin can not be removed.', [
++          '@entity_type' => $entity_type_id,
++          '@uuid' => $uuid,
++          ]);
++
++        }else{
++
++          try {
++            $message = $this->t('Deleted content @label (@entity_type: @id).', [
++              '@label' => $entity->label(),
++              '@id' => $entity->id(),
++              '@entity_type' => $entity->getEntityTypeId(),
++            ]);
++            $entity->delete();
++            $error = FALSE;
++            // Invalidate the CS Cache of the entity.
++            $bundle = $entity->bundle();
++            $name = $entity_type_id . "." .  $bundle . "." . $entity->uuid();
++            $cache = \Drupal::cache('content')->invalidate($entity_type_id.".".$bundle.":".$name);
++          } catch (EntityStorageException $e) {
++            $message = $e->getMessage();
++            drupal_set_message($message, 'error');
++          }
++        }
++      }
++      else {
++        $message = $this->t('@uuid of type @entity_type was not found.', [
++          '@entity_type' => $entity_type_id,
++          '@uuid' => $uuid,
++        ]);
++      }
++    }
++    $context['results'][] = TRUE;
++    $context['sandbox']['progress']++;
++    $context['message'] = $message;
++
++    if ($error) {
++      if (!isset($context['results']['errors'])) {
++        $context['results']['errors'] = [];
++      }
++      $context['results']['errors'][] = $context['message'];
++    }
++
++    $context['finished'] = $context['sandbox']['max'] > 0
++                        && $context['sandbox']['progress'] < $context['sandbox']['max'] ?
++                           $context['sandbox']['progress'] / $context['sandbox']['max'] : 1;
++  }
++
++  /**
++   * Finish batch.
++   *
++   * This function is a static function to avoid serializing the ContentSync
++   * object unnecessarily.
++   */
++  public static function finishImportBatch($success, $results, $operations) {
++    if ($success) {
++      if (!empty($results['errors'])) {
++        foreach ($results['errors'] as $error) {
++          drupal_set_message($error, 'error');
++          \Drupal::logger('config_sync')->error($error);
++        }
++        drupal_set_message(\Drupal::translation()
++                                  ->translate('The content was imported with errors.'), 'warning');
++      }
++      else {
++        drupal_set_message(\Drupal::translation()
++                                  ->translate('The content was imported successfully.'));
++      }
++    }
++    else {
++      // An error occurred.
++      // $operations contains the operations that remained unprocessed.
++      $error_operation = reset($operations);
++      $message = \Drupal::translation()
++                        ->translate('An error occurred while processing %error_operation with arguments: @arguments', [
++                          '%error_operation' => $error_operation[0],
++                          '@arguments' => print_r($error_operation[1], TRUE),
++                        ]);
++      drupal_set_message($message, 'error');
++    }
++  }
++
++}
+diff --git a/src/Form/ContentSingleExportForm.php b/src/Form/ContentSingleExportForm.php
+index 2a2e24c..db047fc 100755
+--- a/src/Form/ContentSingleExportForm.php
++++ b/src/Form/ContentSingleExportForm.php
+@@ -118,8 +118,10 @@ class ContentSingleExportForm extends FormBase {
+             'event' => 'autocompleteclose',
+         ],
+       ];
+-      // Remove target bundles for user & file because it is not supported.
+-      if($default_type == 'user' || $default_type == 'file'){
++      // Autocomplete doesn't support target bundles parameter on bundle-less entities.
++      $target_type = \Drupal::entityManager()->getDefinition($default_type);
++      $target_type_bundles = $target_type->getBundleEntityType();
++      if(is_null($target_type_bundles)){
+         unset($form['content_entity']['#selection_settings']);
+       }
+     }
+diff --git a/src/Form/ContentSync.php b/src/Form/ContentSync.php
+index f150abf..7427168 100755
+--- a/src/Form/ContentSync.php
++++ b/src/Form/ContentSync.php
+@@ -3,20 +3,13 @@
+ namespace Drupal\content_sync\Form;
+ 
+ use Drupal\content_sync\ContentSyncManagerInterface;
+-use Drupal\Core\Config\TypedConfigManagerInterface;
+ use Drupal\Core\Entity\EntityStorageException;
+-use Drupal\Core\Extension\ModuleHandlerInterface;
+-use Drupal\Core\Extension\ModuleInstallerInterface;
+-use Drupal\Core\Extension\ThemeHandlerInterface;
+ use Drupal\Core\Config\ConfigManagerInterface;
+ use Drupal\Core\Form\FormBase;
+ use Drupal\Core\Config\StorageInterface;
+ use Drupal\Core\Form\FormStateInterface;
+-use Drupal\Core\Lock\LockBackendInterface;
+ use Drupal\Core\Config\StorageComparer;
+-use Drupal\Core\Render\RendererInterface;
+ use Drupal\Core\Url;
+-use Symfony\Component\EventDispatcher\EventDispatcherInterface;
+ use Symfony\Component\DependencyInjection\ContainerInterface;
+ 
+ /**
+@@ -24,12 +17,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
+  */
+ class ContentSync extends FormBase {
+ 
+-  /**
+-   * The database lock object.
+-   *
+-   * @var \Drupal\Core\Lock\LockBackendInterface
+-   */
+-  protected $lock;
++  use ContentImportTrait;
+ 
+   /**
+    * The sync content object.
+@@ -46,20 +34,6 @@ class ContentSync extends FormBase {
+   protected $activeStorage;
+ 
+   /**
+-   * The snapshot content object.
+-   *
+-   * @var \Drupal\Core\Config\StorageInterface
+-   */
+-  protected $snapshotStorage;
+-
+-  /**
+-   * Event dispatcher.
+-   *
+-   * @var \Symfony\Component\EventDispatcher\EventDispatcherInterface
+-   */
+-  protected $eventDispatcher;
+-
+-  /**
+    * The configuration manager.
+    *
+    * @var \Drupal\Core\Config\ConfigManagerInterface;
+@@ -67,41 +41,6 @@ class ContentSync extends FormBase {
+   protected $configManager;
+ 
+   /**
+-   * The typed config manager.
+-   *
+-   * @var \Drupal\Core\Config\TypedConfigManagerInterface
+-   */
+-  protected $typedConfigManager;
+-
+-  /**
+-   * The module handler.
+-   *
+-   * @var \Drupal\Core\Extension\ModuleHandlerInterface
+-   */
+-  protected $moduleHandler;
+-
+-  /**
+-   * The theme handler.
+-   *
+-   * @var \Drupal\Core\Extension\ThemeHandlerInterface
+-   */
+-  protected $themeHandler;
+-
+-  /**
+-   * The module installer.
+-   *
+-   * @var \Drupal\Core\Extension\ModuleInstallerInterface
+-   */
+-  protected $moduleInstaller;
+-
+-  /**
+-   * The renderer.
+-   *
+-   * @var \Drupal\Core\Render\RendererInterface
+-   */
+-  protected $renderer;
+-
+-  /**
+    * @var \Drupal\content_sync\ContentSyncManagerInterface
+    */
+   protected $contentSyncManager;
+@@ -113,38 +52,15 @@ class ContentSync extends FormBase {
+    *   The source storage.
+    * @param \Drupal\Core\Config\StorageInterface $active_storage
+    *   The target storage.
+-   * @param \Drupal\Core\Config\StorageInterface $snapshot_storage
+-   *   The snapshot storage.
+-   * @param \Drupal\Core\Lock\LockBackendInterface $lock
+-   *   The lock object.
+-   * @param \Symfony\Component\EventDispatcher\EventDispatcherInterface $event_dispatcher
+-   *   Event dispatcher.
+    * @param \Drupal\Core\Config\ConfigManagerInterface $config_manager
+    *   Configuration manager.
+-   * @param \Drupal\Core\Config\TypedConfigManagerInterface $typed_config
+-   *   The typed configuration manager.
+-   * @param \Drupal\Core\Extension\ModuleHandlerInterface $module_handler
+-   *   The module handler.
+-   * @param \Drupal\Core\Extension\ModuleInstallerInterface $module_installer
+-   *   The module installer.
+-   * @param \Drupal\Core\Extension\ThemeHandlerInterface $theme_handler
+-   *   The theme handler.
+-   * @param \Drupal\Core\Render\RendererInterface $renderer
+-   *   The renderer.
+    * @param \Drupal\content_sync\ContentSyncManagerInterface $content_sync_manager
+    *   The content sync manager.
+    */
+-  public function __construct(StorageInterface $sync_storage, StorageInterface $active_storage, StorageInterface $snapshot_storage, LockBackendInterface $lock, EventDispatcherInterface $event_dispatcher, ConfigManagerInterface $config_manager, TypedConfigManagerInterface $typed_config, ModuleHandlerInterface $module_handler, ModuleInstallerInterface $module_installer, ThemeHandlerInterface $theme_handler, RendererInterface $renderer, ContentSyncManagerInterface $content_sync_manager) {
++  public function __construct(StorageInterface $sync_storage, StorageInterface $active_storage, ConfigManagerInterface $config_manager, ContentSyncManagerInterface $content_sync_manager) {
+     $this->syncStorage = $sync_storage;
+     $this->activeStorage = $active_storage;
+-    $this->snapshotStorage = $snapshot_storage;
+-    $this->lock = $lock;
+-    $this->eventDispatcher = $event_dispatcher;
+     $this->configManager = $config_manager;
+-    $this->typedConfigManager = $typed_config;
+-    $this->moduleHandler = $module_handler;
+-    $this->moduleInstaller = $module_installer;
+-    $this->themeHandler = $theme_handler;
+     $this->contentSyncManager = $content_sync_manager;
+   }
+ 
+@@ -155,15 +71,7 @@ class ContentSync extends FormBase {
+     return new static(
+       $container->get('content.storage.sync'),
+       $container->get('content.storage'),
+-      $container->get('config.storage.snapshot'),
+-      $container->get('lock.persistent'),
+-      $container->get('event_dispatcher'),
+       $container->get('config.manager'),
+-      $container->get('config.typed'),
+-      $container->get('module_handler'),
+-      $container->get('module_installer'),
+-      $container->get('theme_handler'),
+-      $container->get('renderer'),
+       $container->get('content_sync.manager')
+     );
+   }
+@@ -179,43 +87,32 @@ class ContentSync extends FormBase {
+    * {@inheritdoc}
+    */
+   public function buildForm(array $form, FormStateInterface $form_state) {
++    // Validate site uuid unless bypass the validation is selected
++    $config = \Drupal::config('content_sync.settings');
++    if ($config->get('content_sync.site_uuid_override') == FALSE) {
++      // Get site uuid from site settings configuration.
++      $site_config = $this->config('system.site');
++      $target = $site_config->get('uuid');
++      // Get site uuid from content sync folder
++      $source = $this->syncStorage->read('site.uuid');
++
++      if ($source['site_uuid'] !== $target) {
++        drupal_set_message($this->t('The staged content cannot be imported, because it originates from a different site than this site. You can only synchronize content between cloned instances of this site.'), 'error');
++        $form['actions']['#access'] = FALSE;
++        return $form;
++      }
++    }
++
+     $form['actions'] = ['#type' => 'actions'];
+     $form['actions']['submit'] = [
+       '#type' => 'submit',
+       '#value' => $this->t('Import all'),
+     ];
+ 
++    //check that there is something on the content sync folder.
+     $source_list = $this->syncStorage->listAll();
+     $storage_comparer = new StorageComparer($this->syncStorage, $this->activeStorage, $this->configManager);
+-    if (empty($source_list) || !$storage_comparer->createChangelist()
+-                                                 ->hasChanges()
+-    ) {
+-      $form['no_changes'] = [
+-        '#type' => 'table',
+-        '#header' => [$this->t('Name'), $this->t('Operations')],
+-        '#rows' => [],
+-        '#empty' => $this->t('There are no content changes to import.'),
+-      ];
+-      $form['actions']['#access'] = FALSE;
+-      return $form;
+-    }
+-    else {
+-      // Validate site uuid unless bypass the validation is selected
+-      $config = \Drupal::config('content_sync.settings');
+-      if ($config->get('content_sync.site_uuid_override') == FALSE) {
+-        // Get site uuid from site settings configuration.
+-        $site_config = $this->config('system.site');
+-        $target = $site_config->get('uuid');
+-        // Get site uuid from content sync folder
+-        $source = $this->syncStorage->read('site.uuid');
+-
+-        if ($source['site_uuid'] !== $target) {
+-          drupal_set_message($this->t('The staged content cannot be imported, because it originates from a different site than this site. You can only synchronize content between cloned instances of this site.'), 'error');
+-          $form['actions']['#access'] = FALSE;
+-          return $form;
+-        }
+-      }
+-    }
++    $storage_comparer->createChangelist();
+ 
+     // Store the comparer for use in the submit.
+     $form_state->set('storage_comparer', $storage_comparer);
+@@ -224,13 +121,7 @@ class ContentSync extends FormBase {
+     $form['#attached']['library'][] = 'core/drupal.dialog.ajax';
+ 
+     foreach ($storage_comparer->getAllCollectionNames() as $collection) {
+-      if ($collection != StorageInterface::DEFAULT_COLLECTION) {
+-        $form[$collection]['collection_heading'] = [
+-          '#type' => 'html_tag',
+-          '#tag' => 'h2',
+-          '#value' => $this->t('@collection configuration collection', ['@collection' => $collection]),
+-        ];
+-      }
++
+ 
+       foreach ($storage_comparer->getChangelist(NULL, $collection) as $config_change_type => $config_names) {
+         if (empty($config_names)) {
+@@ -244,19 +135,19 @@ class ContentSync extends FormBase {
+         ];
+         switch ($config_change_type) {
+           case 'create':
+-            $form[$collection][$config_change_type]['heading']['#value'] = $this->formatPlural(count($config_names), '@count new', '@count new');
++            $form[$collection][$config_change_type]['heading']['#value'] = $collection .' '. $this->formatPlural(count($config_names), '@count new', '@count new');
+             break;
+ 
+           case 'update':
+-            $form[$collection][$config_change_type]['heading']['#value'] = $this->formatPlural(count($config_names), '@count changed', '@count changed');
++            $form[$collection][$config_change_type]['heading']['#value'] = $collection .' '. $this->formatPlural(count($config_names), '@count changed', '@count changed');
+             break;
+ 
+           case 'delete':
+-            $form[$collection][$config_change_type]['heading']['#value'] = $this->formatPlural(count($config_names), '@count removed', '@count removed');
++            $form[$collection][$config_change_type]['heading']['#value'] = $collection .' '. $this->formatPlural(count($config_names), '@count removed', '@count removed');
+             break;
+ 
+           case 'rename':
+-            $form[$collection][$config_change_type]['heading']['#value'] = $this->formatPlural(count($config_names), '@count renamed', '@count renamed');
++            $form[$collection][$config_change_type]['heading']['#value'] = $collection .' '. $this->formatPlural(count($config_names), '@count renamed', '@count renamed');
+             break;
+         }
+         $form[$collection][$config_change_type]['list'] = [
+@@ -315,10 +206,8 @@ class ContentSync extends FormBase {
+    * {@inheritdoc}
+    */
+   public function submitForm(array &$form, FormStateInterface $form_state) {
+-
+     $comparer = $form_state->get('storage_comparer');
+     $collections = $comparer->getAllCollectionNames();
+-
+     //Set Batch to process the files from the content directory.
+     //Get the files to be processed
+     $content_to_sync = [];
+@@ -335,177 +224,9 @@ class ContentSync extends FormBase {
+         $content_to_delete = $actions['delete'];
+       }
+     }
+-    $batch = [
+-      'title' => $this->t('Synchronizing Content...'),
+-      'message' => $this->t('Synchronizing Content...'),
+-      'operations' => [
+-        [
+-          [$this, 'syncContent'],
+-          [$content_to_sync],
+-          [$this, 'deleteContent'],
+-          [$content_to_delete],
+-        ],
+-      ],
+-      'finished' => [$this, 'finishBatch'],
+-    ];
+-
++    $serializer_context = [];
++    $batch = $this->generateImportBatch($content_to_sync, $content_to_delete, $serializer_context);
+     batch_set($batch);
+   }
+ 
+-  /**
+-   * Processes the content import batch and persists the importer.
+-   *
+-   * @param \Drupal\Core\Config\ConfigImporter $config_importer
+-   *   The batch config importer object to persist.
+-   * @param string $sync_step
+-   *   The synchronization step to do.
+-   * @param array $context
+-   *   The batch context.
+-   */
+-  public function syncContent(array $content_to_sync, &$context) {
+-    if (empty($context['sandbox'])) {
+-      $directory = content_sync_get_content_directory('sync');
+-      $queue = $this->contentSyncManager->generateImportQueue($content_to_sync, $directory);
+-      $context['sandbox']['progress'] = 0;
+-      $context['sandbox']['queue'] = $queue;
+-      $context['sandbox']['directory'] = $directory;
+-      $context['sandbox']['max'] = count($queue);
+-    }
+-    if (!empty($context['sandbox']['queue'])) {
+-      $error = FALSE;
+-      $item = array_pop($context['sandbox']['queue']);
+-      $decoded_entity = $item['decoded_entity'];
+-      $entity_type_id = $item['entity_type_id'];
+-      $cs_context = [
+-        'content_sync_directory' => $context['sandbox']['directory'],
+-      ];
+-      $entity = $this->contentSyncManager->getContentImporter()
+-                                         ->importEntity($decoded_entity, $cs_context);
+-      if($entity) {
+-        $context['results'][] = TRUE;
+-        $context['message'] = $this->t('Imported content @label (@entity_type: @id).', [
+-          '@label' => $entity->label(),
+-          '@id' => $entity->id(),
+-          '@entity_type' => $entity->getEntityTypeId(),
+-        ]);
+-        unset($entity);
+-      }
+-      else {
+-        $error = TRUE;
+-      }
+-      if ($error) {
+-        $context['message'] = $this->t('Error exporting content of type @entity_type.', [
+-          '@entity_type' => $entity_type_id,
+-        ]);
+-        if (!isset($context['results']['errors'])) {
+-          $context['results']['errors'] = [];
+-        }
+-        $context['results']['errors'][] = $context['message'];
+-      }
+-      if ($error) {
+-        drupal_set_message($context['message'], 'error');
+-      }
+-      // We need to count the progress anyway even if an error has occured.
+-      $context['sandbox']['progress']++;
+-    }
+-    $context['finished'] = $context['sandbox']['progress'] / $context['sandbox']['max'];
+-    if ($context['sandbox']['progress'] >= $context['sandbox']['max']) {
+-      $context['finished'] = 1;
+-    }
+-  }
+-
+-
+-  public function deleteContent(array $content_to_sync, &$context) {
+-    if (empty($context['sandbox'])) {
+-      $directory = content_sync_get_content_directory('sync');
+-      $context['sandbox']['progress'] = 0;
+-      $context['sandbox']['queue'] = $content_to_sync;
+-      $context['sandbox']['directory'] = $directory;
+-      $context['sandbox']['max'] = count($content_to_sync);
+-    }
+-    if (!empty($context['sandbox']['queue'])) {
+-      $error = TRUE;
+-      $item = array_pop($context['sandbox']['queue']);
+-      $decoded_entity = $item['decoded_entity'];
+-      $entity_type_id = $item['entity_type_id'];
+-      $cs_context = [
+-        'content_sync_directory' => $context['sandbox']['directory'],
+-      ];
+-      $entity_type = $this->contentSyncManager->getEntityTypeManager()
+-                                              ->getDefinition($entity_type_id);
+-      /** @var \Drupal\Core\Entity\ContentEntityInterface $entity */
+-      $entity = $this->contentSyncManager->getSerializer()
+-                                         ->denormalize($decoded_entity, $entity_type->getClass(), 'yaml', $cs_context);
+-
+-      if (!empty($entity)) {
+-        try {
+-          $message = $this->t('Deleted content @label (@entity_type: @id).', [
+-            '@label' => $entity->label(),
+-            '@id' => $entity->id(),
+-            '@entity_type' => $entity->getEntityTypeId(),
+-          ]);
+-          $entity->delete();
+-          $error = FALSE;
+-        } catch (EntityStorageException $e) {
+-          $message = $e->getMessage();
+-          drupal_set_message($message, 'error');
+-        }
+-      }
+-      else {
+-        $message = $this->t('Error exporting content of type @entity_type.', [
+-          '@entity_type' => $entity_type_id,
+-        ]);
+-      }
+-    }
+-    $context['results'][] = TRUE;
+-    $context['sandbox']['progress']++;
+-    $context['message'] = $message;
+-
+-    if ($error) {
+-      if (!isset($context['results']['errors'])) {
+-        $context['results']['errors'] = [];
+-      }
+-      $context['results']['errors'][] = $context['message'];
+-    }
+-
+-    $context['finished'] = $context['sandbox']['progress'] / $context['sandbox']['max'];
+-    if ($context['sandbox']['progress'] >= $context['sandbox']['max']) {
+-      $context['finished'] = 1;
+-    }
+-  }
+-
+-  /**
+-   * Finish batch.
+-   *
+-   * This function is a static function to avoid serializing the ConfigSync
+-   * object unnecessarily.
+-   */
+-  public static function finishBatch($success, $results, $operations) {
+-    if ($success) {
+-      if (!empty($results['errors'])) {
+-        foreach ($results['errors'] as $error) {
+-          drupal_set_message($error, 'error');
+-          \Drupal::logger('config_sync')->error($error);
+-        }
+-        drupal_set_message(\Drupal::translation()
+-                                  ->translate('The content was imported with errors.'), 'warning');
+-      }
+-      else {
+-        drupal_set_message(\Drupal::translation()
+-                                  ->translate('The content was imported successfully.'));
+-      }
+-    }
+-    else {
+-      // An error occurred.
+-      // $operations contains the operations that remained unprocessed.
+-      $error_operation = reset($operations);
+-      $message = \Drupal::translation()
+-                        ->translate('An error occurred while processing %error_operation with arguments: @arguments', [
+-                          '%error_operation' => $error_operation[0],
+-                          '@arguments' => print_r($error_operation[1], TRUE),
+-                        ]);
+-      drupal_set_message($message, 'error');
+-    }
+-  }
+-
+ }
+diff --git a/src/Normalizer/FileEntityNormalizer.php b/src/Normalizer/FileEntityNormalizer.php
+index 001354e..4a62afe 100755
+--- a/src/Normalizer/FileEntityNormalizer.php
++++ b/src/Normalizer/FileEntityNormalizer.php
+@@ -42,7 +42,7 @@ class FileEntityNormalizer extends ContentEntityNormalizer {
+   /**
+    * {@inheritdoc}
+    */
+-  public function denormalize($data, $class, $format = NULL, array $context = array()) {
++  public function denormalize($data, $class, $format = NULL, array $serializer_context = array()) {
+ 
+     $file_data = '';
+ 
+@@ -54,10 +54,10 @@ class FileEntityNormalizer extends ContentEntityNormalizer {
+     }
+ 
+     // If a directory is set, we must to copy the file to the file system.
+-    if (!empty($context['content_sync_directory'])) {
++    if (!empty($serializer_context['content_sync_directory_files'])) {
+       $scheme = $this->fileSystem->uriScheme($data['uri'][0]['value']);
+       if (!empty($scheme)) {
+-        $source_path = realpath($context['content_sync_directory']) . '/files/' . $scheme . '/';
++        $source_path = realpath($serializer_context['content_sync_directory_files']) . '/' .$scheme . '/';
+         $source      = str_replace($scheme . '://', $source_path, $data['uri'][0]['value']);
+         if (file_exists($source)) {
+           $file = $this->fileSystem->realpath($data['uri'][0]['value']);
+@@ -72,14 +72,14 @@ class FileEntityNormalizer extends ContentEntityNormalizer {
+               ]
+             ];
+ 
+-            // We just need a method to create the image.
++            // We just need one method to create the image.
+             $file_data = '';
+           }
+         }
+       }
+     }
+ 
+-    $entity = parent::denormalize($data, $class, $format, $context);
++    $entity = parent::denormalize($data, $class, $format, $serializer_context);
+ 
+     // If the image was sent as base64 we must to create the physical file.
+     if ($file_data) {
+@@ -96,7 +96,7 @@ class FileEntityNormalizer extends ContentEntityNormalizer {
+     }
+ 
+     // If the image was sent as URL we must to create the physical file.
+-    if ($file_data) {
++    /*if ($file_data) {
+       // Decode and save to file.
+       $file_contents = base64_decode($file_data);
+       $dirname = $this->fileSystem->dirname($entity->getFileUri());
+@@ -107,7 +107,7 @@ class FileEntityNormalizer extends ContentEntityNormalizer {
+       else {
+         throw new \RuntimeException(SafeMarkup::format('Failed to write @filename.', array('@filename' => $entity->getFilename())));
+       }
+-    }
++    }*/
+ 
+     return $entity;
+   }
+@@ -115,22 +115,21 @@ class FileEntityNormalizer extends ContentEntityNormalizer {
+   /**
+    * {@inheritdoc}
+    */
+-  public function normalize($object, $format = NULL, array $context = array()) {
+-    $data = parent::normalize($object, $format, $context);
++  public function normalize($object, $format = NULL, array $serializer_context = array()) {
++    $data = parent::normalize($object, $format, $serializer_context);
+ 
+     // The image will be saved in the export directory.
+-    if (!empty($context['content_sync_directory'])) {
++    if (!empty($serializer_context['content_sync_directory_files'])) {
+       $uri = $object->getFileUri();
+       $scheme = $this->fileSystem->uriScheme($uri);
+-
+-      $destination = "{$context['content_sync_directory']}/files/{$scheme}/";
++      $destination = "{$serializer_context['content_sync_directory_files']}/{$scheme}/";
+       $destination = str_replace($scheme . '://', $destination, $uri);
+       file_prepare_directory($this->fileSystem->dirname($destination), FILE_CREATE_DIRECTORY);
+       file_unmanaged_copy($uri, $destination, FILE_EXISTS_REPLACE);
+     }
+ 
+     // Set base64-encoded file contents to the "data" property.
+-    if (!empty($context['content_sync_file_base_64'])) {
++    if (!empty($serializer_context['content_sync_file_base_64'])) {
+       $file_data = base64_encode(file_get_contents($object->getFileUri()));
+       $data['data'] = [['value' => $file_data]];
+     }

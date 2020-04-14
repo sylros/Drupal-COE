@@ -1,0 +1,19 @@
+uuid: 7e7c8f10-8b8f-4691-9e46-bf58982563f5
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_request_email
+    - node.type.request_form
+id: node.request_form.field_request_email
+field_name: field_request_email
+entity_type: node
+bundle: request_form
+label: 'Request Email'
+description: ''
+required: true
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: email

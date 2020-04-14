@@ -1,0 +1,159 @@
+uuid: edce37c1-790e-473b-a473-5df29a5922be
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_claimant_name
+    - field.storage.node.field_date_of_decision
+    - field.storage.node.field_date_of_filing
+    - field.storage.node.field_date_order_iossued
+    - field.storage.node.field_decision_on_claim_validity
+    - field.storage.node.field_decision_on_compliance
+    - field.storage.node.field_expiry_date_of_valid_claim
+    - field.storage.node.field_list_of_sds_non_compliance
+    - field.storage.node.field_order_issued_
+    - field.storage.node.field_product_identifier
+    - field.storage.node.field_status_of_the_order
+    - search_api.server.db
+  module:
+    - content_moderation
+    - node
+    - search_api
+id: claims
+name: Claims
+description: ''
+read_only: false
+field_settings:
+  field_claimant_name:
+    label: 'Claimant Name'
+    datasource_id: 'entity:node'
+    property_path: field_claimant_name
+    type: text
+    dependencies:
+      config:
+        - field.storage.node.field_claimant_name
+  field_date_of_decision:
+    label: 'Date of Decision'
+    datasource_id: 'entity:node'
+    property_path: field_date_of_decision
+    type: date
+    dependencies:
+      config:
+        - field.storage.node.field_date_of_decision
+  field_date_of_filing:
+    label: 'Date of Filing'
+    datasource_id: 'entity:node'
+    property_path: field_date_of_filing
+    type: date
+    dependencies:
+      config:
+        - field.storage.node.field_date_of_filing
+  field_date_order_iossued:
+    label: 'Date Order Issued'
+    datasource_id: 'entity:node'
+    property_path: field_date_order_iossued
+    type: date
+    dependencies:
+      config:
+        - field.storage.node.field_date_order_iossued
+  field_decision_on_claim_validity:
+    label: 'Decision on Claim Validity'
+    datasource_id: 'entity:node'
+    property_path: field_decision_on_claim_validity
+    type: text
+    dependencies:
+      config:
+        - field.storage.node.field_decision_on_claim_validity
+  field_decision_on_compliance:
+    label: 'Decision on Compliance'
+    datasource_id: 'entity:node'
+    property_path: field_decision_on_compliance
+    type: text
+    dependencies:
+      config:
+        - field.storage.node.field_decision_on_compliance
+  field_expiry_date_of_valid_claim:
+    label: 'Expiry date of valid claims for exemption'
+    datasource_id: 'entity:node'
+    property_path: field_expiry_date_of_valid_claim
+    type: date
+    dependencies:
+      config:
+        - field.storage.node.field_expiry_date_of_valid_claim
+  field_list_of_sds_non_compliance:
+    label: 'List of SDS non-compliances and related corrective measures'
+    datasource_id: 'entity:node'
+    property_path: field_list_of_sds_non_compliance
+    type: text
+    dependencies:
+      config:
+        - field.storage.node.field_list_of_sds_non_compliance
+  field_order_issued_:
+    label: 'Order Issued?'
+    datasource_id: 'entity:node'
+    property_path: field_order_issued_
+    type: text
+    dependencies:
+      config:
+        - field.storage.node.field_order_issued_
+  field_product_identifier:
+    label: 'Product Identifier'
+    datasource_id: 'entity:node'
+    property_path: field_product_identifier
+    type: text
+    dependencies:
+      config:
+        - field.storage.node.field_product_identifier
+  field_status_of_the_order:
+    label: 'Status of the Order'
+    datasource_id: 'entity:node'
+    property_path: field_status_of_the_order
+    type: text
+    dependencies:
+      config:
+        - field.storage.node.field_status_of_the_order
+  moderation_state:
+    label: 'Moderation state'
+    datasource_id: 'entity:node'
+    property_path: moderation_state
+    type: string
+    dependencies:
+      module:
+        - content_moderation
+  nid:
+    label: ID
+    datasource_id: 'entity:node'
+    property_path: nid
+    type: integer
+    dependencies:
+      module:
+        - node
+  title:
+    label: Title
+    datasource_id: 'entity:node'
+    property_path: title
+    type: string
+    dependencies:
+      module:
+        - node
+datasource_settings:
+  'entity:node':
+    bundles:
+      default: false
+      selected:
+        - exemption_claim
+    languages:
+      default: true
+      selected: {  }
+processor_settings:
+  add_url: {  }
+  aggregated_field: {  }
+  language_with_fallback: {  }
+  rendered_item: {  }
+tracker_settings:
+  default:
+    indexing_order: fifo
+options:
+  index_directly: true
+  cron_limit: 50
+server: db

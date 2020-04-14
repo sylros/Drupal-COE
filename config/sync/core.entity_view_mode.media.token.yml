@@ -1,0 +1,14 @@
+uuid: cab19aad-8f36-492b-8474-3e50d3cb460a
+langcode: en
+status: true
+dependencies:
+  module:
+    - lightning_core
+    - media
+third_party_settings:
+  lightning_core:
+    internal: true
+id: media.token
+label: Token
+targetEntityType: media
+cache: true

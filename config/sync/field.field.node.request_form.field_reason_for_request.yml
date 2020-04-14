@@ -1,0 +1,29 @@
+uuid: a9e18873-3f18-4eda-b23d-83816c48651c
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_reason_for_request
+    - node.type.request_form
+    - taxonomy.vocabulary.reason_for_request
+id: node.request_form.field_reason_for_request
+field_name: field_reason_for_request
+entity_type: node
+bundle: request_form
+label: 'Reason for request'
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings:
+  handler: 'default:taxonomy_term'
+  handler_settings:
+    target_bundles:
+      reason_for_request: reason_for_request
+    sort:
+      field: name
+      direction: asc
+    auto_create: false
+    auto_create_bundle: ''
+field_type: entity_reference
