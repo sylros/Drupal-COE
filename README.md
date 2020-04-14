@@ -1,43 +1,40 @@
-Composer Project template for Drupal
+Cloning the demo to your local environment
 ====================================
-
-[![Build Status][ci-badge]][ci]
-
-Drupal WxT codebase for `<site-name>`.
 
 ## Requirements
 
-* [Composer][composer]
-* [Node][node]
+* [Drush][drush]
+* [Mysql][mysql]
 
-## New Project (stable tag)
+## Installation
 
-```sh
-composer create-project drupalwxt/wxt-project:3.0.7 site-name
+* Copy the repo to the web root and run the following commands at the root of the repo
+
+* ```
+cp sites/default/default.settings.php sites/default/settings.php
+```
+* ```
+chmod 777 sites/default/settings.php
+```
+* ```
+drush si
+```
+* ```
+drush sql-cli < ../db.sql
+```
+* ```
+drush cim -y
+```
+* ```
+drush upwd admin <password>
+```
+* ```
+chmod 664 sites/default/settings.php
 ```
 
-## New Project (dev)
+## Maintainers
 
-```sh
-composer create-project drupalwxt/wxt-project:8.x-dev site-name
-```
+* [Patrick Gohard] - patrick.gohard@canada.ca
 
-## Maintenance
-
-List of common commands are as follows:
-
-| Task                                            | Composer                                               |
-|-------------------------------------------------|--------------------------------------------------------|
-| Latest version of a contributed project         | ```composer require drupal/PROJECT_NAME:8.*```         |
-| Specific version of a contributed project       | ```composer require drupal/PROJECT_NAME:8.1.0-beta5``` |
-| Updating all projects including Drupal Core     | ```composer update```                                  |
-| Updating a single contributed project           | ```composer update drupal/PROJECT_NAME```              |
-| Updating Drupal Core exclusively                | ```composer update drupal/core```                      |
-
-
-[ci]:                       https://travis-ci.org/drupalwxt/site-wxt
-[ci-badge]:                 https://travis-ci.org/drupalwxt/site-wxt.svg?branch=8.x
-[composer]:                 https://getcomposer.org
-[node]:                     https://nodejs.org
-[docker-scaffold-readme]:   https://github.com/drupal-composer-ext/drupal-scaffold-docker/blob/8.x/README.md
-[docker-readme]:            https://github.com/drupal-composer-ext/drupal-scaffold-docker/blob/8.x/template/docker/README.md
+[drush]:                    https://docs.drush.org/en/9.x/install/
+[mysql]:                    https://www.drupal.org/docs/8/install/step-3-create-a-database
