@@ -1,0 +1,5 @@
+name: HC Demo API
+description: A module to showcase creating a API endpoint for other applications to consume
+package: HC Demo
+type: module
+core: 8.x

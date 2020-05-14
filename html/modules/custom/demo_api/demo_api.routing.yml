@@ -1,0 +1,41 @@
+demo_api.get_all_excemption:
+  path: '/api/get_claims'
+  defaults:
+    _controller: '\Drupal\demo_api\Controller\ClaimRestController::getAllExemption'
+  methods: [GET]
+  requirements:
+    _access: 'TRUE'
+
+demo_api.get_documentation:
+  path: '/api/claim_documentation'
+  defaults:
+    _controller: '\Drupal\demo_api\Controller\ClaimRestController::claimsDocumentation'
+  methods: [GET]
+  requirements:
+    _access: 'TRUE'
+
+demo_api.get_field_details:
+  path: '/api/claim/fields_details'
+  defaults:
+    _controller: '\Drupal\demo_api\Controller\ClaimRestController::claimFields'
+  methods: [GET]
+  requirements:
+    _access: 'TRUE'
+
+demo_api.get_field_list:
+  path: '/api/claim/fields'
+  defaults:
+    _controller: '\Drupal\demo_api\Controller\ClaimRestController::claimFieldList'
+  methods: [GET]
+  requirements:
+    _access: 'TRUE'
+
+demo_api.create_claim:
+  path: '/api/submit_claim'
+  defaults:
+    _controller: '\Drupal\demo_api\Controller\ClaimRestController::submitClaim'
+  methods: [POST]
+  options:
+    _auth: ['basic_auth']
+  requirements:
+    _custom_access: '\Drupal\demo_api\Controller\ClaimRestController::access'
