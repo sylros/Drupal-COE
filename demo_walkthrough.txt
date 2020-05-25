@@ -1,0 +1,50 @@
+On the home page you will find a block with links to where you need to go for the demo
+
+The link to "Orders" will allow you to create new orders, Click the "Create a new order" button
+
+- Order type = HC Order (This is a customizable order, think of a content type that users can create to make orders)
+- Customer = Type in the name of a Drupal user in the system you've created, preferably a user with a gmail account or another email client
+that will receive emails
+- Fill in the billing information with dummy data
+- Add an order item - HC Invoice
+  - Give it a title
+  - Put in a price - Under 1000$
+  - Click "Create Order Item"
+  - Add another order if you want to
+- Save the order
+
+You be redirected to the new order's view page where you can see an invoice tab. Until you place the order that tab will be empty
+At the bottom of the order's view page click the "Place Order" button and it will create an invoice of the current order
+
+In the Invoice tab you can now see the invoice and select download invoice which will create a PDF of the invoice
+
+In the payment tab you will be able to make a payment on the order. There should only be one gateway for payments and the customer that was
+chosen for the order needs to a payment option added to his user account before making a payment
+
+Go to the user's page in Drupal
+
+There will be a Payment method tab where you can add a payment method for that user
+
+Go here for test credit card credentials https://developer.moneris.com/en/More/Testing/Testing%20a%20Solution and any of the test card
+credentials should work
+
+Once the user has the method saved to there account they can make a payment by selecting the payment method - Make the test payment and the
+system will create a new entity type with the response from Moneris
+
+Go back to the home page and click the "Transactions" link and it will bring you to the server page for transactions - The most recent
+transaction will be the one that was created when you made the payment and you can show this
+
+Most of the information I don't even know what it means, but you can see the receipt ID, order ID, who the customer was, the amount and if
+it was approved.
+
+Go back to the search page for transactions and click the select / deselect all results button
+In the dropdown menu above select one of the options to generate either a CSV or XLSX file of the search results
+Hit "Apply to selected items" and you will get a notification at the top of the page to download the generated file
+
+Open the file to show the spreadsheet with all the data from the view exported in the format selected.
+
+Lastly to show the Moneris Hosted Pay Page go to the following page {drupal_root}/HHP.html and it will bring up the test page for hosted pay pages
+Only the first two fields matter for the demo, make sure the Store ID and HPP Key are still valid. If the credentials don't work anymore, go to
+the Moneris testsite and put in the information for store5 and go to the Hosted Paypage Configuration and click "Generate new configuration"
+
+- Select to have Moneris provide a receipt and create the new configuration for testing.
