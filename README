@@ -1,0 +1,108 @@
+COPS README
+
+Create the docker containers using the following script
+
+--- Start of Script ---
+
+docker network create appnet || true
+
+# Stop & remove existing
+docker stop drupal-cops-data || true
+docker rm drupal-cops-data || true
+docker stop drupal-cops || true
+docker rm drupal-cops|| true
+docker stop drupal || true
+docker rm drupal || true
+docker stop smtpserver-cops || true
+docker rm smtpserver-cops || true
+
+# First volume contains the settings.php file and configuration for Drupal to connect to the DB
+# Second volume contains the code to run Drupal
+# Drupal Pure PHP
+docker create --name drupal-cops \
+    -p 80:80 \
+    -e WEBROOT=/var/www/html \
+    -v /var/opt/docker/default-COPS:/var/www/html/sites/default \
+    -v /var/opt/docker/demo/Drupal-COE:/var/www \
+    jack.hc-sc.gc.ca/rsams:1.0.25
+
+docker network connect appnet drupal-cops
+
+# Database for Drupal WxT
+docker create --name drupal-cops-data \
+            -p 3306:3306 \
+            -e MYSQL_ROOT_PASSWORD=password \
+            -v drupal-data-cops-volume:/var/lib/mysql \
+            -v /var/opt/docker/demo/Drupal-COE/db:/var \
+            mariadb:10.4.8
+
+docker network connect appnet drupal-cops-data
+
+# SMTP Server for sending out emails
+docker create --name smtpserver-cops \
+    -p 25:25 \
+    -e MAILNAME=canadacentral.cloudapp.azure.com \
+    -e RELAY_NETWORKS=:10.160.2.11 \
+    namshi/smtp
+
+docker network connect appnet smtpserver-cops
+
+# Start environment
+docker start drupal-cops-data
+docker start drupal-cops
+docker start smtpserver-cops
+
+--- End of Script ---
+
+Update the PHP docker container with the following commands
+
+apt-get update
+apt-get install unzip
+docker-php-ext-install zip
+docker-php-ext-install bcmath
+
+This will add the necessary PHP libraries to the docker container - NOTE if you remove the containers you will need to run those commands again
+Restart the drupal-cops container - Run docker stop drupal-cops followed by docker start drupal-cops
+
+Create the database for Drupal, run docker exec -to drupal-cops-data to access the database container
+
+Import the database dump from the repo. Located at the {repo_root}/Drupal_COE/db/db.sql - NOTE the script will create a volume with the
+database dump from the repo. The database dump can be found at /var/db/db.sql in the database container
+
+Run docker exec -ti drupal-cops-data /bin/bash to access the database container
+
+Run the following commands
+
+- mysql -u root -p
+- Enter the password for mysql from the docker start up script
+- CREATE DATABASE <DB_NAME> CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+- exit
+- mysql -u root -p <DB_NAME> < db.sql
+
+Create the other volume for the Drupal container to hold the /sites/default folder
+
+- Copy the content of the /sites/default folder from the repo to /var/opt/docker/default-COPS
+- Copy default.settings.php and rename it to settings.php
+- Add the following lines at the end of the file
+
+$databases['default']['default'] = array (
+  'database' => 'cops',
+  'username' => 'root',
+  'password' => 'password',
+  'prefix' => '',
+  'host' => 'drupal-cops-data',
+  'port' => '3306',
+  'namespace' => 'Drupal\\Core\\Database\\Driver\\mysql',
+  'driver' => 'mysql',
+);
+
+$settings['config_sync_directory'] = '../config/sync';
+$settings['file_private_path'] = 'sites/default/files/private';
+
+Restart the drupal-cops container again
+Go inside the drupal-cops container by running the docker exec ti drupal-cops /bin/bash command again
+Change the administrator password to your prefered password by running the following drush command
+
+drush upwd admin <password>
+
+Everything should now be setup for you.
