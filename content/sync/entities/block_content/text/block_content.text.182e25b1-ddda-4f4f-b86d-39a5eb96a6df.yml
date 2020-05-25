@@ -1,0 +1,67 @@
+uuid:
+  -
+    value: 182e25b1-ddda-4f4f-b86d-39a5eb96a6df
+langcode:
+  -
+    value: en
+type:
+  -
+    target_id: text
+    target_type: block_content_type
+    target_uuid: 50183393-a44f-4042-a810-cf8eae3f487c
+revision_created:
+  -
+    value: '2020-03-24T14:46:31+00:00'
+    format: 'Y-m-d\TH:i:sP'
+revision_user: {  }
+revision_log: {  }
+status:
+  -
+    value: true
+info:
+  -
+    value: Links
+changed:
+  -
+    value: '2020-03-24T14:48:33+00:00'
+    format: 'Y-m-d\TH:i:sP'
+reusable:
+  -
+    value: true
+default_langcode:
+  -
+    value: true
+revision_translation_affected:
+  -
+    value: true
+scheduled_transition_date: {  }
+scheduled_transition_state: {  }
+metatag:
+  value:
+    canonical_url: 'http://default/en/welcome'
+content_translation_source:
+  -
+    value: und
+content_translation_outdated:
+  -
+    value: false
+content_translation_uid:
+  -
+    target_type: user
+    target_uuid: bb62e23f-3131-48e7-95de-18c9c53ee857
+content_translation_created:
+  -
+    value: '2020-03-24T14:46:31+00:00'
+    format: 'Y-m-d\TH:i:sP'
+body:
+  -
+    value: "<p><a href=\"/en/claims/search\">Search</a></p>\r\n\r\n<p><a href=\"/en/node/add/exemption_claim\">Create Exemption</a></p>\r\n"
+    format: rich_text
+    processed: "<p><a href=\"/en/claims/search\">Search</a></p>\n\n<p><a href=\"/en/node/add/exemption_claim\">Create Exemption</a></p>\n"
+    summary: ''
+    summary_processed: ''
+_content_sync:
+  entity_type: block_content
+  entity_dependencies:
+    user:
+      - user.user.bb62e23f-3131-48e7-95de-18c9c53ee857

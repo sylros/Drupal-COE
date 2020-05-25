@@ -1,0 +1,23 @@
+uuid: fc954fbf-91d8-4f33-94c5-7f1598b95141
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_timedout
+    - node.type.transaction
+id: node.transaction.field_timedout
+field_name: field_timedout
+entity_type: node
+bundle: transaction
+label: TimedOut
+description: ''
+required: false
+translatable: false
+default_value:
+  -
+    value: 0
+default_value_callback: ''
+settings:
+  on_label: 'On'
+  off_label: 'Off'
+field_type: boolean

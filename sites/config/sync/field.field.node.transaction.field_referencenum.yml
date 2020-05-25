@@ -1,0 +1,19 @@
+uuid: 03b48a99-6ecb-4292-a8fb-b865729872d1
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_referencenum
+    - node.type.transaction
+id: node.transaction.field_referencenum
+field_name: field_referencenum
+entity_type: node
+bundle: transaction
+label: ReferenceNum
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: string

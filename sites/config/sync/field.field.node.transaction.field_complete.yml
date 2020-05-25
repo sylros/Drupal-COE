@@ -1,0 +1,23 @@
+uuid: ec344d7d-d30a-4772-8f4f-c3a21972274f
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_complete
+    - node.type.transaction
+id: node.transaction.field_complete
+field_name: field_complete
+entity_type: node
+bundle: transaction
+label: Complete
+description: ''
+required: false
+translatable: false
+default_value:
+  -
+    value: 0
+default_value_callback: ''
+settings:
+  on_label: 'On'
+  off_label: 'Off'
+field_type: boolean

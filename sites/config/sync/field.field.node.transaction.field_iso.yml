@@ -1,0 +1,23 @@
+uuid: 0cd88392-cdfe-4cb5-b51a-5531c6e986c5
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_iso
+    - node.type.transaction
+id: node.transaction.field_iso
+field_name: field_iso
+entity_type: node
+bundle: transaction
+label: ISO
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings:
+  min: null
+  max: null
+  prefix: ''
+  suffix: ''
+field_type: integer

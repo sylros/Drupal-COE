@@ -1,0 +1,22 @@
+uuid: e08c6291-0eed-442f-86e9-8a5acb83e625
+langcode: en
+status: true
+dependencies:
+  config:
+    - node.type.transaction
+id: node.transaction.promote
+field_name: promote
+entity_type: node
+bundle: transaction
+label: 'Promoted to front page'
+description: ''
+required: false
+translatable: true
+default_value:
+  -
+    value: 0
+default_value_callback: ''
+settings:
+  on_label: 'On'
+  off_label: 'Off'
+field_type: boolean

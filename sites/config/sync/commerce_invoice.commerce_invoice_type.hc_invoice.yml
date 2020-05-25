@@ -1,0 +1,15 @@
+uuid: be76be16-a2ca-4b69-8fd0-476a04e2a7c1
+langcode: en
+status: true
+dependencies: {  }
+label: 'HC Invoice'
+id: hc_invoice
+numberPattern: invoice_default
+logo: null
+dueDays: 30
+paymentTerms: Term
+footerText: ''
+traits: {  }
+workflow: invoice_default
+sendConfirmation: true
+confirmationBcc: ''

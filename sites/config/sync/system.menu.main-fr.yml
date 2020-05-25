@@ -1,0 +1,10 @@
+uuid: 9377bfef-ed4a-4ce4-b9ff-d91656429b18
+langcode: fr
+status: true
+dependencies: {  }
+_core:
+  default_config_hash: 4N-F8BxabqFyY-bdNUjp_QkbQMdFOOf3aH6FUQQs-nk
+id: main-fr
+label: 'Menu principal'
+description: 'Menu principal en francais.'
+locked: false

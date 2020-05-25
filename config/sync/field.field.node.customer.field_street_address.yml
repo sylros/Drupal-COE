@@ -1,0 +1,19 @@
+uuid: 72c41462-4d9a-4bce-8e56-6f01b1f7564c
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_street_address
+    - node.type.customer
+id: node.customer.field_street_address
+field_name: field_street_address
+entity_type: node
+bundle: customer
+label: 'Street Address'
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: string

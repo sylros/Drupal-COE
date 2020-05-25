@@ -1,0 +1,12 @@
+uuid: 45464080-db73-4b52-bade-7a39db46377c
+langcode: en
+status: true
+dependencies: {  }
+id: invoice
+label: Invoice
+description: ''
+variationType: invoice_variant
+multipleVariations: true
+injectVariationFields: true
+traits: {  }
+locked: false

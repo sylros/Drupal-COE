@@ -1,0 +1,20 @@
+uuid: 6747943b-57ac-4bb3-9f52-8a8465cfdd8a
+langcode: en
+status: true
+dependencies:
+  module:
+    - commerce_invoice
+third_party_settings:
+  commerce_invoice:
+    invoice_type: hc_invoice
+    order_placed_generation: true
+label: 'HC Order'
+id: hc_order
+workflow: order_default
+numberPattern: order_default
+refresh_mode: customer
+refresh_frequency: 300
+sendReceipt: true
+receiptBcc: ''
+traits: {  }
+locked: false

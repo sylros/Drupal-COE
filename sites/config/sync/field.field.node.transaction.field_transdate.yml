@@ -1,0 +1,21 @@
+uuid: d5ad322d-ca88-457f-b516-d75dbcf10797
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_transdate
+    - node.type.transaction
+  module:
+    - datetime
+id: node.transaction.field_transdate
+field_name: field_transdate
+entity_type: node
+bundle: transaction
+label: TransDate
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: datetime

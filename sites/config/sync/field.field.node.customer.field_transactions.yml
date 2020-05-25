@@ -1,0 +1,29 @@
+uuid: 1b87b577-87b2-440b-a953-532c66fcb771
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_transactions
+    - node.type.customer
+    - node.type.transaction
+id: node.customer.field_transactions
+field_name: field_transactions
+entity_type: node
+bundle: customer
+label: Transactions
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings:
+  handler: 'default:node'
+  handler_settings:
+    target_bundles:
+      transaction: transaction
+    sort:
+      field: created
+      direction: ASC
+    auto_create: false
+    auto_create_bundle: ''
+field_type: entity_reference

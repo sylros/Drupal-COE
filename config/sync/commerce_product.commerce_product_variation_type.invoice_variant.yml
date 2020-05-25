@@ -1,0 +1,10 @@
+uuid: 9aa4f127-c042-4305-ba10-4a7f5aa1a435
+langcode: en
+status: true
+dependencies: {  }
+id: invoice_variant
+label: 'Invoice Variant'
+orderItemType: default
+generateTitle: false
+traits: {  }
+locked: false

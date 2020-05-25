@@ -1,0 +1,19 @@
+uuid: 29a20dbe-7256-4221-b31e-03c8566017b1
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_datakey
+    - node.type.transaction
+id: node.transaction.field_datakey
+field_name: field_datakey
+entity_type: node
+bundle: transaction
+label: DataKey
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: string

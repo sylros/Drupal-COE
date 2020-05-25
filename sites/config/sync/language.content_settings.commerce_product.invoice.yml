@@ -1,0 +1,11 @@
+uuid: 5cb02bec-af96-4102-ad13-5cdedf2a5e4a
+langcode: en
+status: true
+dependencies:
+  config:
+    - commerce_product.commerce_product_type.invoice
+id: commerce_product.invoice
+target_entity_type_id: commerce_product
+target_bundle: invoice
+default_langcode: site_default
+language_alterable: false

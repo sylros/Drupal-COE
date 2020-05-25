@@ -1,0 +1,23 @@
+uuid: 3a23bcb0-6c94-451b-b3eb-65ca35303ec2
+langcode: en
+status: true
+dependencies:
+  config:
+    - commerce_invoice.commerce_invoice_type.hc_invoice
+    - field.storage.commerce_invoice.field_organization_number
+id: commerce_invoice.hc_invoice.field_organization_number
+field_name: field_organization_number
+entity_type: commerce_invoice
+bundle: hc_invoice
+label: 'Organization Number'
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings:
+  min: null
+  max: null
+  prefix: ''
+  suffix: ''
+field_type: integer

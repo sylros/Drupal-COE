@@ -1,0 +1,11 @@
+uuid: 33127f11-9c65-433b-93f3-513c2efabdb9
+langcode: en
+status: true
+dependencies:
+  config:
+    - comment.type.invoice_comments
+id: comment.invoice_comments
+target_entity_type_id: comment
+target_bundle: invoice_comments
+default_langcode: site_default
+language_alterable: false

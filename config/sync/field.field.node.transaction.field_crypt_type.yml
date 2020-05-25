@@ -1,0 +1,23 @@
+uuid: 2fa5a690-786e-430f-821b-6ddee3dca4ba
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_crypt_type
+    - node.type.transaction
+id: node.transaction.field_crypt_type
+field_name: field_crypt_type
+entity_type: node
+bundle: transaction
+label: 'Encryption Type'
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings:
+  min: null
+  max: null
+  prefix: ''
+  suffix: ''
+field_type: integer

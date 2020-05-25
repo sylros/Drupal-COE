@@ -1,0 +1,20 @@
+uuid: 59402370-af9a-43fc-9a3a-821df3af0cfc
+langcode: en
+status: true
+dependencies:
+  module:
+    - commerce_invoice
+id: commerce_invoice.field_invoice_num
+field_name: field_invoice_num
+entity_type: commerce_invoice
+type: integer
+settings:
+  unsigned: false
+  size: normal
+module: core
+locked: false
+cardinality: 1
+translatable: true
+indexes: {  }
+persist_with_no_fields: false
+custom_storage: false

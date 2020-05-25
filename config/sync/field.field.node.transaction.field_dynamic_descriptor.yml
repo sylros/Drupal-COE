@@ -1,0 +1,19 @@
+uuid: a0c80617-2b98-4d13-9b22-e23fef2f00e3
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_dynamic_descriptor
+    - node.type.transaction
+id: node.transaction.field_dynamic_descriptor
+field_name: field_dynamic_descriptor
+entity_type: node
+bundle: transaction
+label: 'Dynamic Descriptor'
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: string

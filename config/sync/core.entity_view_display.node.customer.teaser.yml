@@ -1,0 +1,46 @@
+uuid: 46f4ae2b-7c36-41fa-af4e-4b5596e0e0ec
+langcode: en
+status: true
+dependencies:
+  config:
+    - core.entity_view_mode.node.teaser
+    - field.field.node.customer.field_city
+    - field.field.node.customer.field_company
+    - field.field.node.customer.field_customer_email
+    - field.field.node.customer.field_first_name
+    - field.field.node.customer.field_last_name
+    - field.field.node.customer.field_moneris_customer_id
+    - field.field.node.customer.field_order
+    - field.field.node.customer.field_postal_code
+    - field.field.node.customer.field_province
+    - field.field.node.customer.field_street_address
+    - field.field.node.customer.field_transactions
+    - node.type.customer
+  module:
+    - user
+id: node.customer.teaser
+targetEntityType: node
+bundle: customer
+mode: teaser
+content:
+  links:
+    weight: 100
+    settings: {  }
+    third_party_settings: {  }
+    region: content
+hidden:
+  entity_print_view_epub: true
+  entity_print_view_pdf: true
+  entity_print_view_word_docx: true
+  field_city: true
+  field_company: true
+  field_customer_email: true
+  field_first_name: true
+  field_last_name: true
+  field_moneris_customer_id: true
+  field_order: true
+  field_postal_code: true
+  field_province: true
+  field_street_address: true
+  field_transactions: true
+  langcode: true

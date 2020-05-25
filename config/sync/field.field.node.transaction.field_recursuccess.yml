@@ -1,0 +1,19 @@
+uuid: d918ed1f-1fda-4bc0-8c5a-192ac1a35646
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_recursuccess
+    - node.type.transaction
+id: node.transaction.field_recursuccess
+field_name: field_recursuccess
+entity_type: node
+bundle: transaction
+label: RecurSuccess
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: string

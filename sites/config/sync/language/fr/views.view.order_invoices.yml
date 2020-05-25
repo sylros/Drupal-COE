@@ -1,0 +1,32 @@
+display:
+  default:
+    display_title: Maître
+    display_options:
+      exposed_form:
+        options:
+          submit_button: Appliquer
+          reset_button_label: Réinitialiser
+          exposed_sorts_label: 'Trier par'
+          sort_asc_label: Asc
+          sort_desc_label: Desc
+      fields:
+        invoice_number:
+          label: 'Numéro de facture'
+          separator: ', '
+        invoice_date:
+          label: Date
+          separator: ', '
+        langcode:
+          label: Langue
+          separator: ', '
+        state:
+          label: État
+          separator: ', '
+        operations:
+          label: Actions
+      arguments:
+        orders_target_id:
+          exception:
+            title: Tout
+  page_1:
+    display_title: Page

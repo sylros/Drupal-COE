@@ -1,0 +1,19 @@
+uuid: 23f59582-a17a-43bc-a4b0-5c4e457eee47
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_cardtype
+    - node.type.transaction
+id: node.transaction.field_cardtype
+field_name: field_cardtype
+entity_type: node
+bundle: transaction
+label: CardType
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: string

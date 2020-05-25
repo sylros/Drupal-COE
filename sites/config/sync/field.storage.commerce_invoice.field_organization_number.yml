@@ -1,0 +1,20 @@
+uuid: 41e15be3-19fa-4b24-aee9-4096d78d06c1
+langcode: en
+status: true
+dependencies:
+  module:
+    - commerce_invoice
+id: commerce_invoice.field_organization_number
+field_name: field_organization_number
+entity_type: commerce_invoice
+type: integer
+settings:
+  unsigned: false
+  size: normal
+module: core
+locked: false
+cardinality: 1
+translatable: true
+indexes: {  }
+persist_with_no_fields: false
+custom_storage: false

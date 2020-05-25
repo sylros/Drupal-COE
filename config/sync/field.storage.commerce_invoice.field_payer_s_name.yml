@@ -1,0 +1,21 @@
+uuid: baf29d70-a0af-42ee-9dc8-21b3eff24f5b
+langcode: en
+status: true
+dependencies:
+  module:
+    - commerce_invoice
+id: commerce_invoice.field_payer_s_name
+field_name: field_payer_s_name
+entity_type: commerce_invoice
+type: string
+settings:
+  max_length: 255
+  is_ascii: false
+  case_sensitive: false
+module: core
+locked: false
+cardinality: 1
+translatable: true
+indexes: {  }
+persist_with_no_fields: false
+custom_storage: false

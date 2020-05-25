@@ -1,0 +1,23 @@
+uuid: a1259085-7e80-440a-9b5a-eea4c4372e61
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_corporatecard
+    - node.type.transaction
+id: node.transaction.field_corporatecard
+field_name: field_corporatecard
+entity_type: node
+bundle: transaction
+label: CorporateCard
+description: ''
+required: false
+translatable: false
+default_value:
+  -
+    value: 0
+default_value_callback: ''
+settings:
+  on_label: 'On'
+  off_label: 'Off'
+field_type: boolean

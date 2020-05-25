@@ -1,0 +1,12 @@
+name: Commerce Moneris
+type: module
+description: Integration with Moneris API and HPP payment methods. Works for Canada and US gateways.
+package: Commerce (contrib)
+# core: 8.x
+dependencies:
+  - commerce_payment
+# Information added by Drupal.org packaging script on 2019-06-24
+version: '8.x-2.0-rc3'
+core: '8.x'
+project: 'commerce_moneris'
+datestamp: 1561405985

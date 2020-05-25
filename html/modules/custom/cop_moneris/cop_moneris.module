@@ -1,0 +1,22 @@
+<?php
+
+use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Entity\EntityTypeInterface;
+use Drupal\Core\Entity\EntityInterface;
+use Drupal\node\Entity\Node;
+
+function cop_moneris_form_alter(&$form, FormStateInterface $form_state, $form_id){
+  // drupal_set_message("This is form_id: $form_id");
+
+  if($form_id == 'commerce_checkout_flow_multistep_default') {
+    // kint(($form_state));
+    // dpm($form['payment_information']);
+  }
+
+  if($form_id == 'moneris_onsite') {
+    drupal_set_message("this form");
+  }
+}
+
+
+ ?>

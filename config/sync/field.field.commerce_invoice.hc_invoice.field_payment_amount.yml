@@ -1,0 +1,23 @@
+uuid: e53f31e3-e9e5-451a-b3b6-529c79c7c5d0
+langcode: en
+status: true
+dependencies:
+  config:
+    - commerce_invoice.commerce_invoice_type.hc_invoice
+    - field.storage.commerce_invoice.field_payment_amount
+  module:
+    - commerce_price
+id: commerce_invoice.hc_invoice.field_payment_amount
+field_name: field_payment_amount
+entity_type: commerce_invoice
+bundle: hc_invoice
+label: 'Payment amount'
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings:
+  available_currencies:
+    - CAD
+field_type: commerce_price

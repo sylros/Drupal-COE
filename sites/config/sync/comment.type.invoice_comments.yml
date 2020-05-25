@@ -1,0 +1,8 @@
+uuid: 5726512c-f853-4586-ba13-5d43c5a5b08c
+langcode: en
+status: true
+dependencies: {  }
+id: invoice_comments
+label: 'Invoice Comments'
+target_entity_type_id: commerce_invoice
+description: ''

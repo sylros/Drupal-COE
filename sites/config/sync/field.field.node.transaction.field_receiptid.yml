@@ -1,0 +1,19 @@
+uuid: 8ba87473-549d-4a8b-8377-6c2b00c809c6
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_receiptid
+    - node.type.transaction
+id: node.transaction.field_receiptid
+field_name: field_receiptid
+entity_type: node
+bundle: transaction
+label: ReceiptId
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: string

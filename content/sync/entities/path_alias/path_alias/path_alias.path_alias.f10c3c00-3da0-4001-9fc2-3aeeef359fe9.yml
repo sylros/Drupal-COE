@@ -1,0 +1,36 @@
+uuid:
+  -
+    value: f10c3c00-3da0-4001-9fc2-3aeeef359fe9
+langcode:
+  -
+    value: und
+path:
+  -
+    value: /webform/contact/submissions
+alias:
+  -
+    value: /form/contact/submissions
+status:
+  -
+    value: true
+_content_sync:
+  entity_type: path_alias
+_translations:
+  und:
+    uuid:
+      -
+        value: f10c3c00-3da0-4001-9fc2-3aeeef359fe9
+    langcode:
+      -
+        value: und
+    path:
+      -
+        value: /webform/contact/submissions
+    alias:
+      -
+        value: /form/contact/submissions
+    status:
+      -
+        value: true
+    _content_sync:
+      entity_type: path_alias

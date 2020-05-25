@@ -1,0 +1,148 @@
+uuid: 5a46bf4b-d220-405c-8319-5d40f766567b
+langcode: en
+status: true
+dependencies:
+  config:
+    - commerce_invoice.commerce_invoice_type.hc_invoice
+    - field.field.commerce_invoice.hc_invoice.field_invoice_num
+    - field.field.commerce_invoice.hc_invoice.field_organization_number
+    - field.field.commerce_invoice.hc_invoice.field_payer_s_email
+    - field.field.commerce_invoice.hc_invoice.field_payer_s_name
+    - field.field.commerce_invoice.hc_invoice.field_payer_s_phone_number
+    - field.field.commerce_invoice.hc_invoice.field_payment_amount
+    - field.field.commerce_invoice.hc_invoice.field_sap_customer_number
+  module:
+    - commerce_invoice
+    - commerce_price
+    - state_machine
+    - user
+id: commerce_invoice.hc_invoice.default
+targetEntityType: commerce_invoice
+bundle: hc_invoice
+mode: default
+content:
+  due_date:
+    label: above
+    type: timestamp
+    weight: 0
+    region: content
+    settings:
+      date_format: medium
+      custom_date_format: ''
+      timezone: ''
+    third_party_settings: {  }
+  field_invoice_num:
+    weight: 13
+    label: above
+    settings:
+      thousand_separator: ''
+      prefix_suffix: true
+    third_party_settings: {  }
+    type: number_integer
+    region: content
+  field_organization_number:
+    weight: 11
+    label: above
+    settings:
+      thousand_separator: ''
+      prefix_suffix: true
+    third_party_settings: {  }
+    type: number_integer
+    region: content
+  field_payer_s_email:
+    weight: 15
+    label: above
+    settings: {  }
+    third_party_settings: {  }
+    type: basic_string
+    region: content
+  field_payer_s_name:
+    weight: 14
+    label: above
+    settings:
+      link_to_entity: false
+    third_party_settings: {  }
+    type: string
+    region: content
+  field_payer_s_phone_number:
+    weight: 16
+    label: above
+    settings: {  }
+    third_party_settings: {  }
+    type: basic_string
+    region: content
+  field_payment_amount:
+    weight: 17
+    label: above
+    settings:
+      strip_trailing_zeroes: false
+      currency_display: symbol
+    third_party_settings: {  }
+    type: commerce_price_default
+    region: content
+  field_sap_customer_number:
+    weight: 12
+    label: above
+    settings:
+      thousand_separator: ''
+      prefix_suffix: true
+    third_party_settings: {  }
+    type: number_integer
+    region: content
+  invoice_date:
+    label: above
+    type: timestamp
+    weight: 0
+    region: content
+    settings:
+      date_format: medium
+      custom_date_format: ''
+      timezone: ''
+    third_party_settings: {  }
+  invoice_items:
+    label: hidden
+    type: commerce_invoice_item_table
+    weight: 0
+    region: content
+    settings: {  }
+    third_party_settings: {  }
+  mail:
+    label: above
+    type: string
+    weight: 0
+    region: content
+    settings:
+      link_to_entity: false
+    third_party_settings: {  }
+  state:
+    label: hidden
+    type: state_transition_form
+    weight: 10
+    region: content
+    settings: {  }
+    third_party_settings: {  }
+  total_price:
+    label: hidden
+    type: commerce_invoice_total_summary
+    weight: 0
+    region: content
+    settings: {  }
+    third_party_settings: {  }
+  uid:
+    label: above
+    type: author
+    weight: 0
+    region: content
+    settings: {  }
+    third_party_settings: {  }
+hidden:
+  billing_profile: true
+  entity_print_view_epub: true
+  entity_print_view_pdf: true
+  entity_print_view_word_docx: true
+  invoice_file: true
+  invoice_number: true
+  langcode: true
+  orders: true
+  store_id: true
+  total_paid: true

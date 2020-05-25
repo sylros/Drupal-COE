@@ -1,0 +1,76 @@
+uuid: 59133fe7-b499-498a-bb51-d5e2a9c11c9a
+langcode: en
+status: true
+dependencies:
+  config:
+    - core.entity_view_mode.node.teaser
+    - field.field.node.transaction.field_authcode
+    - field.field.node.transaction.field_avsresultcode
+    - field.field.node.transaction.field_cardtype
+    - field.field.node.transaction.field_complete
+    - field.field.node.transaction.field_corporatecard
+    - field.field.node.transaction.field_crypt_type
+    - field.field.node.transaction.field_customer_id
+    - field.field.node.transaction.field_cvdresultcode
+    - field.field.node.transaction.field_datakey
+    - field.field.node.transaction.field_dynamic_descriptor
+    - field.field.node.transaction.field_iso
+    - field.field.node.transaction.field_isvisadebit
+    - field.field.node.transaction.field_message
+    - field.field.node.transaction.field_order_id
+    - field.field.node.transaction.field_paymenttype
+    - field.field.node.transaction.field_receiptid
+    - field.field.node.transaction.field_recursuccess
+    - field.field.node.transaction.field_referencenum
+    - field.field.node.transaction.field_responsecode
+    - field.field.node.transaction.field_ressuccess
+    - field.field.node.transaction.field_timedout
+    - field.field.node.transaction.field_transamount
+    - field.field.node.transaction.field_transdate
+    - field.field.node.transaction.field_transid
+    - field.field.node.transaction.field_transtime
+    - field.field.node.transaction.field_transtype
+    - node.type.transaction
+  module:
+    - user
+id: node.transaction.teaser
+targetEntityType: node
+bundle: transaction
+mode: teaser
+content:
+  links:
+    weight: 100
+    settings: {  }
+    third_party_settings: {  }
+    region: content
+hidden:
+  entity_print_view_epub: true
+  entity_print_view_pdf: true
+  entity_print_view_word_docx: true
+  field_authcode: true
+  field_avsresultcode: true
+  field_cardtype: true
+  field_complete: true
+  field_corporatecard: true
+  field_crypt_type: true
+  field_customer_id: true
+  field_cvdresultcode: true
+  field_datakey: true
+  field_dynamic_descriptor: true
+  field_iso: true
+  field_isvisadebit: true
+  field_message: true
+  field_order_id: true
+  field_paymenttype: true
+  field_receiptid: true
+  field_recursuccess: true
+  field_referencenum: true
+  field_responsecode: true
+  field_ressuccess: true
+  field_timedout: true
+  field_transamount: true
+  field_transdate: true
+  field_transid: true
+  field_transtime: true
+  field_transtype: true
+  langcode: true

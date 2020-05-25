@@ -1,0 +1,10 @@
+uuid: dde910ba-c96d-47db-bf8b-8a6fc6b11d5d
+langcode: en
+status: true
+dependencies: {  }
+label: 'HC Invoice'
+id: hc_invoice
+purchasableEntityType: ''
+orderType: hc_order
+traits: {  }
+locked: false

@@ -1,0 +1,15 @@
+definitions:
+  user__page:
+    menu_name: account
+    parent: 'menu_link_content:96d092b4-2c63-4c76-a0ee-15620c11a77a'
+    weight: -10
+    expanded: false
+    enabled: true
+  user__logout:
+    menu_name: account
+    parent: 'menu_link_content:96d092b4-2c63-4c76-a0ee-15620c11a77a'
+    weight: 10
+    expanded: false
+    enabled: true
+_core:
+  default_config_hash: jdY7AU0tU-QsjmiOw3W8vwpYMb-By--_MSFgbqKUTYM

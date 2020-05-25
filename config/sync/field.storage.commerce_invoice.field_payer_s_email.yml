@@ -1,0 +1,18 @@
+uuid: 885744e0-332d-4144-a325-d7d8f99322e1
+langcode: en
+status: true
+dependencies:
+  module:
+    - commerce_invoice
+id: commerce_invoice.field_payer_s_email
+field_name: field_payer_s_email
+entity_type: commerce_invoice
+type: email
+settings: {  }
+module: core
+locked: false
+cardinality: 1
+translatable: true
+indexes: {  }
+persist_with_no_fields: false
+custom_storage: false

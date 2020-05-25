@@ -1,0 +1,51 @@
+uuid: 9bf221fc-3e13-4aad-9c42-d52d0d5a17f9
+langcode: en
+status: true
+dependencies:
+  module:
+    - node
+    - options
+id: node.field_province
+field_name: field_province
+entity_type: node
+type: list_string
+settings:
+  allowed_values:
+    -
+      value: BC
+      label: 'British Columbia'
+    -
+      value: A
+      label: Alberta
+    -
+      value: S
+      label: Saskatchewan
+    -
+      value: M
+      label: Manitoba
+    -
+      value: O
+      label: Ontario
+    -
+      value: Q
+      label: Quebec
+    -
+      value: NB
+      label: 'New Brunswick'
+    -
+      value: NS
+      label: 'Nova Scotia'
+    -
+      value: PEI
+      label: 'Prince Edward Island'
+    -
+      value: NFL
+      label: 'Newfoundland and Labrador'
+  allowed_values_function: ''
+module: options
+locked: false
+cardinality: 1
+translatable: true
+indexes: {  }
+persist_with_no_fields: false
+custom_storage: false

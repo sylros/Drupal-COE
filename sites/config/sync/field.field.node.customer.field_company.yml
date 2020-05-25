@@ -1,0 +1,19 @@
+uuid: 05eed8ea-907a-4f0a-8516-cf494d8ac54e
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_company
+    - node.type.customer
+id: node.customer.field_company
+field_name: field_company
+entity_type: node
+bundle: customer
+label: Company
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: string

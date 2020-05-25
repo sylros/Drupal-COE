@@ -1,0 +1,5 @@
+name: HC Form Demo
+type: module
+description: 'Module that shows various options for forms'
+package: HC Demo
+core: 8.x

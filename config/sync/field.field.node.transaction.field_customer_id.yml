@@ -1,0 +1,19 @@
+uuid: d040eba2-95d5-4706-b836-af99b66a4de0
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_customer_id
+    - node.type.transaction
+id: node.transaction.field_customer_id
+field_name: field_customer_id
+entity_type: node
+bundle: transaction
+label: 'Customer ID'
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: string

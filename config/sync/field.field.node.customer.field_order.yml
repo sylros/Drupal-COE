@@ -1,0 +1,21 @@
+uuid: e1bbe3ab-2fb8-4f4a-a540-9e2b128e8d1a
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_order
+    - node.type.customer
+id: node.customer.field_order
+field_name: field_order
+entity_type: node
+bundle: customer
+label: Order
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings:
+  handler: 'default:node'
+  handler_settings: {  }
+field_type: entity_reference

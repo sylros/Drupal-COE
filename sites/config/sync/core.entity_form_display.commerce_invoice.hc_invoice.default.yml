@@ -1,0 +1,80 @@
+uuid: e670efdd-c9a4-48ce-bcd3-8203975f21b1
+langcode: en
+status: true
+dependencies:
+  config:
+    - commerce_invoice.commerce_invoice_type.hc_invoice
+    - field.field.commerce_invoice.hc_invoice.field_invoice_num
+    - field.field.commerce_invoice.hc_invoice.field_organization_number
+    - field.field.commerce_invoice.hc_invoice.field_payer_s_email
+    - field.field.commerce_invoice.hc_invoice.field_payer_s_name
+    - field.field.commerce_invoice.hc_invoice.field_payer_s_phone_number
+    - field.field.commerce_invoice.hc_invoice.field_payment_amount
+    - field.field.commerce_invoice.hc_invoice.field_sap_customer_number
+  module:
+    - commerce_price
+    - telephone
+id: commerce_invoice.hc_invoice.default
+targetEntityType: commerce_invoice
+bundle: hc_invoice
+mode: default
+content:
+  field_invoice_num:
+    weight: 5
+    settings:
+      placeholder: ''
+    third_party_settings: {  }
+    type: number
+    region: content
+  field_organization_number:
+    weight: 3
+    settings:
+      placeholder: ''
+    third_party_settings: {  }
+    type: number
+    region: content
+  field_payer_s_email:
+    weight: 7
+    settings:
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+    type: email_default
+    region: content
+  field_payer_s_name:
+    weight: 6
+    settings:
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+    type: string_textfield
+    region: content
+  field_payer_s_phone_number:
+    weight: 8
+    settings:
+      placeholder: ''
+    third_party_settings: {  }
+    type: telephone_default
+    region: content
+  field_payment_amount:
+    weight: 9
+    settings: {  }
+    third_party_settings: {  }
+    type: commerce_price_default
+    region: content
+  field_sap_customer_number:
+    weight: 4
+    settings:
+      placeholder: ''
+    third_party_settings: {  }
+    type: number
+    region: content
+  langcode:
+    type: language_select
+    weight: 2
+    region: content
+    settings:
+      include_locked: true
+    third_party_settings: {  }
+hidden:
+  state: true

@@ -1,0 +1,11 @@
+uuid: c9c1e111-055d-4b0f-bd79-dde635e03e96
+langcode: en
+status: true
+dependencies:
+  config:
+    - commerce_product.commerce_product_variation_type.invoice_variant
+id: commerce_product_variation.invoice_variant
+target_entity_type_id: commerce_product_variation
+target_bundle: invoice_variant
+default_langcode: site_default
+language_alterable: false

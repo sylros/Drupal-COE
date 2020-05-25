@@ -1,0 +1,27 @@
+uuid: 37b3a046-e7f8-4d1f-bbd3-94cb82a259a3
+langcode: en
+status: true
+dependencies:
+  module:
+    - commerce_moneris
+id: invoice_payment
+label: 'Invoice Payment'
+weight: null
+plugin: moneris_onsite
+configuration:
+  display_label: Moneris
+  mode: test
+  payment_method_types:
+    - credit_card
+  collect_billing_information: true
+  store_id: store5
+  api_token: yesguy
+  country_code: CA
+  should_pass_avs_info: true
+conditions:
+  -
+    plugin: order_currency
+    configuration:
+      currencies:
+        - CAD
+conditionOperator: AND

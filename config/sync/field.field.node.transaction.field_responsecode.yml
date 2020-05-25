@@ -1,0 +1,23 @@
+uuid: 2cda7899-bc54-4182-bb0c-a36365bae6b3
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_responsecode
+    - node.type.transaction
+id: node.transaction.field_responsecode
+field_name: field_responsecode
+entity_type: node
+bundle: transaction
+label: ResponseCode
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings:
+  min: null
+  max: null
+  prefix: ''
+  suffix: ''
+field_type: integer

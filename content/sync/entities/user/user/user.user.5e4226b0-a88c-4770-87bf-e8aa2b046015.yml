@@ -1,0 +1,50 @@
+uuid:
+  -
+    value: 5e4226b0-a88c-4770-87bf-e8aa2b046015
+langcode:
+  -
+    value: en
+preferred_langcode:
+  -
+    value: en
+preferred_admin_langcode: {  }
+name:
+  -
+    value: ''
+mail:
+  value: null
+timezone:
+  -
+    value: ''
+created:
+  -
+    value: '2020-03-06T15:44:50+00:00'
+    format: 'Y-m-d\TH:i:sP'
+changed:
+  -
+    value: '2020-03-06T15:44:50+00:00'
+    format: 'Y-m-d\TH:i:sP'
+default_langcode:
+  -
+    value: true
+metatag:
+  value: {  }
+path:
+  -
+    alias: null
+    pid: null
+    langcode: en
+field_first_name: {  }
+field_last_name: {  }
+user_picture: {  }
+_content_sync:
+  entity_type: user
+  is_anonymous: true
+pass:
+  -
+    value: null
+    pre_hashed: true
+status:
+  value: '0'
+roles:
+  - anonymous

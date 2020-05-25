@@ -1,0 +1,23 @@
+uuid: b8fe772c-f567-47bf-a88c-5acfff8b57e8
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_transamount
+    - node.type.transaction
+id: node.transaction.field_transamount
+field_name: field_transamount
+entity_type: node
+bundle: transaction
+label: TransAmount
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings:
+  min: null
+  max: null
+  prefix: ''
+  suffix: ''
+field_type: decimal

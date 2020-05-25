@@ -1,0 +1,20 @@
+uuid: 2daaa300-7745-49c6-be58-b928f7a8c765
+langcode: en
+status: true
+dependencies:
+  module:
+    - commerce_invoice
+id: commerce_invoice.field_sap_customer_number
+field_name: field_sap_customer_number
+entity_type: commerce_invoice
+type: integer
+settings:
+  unsigned: false
+  size: normal
+module: core
+locked: false
+cardinality: 1
+translatable: true
+indexes: {  }
+persist_with_no_fields: false
+custom_storage: false
