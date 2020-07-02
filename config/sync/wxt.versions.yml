@@ -15,6 +15,7 @@ commerce_payment: 2.17.0
 commerce_price: 2.17.0
 commerce_product: 2.17.0
 commerce_store: 2.17.0
+cop_hpp_form: 0.0.0
 cop_moneris: 0.0.0
 crop: 2.0.0
 devel: 0.0.0

@@ -22,16 +22,8 @@ class ModerationDashboardAccess extends ConditionPluginBase {
    * {@inheritdoc}
    */
   public function evaluate() {
-    $dashboard_owner = NULL;
-    if(is_string($this->getContextValue('dashboard_user'))){
-      $dashboard_owner = \Drupal\user\Entity\User::load($this->getContextValue('dashboard_user'));
-    } else {
-      $dashboard_owner = $this->getContextValue('dashboard_user');
-    }
+    $dashboard_owner = $this->getContextValue('dashboard_user');
     $current_user = $this->getContextValue('current_user');
-
-    // kint($dashboard_owner);
-    // die();
 
     // If the given user doesn't have a dashboard, nobody can view it.
     if (!$dashboard_owner->hasPermission('use moderation dashboard')) {

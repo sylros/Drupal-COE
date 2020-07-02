@@ -1,0 +1,22 @@
+<?php
+
+use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Entity\EntityTypeInterface;
+use Drupal\Core\Entity\EntityInterface;
+use Drupal\node\Entity\Node;
+use Drupal\commerce_order\Entity\Order;
+
+
+function cop_hpp_form_form_alter(&$form, FormStateInterface &$form_state, $form_id) {
+  if($form_id === 'commerce_order_hc_order_edit_form') {
+    kint($form);
+    kint($form_state->getFormObject()->getEntity());
+
+    $order = \Drupal\commerce_order\Entity\Order::load(29);
+    $node = \Drupal\node\Entity\Node::load(29);
+    kint($node);
+    kint($order);
+  }
+}
+
+  ?>

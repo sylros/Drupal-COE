@@ -1,0 +1,11 @@
+entity.commerce_order.hpp:
+  path: '/admin/commerce/orders/{commerce_order}/hpp'
+  defaults:
+    _form: '\Drupal\cop_hpp_form\Form\PaymentForm'
+    _title: 'Hosted Pay Page redirect'
+  options:
+    parameters:
+      commerce_order:
+        type: 'entity:commerce_order'
+  requirements:
+    _access: 'TRUE'

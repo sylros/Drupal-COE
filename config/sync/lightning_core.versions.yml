@@ -35,6 +35,7 @@ contact: 8.8.2
 content_moderation: 8.8.2
 content_translation: 8.8.2
 contextual: 8.8.2
+cop_hpp_form: 0.0.0
 cop_moneris: 0.0.0
 core_context: 1.0.0-beta1
 crop: 2.0.0

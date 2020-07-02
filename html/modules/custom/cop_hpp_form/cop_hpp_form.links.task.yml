@@ -1,0 +1,5 @@
+entity.commerce_order.hosted_pay_page:
+  route_name: entity.commerce_order.hpp
+  base_route: entity.commerce_order.canonical
+  title: Go to Hosted Pay page
+  weight: 999

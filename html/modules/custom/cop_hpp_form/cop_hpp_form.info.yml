@@ -1,0 +1,5 @@
+name: COPS HPP Pay Page module
+type: module
+description: 'Module for using moneris hosted pay page'
+package: COPS
+core: 8.x

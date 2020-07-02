@@ -1,0 +1,8 @@
+# Define a route for our event dispatching example.
+cop_moneris.payment_form:
+  path: '/moneris/payment'
+  defaults:
+    _form: '\Drupal\cop_moneris\Form\PaymentEventForm'
+    _title: 'Moneris Payment Event'
+  requirements:
+    _permission: 'access content'
