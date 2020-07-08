@@ -1,0 +1,5 @@
+entity.commerce_order.order_payment:
+  route_name: entity.commerce_order.order_payment
+  base_route: entity.commerce_order.canonical
+  title: Order Payment
+  weight: 998

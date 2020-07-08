@@ -10,6 +10,7 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 use Drupal\node\Entity\Node;
 use Drupal\commerce_order\Entity\Order;
+use Drupal\commerce_price\Price;
 
 class MonerisEventSubscriber implements EventSubscriberInterface {
 
@@ -38,8 +39,25 @@ class MonerisEventSubscriber implements EventSubscriberInterface {
     if($this->validateTransaction($transaction)) {
       //Update order entity
       $oid = $transaction['oid'];
-      $payment = $transaction['payment'];
+      $payment['number'] = $transaction['payment'];
+      $payment['currency_code'] = 'CAD';
       $order = Order::load($oid);
+      kint($order);
+      kint($payment);
+      kint($oid);
+
+      $currentBalance = $order->get('total_price');
+      kint($currentBalance);
+      $currentPayedaBalanced = $order->get('total_paid');
+      if($payment > 0 && ($currentBalance->getValue()[0]['number'] - $currentPayedaBalanced->getValue()[0]['number'] - $payment['number'] > 0)) {
+        $totalPaid['number'] = $payment['number'] + $currentPayedaBalanced->getValue['number'];
+        $totalPaid['currency_code'] = 'CAD';
+        // $currentPayedaBalanced->setValue($totalPaid);
+        $paid = new Price($totalPaid['number'],$totalPaid['currency_code']);
+        $order->setTotalPaid($paid);
+        $order->save();
+      }
+
       kint($order);
       die();
     } else {

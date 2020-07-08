@@ -71,8 +71,8 @@ class PaymentEventForm extends FormBase {
     $this->eventDispatcher->dispatch(PaymentEvent::NEW_TRANSACTION,$event);
 
     $order = Order::load($oid);
-    kint($order);
-    die();
+    // kint($order);
+    // die();
   }
 }
  ?>

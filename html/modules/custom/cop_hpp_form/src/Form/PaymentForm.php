@@ -18,7 +18,7 @@ use Drupal\Core\Routing\RedirectResponse;
 //Commerce libraries
 use Drupal\commerce_order\Form\CustomerFormTrait;
 use Drupal\commerce_order\Order;
-
+use Drupal\commerce_payment\PluginForm\PaymentOffsiteForm;
 //Guzzle Libraries
 use Guzzle\Core\Url as GuzzleUrl;
 use GuzzleHttp\Client as GuzzleClient;
@@ -55,28 +55,28 @@ class PaymentForm extends FormBase {
     // kint($customer->get('field_first_name')->getValue()[0]['value']);
     // kint($this->order->get('total_price')->getValue()[0]);
 
-    $form['store_id'] = array(
+    $form['ps_store_id'] = array(
       '#type' => 'textarea',
       '#title' => 'Store ID',
       '#default_value' => 'A2RGRtore3',
       '#required' => TRUE
     );
 
-    $form['store_key'] = array(
+    $form['hpp_key'] = array(
       '#type' => 'textarea',
       '#title' => 'Store Key',
       '#default_value' => 'hpUJR27FMKBH',
       '#required' => TRUE
     );
 
-    $form['total_charge'] = array(
+    $form['charge_total'] = array(
       '#type' => 'textarea',
       '#title' => 'Total Price',
       '#default_value' => $this->order->get('total_price')->getValue()[0]['number'],
       '#required' => TRUE
     );
 
-    $form['customer_id'] = array(
+    $form['cust_id'] = array(
       '#type' => 'textarea',
       '#title' => 'Customer ID',
       '#default_value' => $customer->get('uid')->getValue()[0]['value'],
@@ -90,7 +90,7 @@ class PaymentForm extends FormBase {
       '#required' => TRUE
     );
 
-    $form['language'] = array(
+    $form['lang'] = array(
       '#type' => 'textarea',
       '#title' => 'Language',
       '#default_value' => $customer->language()->getId(),
@@ -127,7 +127,7 @@ class PaymentForm extends FormBase {
     );
 
     //Hosted Pay Page should override this value - Doesn't matter
-    $form['eci'] = array(
+    $form['ECI'] = array(
       '#type' => 'textarea',
       '#title' => 'ECI',
       '#default_value' => '1',
@@ -292,7 +292,15 @@ class PaymentForm extends FormBase {
       '#button_type' => 'primary',
     );
 
-
+    $form['#redirect_url'] = 'https://esqa.moneris.com/HPPDP/index.php';
+    // unset($form['#attached']['library']);
+    //
+    // $data['store_id'] = 'A2RGRtore3';
+    // $data['store_key'] = 'hpUJR27FMKBH';
+    // $data['total_charge'] = $this->order->get('total_price')->getValue()[0]['number'];
+    // $data['customer_id'] = $customer->get('uid')->getValue()[0]['value'];
+    // $data['order_id'] = $this->order->get('order_id')->getValue()[0]['value'];
+    // $form = PaymentOffsiteForm::buildRedirectForm($form,$form_state,$host,$data,'POST');
     return $form;
   }
 
@@ -312,17 +320,17 @@ class PaymentForm extends FormBase {
 
     // $fields = array();
     $fields = array (
-      'ps_store_id' => $form_state->getValue('store_id'),
-      'hpp_key' => $form_state->getValue('store_key'),
-      'charge_total' => $form_state->getValue('total_charge'),
-      'cust_id' => $form_state->getValue('customer_id'),
+      'ps_store_id' => $form_state->getValue('ps_store_id'),
+      'hpp_key' => $form_state->getValue('hpp_key'),
+      'charge_total' => $form_state->getValue('charge_total'),
+      'cust_id' => $form_state->getValue('cust_id'),
       'order_id' => $form_state->getValue('order_id'),
       'lang' => $form_state->getValue('language'),
       'gst' => $form_state->getValue('gst'),
       'pst' => $form_state->getValue('pst'),
       'hst' => $form_state->getValue('hst'),
       'shipping_cost' => $form_state->getValue('shipping_cost'),
-      'eci' => $form_state->getValue('eci')
+      'ECI' => $form_state->getValue('ECI')
     );
 
     $headers = array(
@@ -330,8 +338,6 @@ class PaymentForm extends FormBase {
       // 'location' => $host
     );
 
-    $redirect = new TrustedRedirectResponse($host,302,$headers);//,302,$fields,$headers);//,302,$headers);
-    // $form_state->setResponse($redirect);
     // $response = \Drupal::httpClient()->post($host,['form_params' => $fields]);
 
     $response = \Drupal::httpClient()->post($host, [
@@ -343,7 +349,9 @@ class PaymentForm extends FormBase {
       'Accept' => 'text/html',
     ]);
 
-    $post = \Drupal::request();
+    $redirect = new TrustedRedirectResponse($host,302,$headers);//,302,$fields,$headers);//,302,$headers);
+    $form_state->setResponse($redirect);
+    // $post = \Drupal::request();
     // $post->server->set('REQUEST_URI',$host);
     // $post->headers->set('host',$host);
     // kint($post);
