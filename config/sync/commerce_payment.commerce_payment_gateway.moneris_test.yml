@@ -1,0 +1,24 @@
+uuid: b31f7590-48fa-4e70-87e2-3b595544b142
+langcode: en
+status: true
+dependencies:
+  module:
+    - cop_hpp_form
+id: moneris_test
+label: 'Moneris Test'
+weight: null
+plugin: moneris_offsite_redirect
+configuration:
+  redirect_method: post
+  display_label: 'Moneris Hosted Pay Page Redirect'
+  mode: test
+  payment_method_types:
+    - credit_card
+  collect_billing_information: true
+conditions:
+  -
+    plugin: order_currency
+    configuration:
+      currencies:
+        - CAD
+conditionOperator: AND
