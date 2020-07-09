@@ -27,6 +27,7 @@ use GuzzleHttp\Psr7\Request as GuzzleRequest;
 
 /**
  * Provides the order add form.
+ * Form redirect does not work look at offsite payment gateway for solution to posting data to moneris and redirecting users to the correct location
  */
 class PaymentForm extends FormBase {
   protected $order;
@@ -285,7 +286,6 @@ class PaymentForm extends FormBase {
     );
 
     $form['actions']['#type'] = 'actions';
-    // kint($form['actions']);
     $form['actions']['submit'] = array(
       '#type' => 'submit',
       '#value' => $this->t('Make Payment'),
@@ -293,32 +293,12 @@ class PaymentForm extends FormBase {
     );
 
     $form['#redirect_url'] = 'https://esqa.moneris.com/HPPDP/index.php';
-    // unset($form['#attached']['library']);
-    //
-    // $data['store_id'] = 'A2RGRtore3';
-    // $data['store_key'] = 'hpUJR27FMKBH';
-    // $data['total_charge'] = $this->order->get('total_price')->getValue()[0]['number'];
-    // $data['customer_id'] = $customer->get('uid')->getValue()[0]['value'];
-    // $data['order_id'] = $this->order->get('order_id')->getValue()[0]['value'];
-    // $form = PaymentOffsiteForm::buildRedirectForm($form,$form_state,$host,$data,'POST');
     return $form;
   }
 
   public function submitForm(array &$form, FormStateInterface $form_state) {
-    // $method = 'POST';
-    // $client = new GuzzleClient();
-    // $url = 'https://esqa.moneris.com/HPPDP/index.php';
-    // $header = array();
-    //
-    // $body;
-    //
-    // $request = new GuzzleRequest($method,$url,$headers)
-
     $host = 'https://esqa.moneris.com/HPPDP/index.php';
 
-    // dpm($form_state->getValue('store_id'));
-
-    // $fields = array();
     $fields = array (
       'ps_store_id' => $form_state->getValue('ps_store_id'),
       'hpp_key' => $form_state->getValue('hpp_key'),
@@ -335,10 +315,7 @@ class PaymentForm extends FormBase {
 
     $headers = array(
       'Content-type' => 'application/x-www-form-urlencoded',
-      // 'location' => $host
     );
-
-    // $response = \Drupal::httpClient()->post($host,['form_params' => $fields]);
 
     $response = \Drupal::httpClient()->post($host, [
       'form_params' => $fields,
@@ -351,134 +328,6 @@ class PaymentForm extends FormBase {
 
     $redirect = new TrustedRedirectResponse($host,302,$headers);//,302,$fields,$headers);//,302,$headers);
     $form_state->setResponse($redirect);
-    // $post = \Drupal::request();
-    // $post->server->set('REQUEST_URI',$host);
-    // $post->headers->set('host',$host);
-    // kint($post);
-    // die();
-
-
-    // $response->send();
-    // $form_state->setResponse($response);
-
-    // kint($response);
-    // kint($form_state);
-    // die();
-    // kint($response);
-    // kint($response->getBody());
-    // kint($response->getBody()->getContents());
-    // $form_state->setResponse($response->getBody()->getContents());
-    // $form_state->setRedirect($response->getBody()->getContents());
-    // die();
-
-    // kint($redirect);
-    // // $redirect->setRouteParameters($fields);
-    // $form_state->setRedirect($redirect);
-    // $redirect = $form_state->getRedirect();
-    // $redirect->setRouteParameters($fields);
-    // // $form_state->setRedirect(NULL);
-    // kint($redirect);
-    // kint($form_state);
-    // die();
-    //
-    // $form_state->setRedirect($host,$fields,$headers);
-
-    // $url = Url::fromUri($host);
-    // $redirect = new TrustedRedirectResponse($host);
-    // $redirect->setContent($fields);
-    // kint($redirect);
-    // die();
-    // $url->setRouteParameters($fields);
-    // kint($url);
-    // kint($url->isExternal());
-    // $form_state->setResponse($redirect);
-    // die();
-
-
-    // kint($fields);
-    // die();
-    //
-    // $client = \Drupal::httpClient();
-    // kint($client);
-    // die();
-    //
-    // $status = $response->getStatusCode();
-
-    // $request = new GuzzleRequest('POST',$host,$headers);//,$fields);
-    // kint($request);
-
-    // $client = new GuzzleClient(['base_uri' => $host]);
-    // kint($client);
-    // $options = array(
-    //   'form_params' => $fields,
-    //   'headers' => $headers,
-    // );
-    // $response = $client->post($options);
-    //
-    // kint($response);
-    //
-    // die();
-    // $response = \Drupal::httpClient()->post('https://esqa.moneris.com/HPPDP/index.php', [
-    //   'form_params' => $fields,
-    //   'headers' => [
-    //     'Content-type' => 'application/x-www-form-urlencoded',
-    //   ],
-    //   'allow_redirects' => TRUE
-    // ]);
-
-    // kint($response->getBody());
-    // kint($response->getStatusCode());
-        // die();
-
-    // $sResponse = new Response($response->getBody(),$response->getStatusCode(),$headers);
-    // kint($sResponse);
-    // die();
-
-    // kint($response);
-    // kint($response->getBody()->__toString());
-    // die();
-    // $form_state->setResponse($sResponse);
-    // kint($form_state);
-    // $client = \Drupal::httpClient();
-    // die();
-    // kint($response);
-    // kint($form_state);
-    // kint($response->getBody());
-    // die();
-    // kint($response->getBody()->getMetadata());
-    // $uri = $response->getBody()->getMetadata()['uri'];
-    // $url = Url::fromUri($host);
-    // kint($url);
-    // kint($response->getBody()->getContents());
-    // kint($response->getBody()->__toString());
-    // die();
-    // $headers = array();
-
-    // $form_state->setResponse($response);
-
-    // $form_state->disableRedirect();
-    // $redirect = new TrustedRedirectResponse($host);//,$fields,$headers);
-    // kint($redsirect);
-    // die();
-    // $metadata = $redirect->getCacheableMetadata();
-    // $metadata->setCacheMaxAge(0);
-    // $redirect->send();
-
-    // $form_state->setResponse($redirect);
-    // kint($redirect->getContent()  );
-    // die();
-    // $form_state->setResponse($response);
-
-    // kint($url->toString());
-    // die();
-    // $form_state->setResponse($url);
-
-    // $form_state->disableRedirect();
-    // kint($form_state);
-    // kint($form_state->getRedirect());
-    // kint($form_state->isRedirectDisabled());
-    //
-    // die();
   }
 }
  ?>

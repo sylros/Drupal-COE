@@ -228,7 +228,5 @@ class HostedPayPageRedirectForm extends BasePaymentOffsiteForm {
 
     unset($form['#attached']['library']);
     $form = $this->buildRedirectForm($form,$form_state,$redirect_url,$data,$redirect_method);
-
-    $return $this->buildRedirectForm($form, $form_state);
   }
 }

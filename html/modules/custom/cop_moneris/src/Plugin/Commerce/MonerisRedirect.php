@@ -68,6 +68,7 @@ class MonerisRedirect extends OffsitePaymentGatewayBase {
 
   /**
    * {@inheritdoc}
+   * This is the function that should be called when Moneris responds with a success
    */
   public function onReturn(OrderInterface $order, Request $request) {
     // @todo Add examples of request validation.

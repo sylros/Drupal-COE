@@ -19,15 +19,10 @@ class MonerisRedirect extends BasePaymentOffsiteForm {
 
     $host = 'https://esqa.moneris.com/HPPDP/index.php';
     $redirect_url = $host;//Create URL from URI
-    // $redirect_url = Url::fromRoute('commerce_payment_example.dummy_redirect_post')->toString();
     $redirect_method = 'post';
 
     $order = $payment->getOrder();
     $customer = $order->getCustomer();
-
-    // kint($order);
-    // kint($customer);
-    // die();
 
     //Set data from the Order and Customer object which should be in the Payment object
     $data = [
@@ -40,13 +35,7 @@ class MonerisRedirect extends BasePaymentOffsiteForm {
       'ECI' => 1,
     ];
 
-    // kint($redirect_url);
-    // kint($data);
-    // kint($redirect_method);
-    // die();
-
     $form = $this->buildRedirectForm($form, $form_state, $redirect_url, $data, self::REDIRECT_POST);
-    // kint($form);
     return $form;
   }
 }

@@ -11,6 +11,10 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Drupal\node\Entity\Node;
 use Drupal\commerce_order\Entity\Order;
 use Drupal\commerce_price\Price;
+use Drupal\commerce_payment\Entity\Payment;
+use Drupal\commerce_payment\Entity\PaymentMethod;
+use Drupal\commerce_payment\Entity\PaymentInterface;
+
 
 class MonerisEventSubscriber implements EventSubscriberInterface {
 
@@ -25,41 +29,32 @@ class MonerisEventSubscriber implements EventSubscriberInterface {
 
   public function processMessage(NewPaymentProcessedEvent $event) {
     if($this->processTransaction($event->getTransaction())) {
-      //Create or Update a node with infomration from the message
-      // $this->messenger()->addStatus($this->t('This is the message: @message',['@message' => $event->getMessage()]));
-      // Record success
+      \Drupal::logger('cop_moneris')->notice('Transacion processed succesfully');
     } else {
+      \Drupal::logger('cop_moneris')->notice('Error processing transaction');
       //Report Issue with message
     }
   }
 
   public function processTransaction($transaction) {
     drupal_set_message("Processing transaction");
+
     //Validate Transaction information
     if($this->validateTransaction($transaction)) {
-      //Update order entity
-      $oid = $transaction['oid'];
-      $payment['number'] = $transaction['payment'];
-      $payment['currency_code'] = 'CAD';
-      $order = Order::load($oid);
-      kint($order);
-      kint($payment);
-      kint($oid);
+      $payment = Payment::create([
+        'type' => 'payment_default',
+        'state' => 'Moneris Transaction Response',
+        'amount' => $transaction['price'],
+        'payment_gateway' => $transaction['payment_gateway']->id(),
+        'order_id' => $transaction['order']->id(),
+        'remote_id' => '1234567890',
+        '$payment_gateway_mode' => $transaction['payment_gateway']->getPlugin()->getMode(),
+        'expires' => '0',
+        'uid' => $transaction['customer'],
+      ]);
 
-      $currentBalance = $order->get('total_price');
-      kint($currentBalance);
-      $currentPayedaBalanced = $order->get('total_paid');
-      if($payment > 0 && ($currentBalance->getValue()[0]['number'] - $currentPayedaBalanced->getValue()[0]['number'] - $payment['number'] > 0)) {
-        $totalPaid['number'] = $payment['number'] + $currentPayedaBalanced->getValue['number'];
-        $totalPaid['currency_code'] = 'CAD';
-        // $currentPayedaBalanced->setValue($totalPaid);
-        $paid = new Price($totalPaid['number'],$totalPaid['currency_code']);
-        $order->setTotalPaid($paid);
-        $order->save();
-      }
+      $payment->save();
 
-      kint($order);
-      die();
     } else {
       return FALSE;
     }

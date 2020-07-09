@@ -14,11 +14,21 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\Response;
 use Drupal\Core\Routing\TrustedRedirectResponse;
 use Drupal\Core\Routing\RedirectResponse;
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
 //Commerce libraries
 use Drupal\commerce_order\Form\CustomerFormTrait;
-use Drupal\commerce_order\Order;
-use Drupal\commerce_payment\PluginForm\PaymentOffsiteForm;
+use Drupal\commerce_order\Entity\Order;
+use Drupal\commerce_payment\Entity\Payment;
+use Drupal\commerce_payment\Entity\PaymentMethod;
+use Drupal\commerce_payment\Entity\PaymentInterface;
+use Drupal\commerce_order\Entity\OrderInterface;
+use Drupal\commerce_price\Price;
+
+//Events
+use Drupal\cop_moneris\Event\PaymentEvent;
+use Drupal\cop_moneris\Event\NewPaymentProcessedEvent;
+use Drupal\cop_moneris\EventSubscriber\MonerisEventSubscriber;
 
 class OrderForm extends FormBase {
   protected $order;
@@ -42,8 +52,12 @@ class OrderForm extends FormBase {
   }
 
   public function buildForm(array $form, FormStateInterface $form_state) {
-    kint($this->order);
-    // $form['order_id'] = $order->get
+    $form['payment'] = array(
+      '#type' => 'textarea',
+      '#title' => 'Total Price',
+      '#default_value' => '',
+      '#required' => TRUE
+    );
 
     $form['actions']['#type'] = 'actions';
     $form['actions']['submit'] = array(
@@ -56,7 +70,23 @@ class OrderForm extends FormBase {
   }
 
   public function submitForm(array &$form, FormStateInterface $form_state) {
+    $dispatcher = \Drupal::service('event_dispatcher');
+    $payment_gateway = \Drupal::EntityTypeManager()
+      ->getStorage('commerce_payment_gateway')
+      ->load('moneris_test');
 
+    $amount = $form_state->getValue('payment');
+    $price = Price::fromArray(['number' => $amount,'currency_code' => 'CAD']);
+
+    $transaction = array(
+      'price' => $price,
+      'payment_gateway' => $payment_gateway,
+      'order' => $this->order,
+      'customer' => $this->order->getCustomerId(),
+    );
+
+    $event = new NewPaymentProcessedEvent($transaction);
+    $dispatcher->dispatch(PaymentEvent::NEW_TRANSACTION, $event);
   }
 }
 
