@@ -1,0 +1,11 @@
+uuid: 2956bdd0-7d51-45bd-a8ec-ffa09f300d7d
+langcode: en
+status: true
+dependencies:
+  config:
+    - node.type.data_centre
+id: node.data_centre
+target_entity_type_id: node
+target_bundle: data_centre
+default_langcode: site_default
+language_alterable: false

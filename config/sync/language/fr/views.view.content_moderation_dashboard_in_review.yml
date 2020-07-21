@@ -34,5 +34,6 @@ display:
           exception:
             title: Tout
         'null':
+          admin_label: 'Utilisateur connecté'
           exception:
             title: Tout

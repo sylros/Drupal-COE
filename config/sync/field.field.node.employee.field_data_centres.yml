@@ -1,0 +1,28 @@
+uuid: d6db9f3a-83f2-4e7e-a802-81767205d315
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_data_centres
+    - node.type.data_centre
+    - node.type.employee
+id: node.employee.field_data_centres
+field_name: field_data_centres
+entity_type: node
+bundle: employee
+label: 'data centres'
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings:
+  handler: 'default:node'
+  handler_settings:
+    target_bundles:
+      data_centre: data_centre
+    sort:
+      field: _none
+    auto_create: false
+    auto_create_bundle: ''
+field_type: entity_reference

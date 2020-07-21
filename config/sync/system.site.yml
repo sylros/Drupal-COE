@@ -1,4 +1,4 @@
-name: claims
+name: APM-lite
 mail: patrick.gohard@canada.ca
 slogan: 'Collaborative open source project led by the Government of Canada'
 page:
@@ -13,4 +13,4 @@ langcode: en
 default_langcode: en
 _core:
   default_config_hash: uNOHaKWnoIbi-Q7d7NTqX2PeF_cwCaM9tTmwBoM2COA
-uuid: 5e0bbab2-215c-4129-a220-4f2ff72cb8af
+uuid: fe360ad9-2ad0-47f7-8004-230fc3aa34b8

@@ -1250,9 +1250,6 @@ abstract class FilterPluginBase extends HandlerBase implements CacheableDependen
     if ($type == 'value' && empty($this->always_required) && empty($this->options['expose']['required']) && $form['#type'] == 'select' && empty($form['#multiple'])) {
       $form['#options'] = ['All' => $this->t('- Any -')] + $form['#options'];
       $form['#default_value'] = 'All';
-      if (!isset($this->value)) {
-        $form['#default_value'] = 'All';
-      }
     }
 
     if (!empty($this->options['expose']['required'])) {

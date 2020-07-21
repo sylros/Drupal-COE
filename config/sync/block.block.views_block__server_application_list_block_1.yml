@@ -1,0 +1,38 @@
+uuid: 38ee34da-f94e-4048-aebc-e5618014b7ac
+langcode: en
+status: true
+dependencies:
+  config:
+    - views.view.server_application_list
+  module:
+    - ctools
+    - views
+    - wxt_library
+  theme:
+    - wxt_bootstrap
+id: views_block__server_application_list_block_1
+theme: wxt_bootstrap
+region: content
+weight: 0
+provider: null
+plugin: 'views_block:server_application_list-block_1'
+settings:
+  id: 'views_block:server_application_list-block_1'
+  label: ''
+  provider: views
+  label_display: visible
+  views_label: ''
+  items_per_page: none
+visibility:
+  'entity_bundle:node':
+    id: 'entity_bundle:node'
+    bundles:
+      server: server
+    negate: false
+    context_mapping:
+      node: '@node.node_route_context:node'
+  panels_title:
+    id: panels_title
+    enabled: 0
+    negate: false
+    context_mapping: {  }

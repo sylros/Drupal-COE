@@ -1,0 +1,159 @@
+<?php
+
+use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Entity\EntityTypeInterface;
+use Drupal\Core\Entity\EntityInterface;
+use Drupal\node\Entity\Node;
+
+function apm_users_form_alter(&$form, FormStateInterface $form_state, $form_id) {
+  // drupal_set_message("This is form id: $form_id");
+  if($form_id === 'node_server_form' || $form_id === 'node_server_edit_form') {
+    // kint($form['field_employee_id']['widget'][0]['value']['#default_value']);
+    // drupal_set_message("This is employee ID: " . $form['field_employee_id']['widget'][0]['value']['#default_value']);
+
+    // kint(\Drupal::currentUser());
+
+    //Adds custom submit function to form
+    foreach (array_keys($form['actions']) as $action) {
+      if ($action != 'preview' && isset($form['actions'][$action]['#type']) && $form['actions'][$action]['#type'] === 'submit') {
+        $form['actions'][$action]['#submit'][] = 'apm_users_form_submit';
+      }
+    }
+  }
+
+  if($form_id === 'node_application_edit_form' || $form_id === 'node_application_form') {
+    // kint($form);
+  }
+}
+
+function apm_users_form_submit($form, FormStateInterface $form_state) {
+  // $employee_id = $form_state->getValue('field_employee_id');
+  $entity = $form_state->getformObject()->getEntity();
+  updateRelatedEntities($entity, $form_state);
+
+}
+
+function updateRelatedEntities(EntityInterface $entity, FormStateInterface $form_state) {
+  $entityType = $entity->bundle();
+  $node = NULL;
+  //Check the list of applications have the server
+  //Check that owner has the server listed
+  //Chek that the data centre as the server listed
+  //If decommission date is set, set decommission date for all applications
+  if($entityType === 'server') {
+    // kint($entity);
+
+    if($entity->hasField('field_owner')) {
+      $owner = $entity->get('field_owner')->getValue()[0]['target_id'];
+      $node = Node::load($owner);
+      $servers = $node->get('field_server_list')->getValue(); // List of servers currently assigned to user
+      $bool = FALSE;
+
+      foreach ($servers as $key => $value) {
+        if($value['target_id'] === $entity->id()) {
+          $bool = TRUE;
+        }
+      }
+
+      if(!$bool) {
+        $servers[] = $entity->id();
+        $node->set('field_server_list',$servers);
+        $node->setNewRevision(TRUE);
+        $node->revision_log = 'Updated owner information based on changes made to server ' . $entity->get('title')->getValue()[0]['value'];
+        $node->setRevisionCreationTime(REQUEST_TIME);
+        $node->setRevisionUserId(\Drupal::currentUser()->id());
+        $node->save();
+      }
+    }
+
+    if($entity->hasField('field_data_center')) {
+      $datacentre = $entity->get('field_data_center')->getValue()[0]['target_id'];
+
+      $node = Node::load($datacentre);
+      $server = $node->get('field_servers')->getValue();
+      $bool = FALSE;
+
+      foreach ($server as $key => $value) {
+        if($value['target_id'] === $entity->id()) {
+          $bool = TRUE;
+        }
+      }
+
+      if(!$bool) {
+        $server[] = $entity->id();
+        $node->set('field_servers', $servers);
+        $node->save();
+      }
+    }
+
+    if($entity->hasField('field_application_list'))  {
+      $applications = $entity->get('field_application_list')->getValue();
+      // $bool = FALSE;
+      $counter = 1;
+      foreach ($applications as $key => $value) {
+        // kint($value['target_id']);
+        $node = Node::load($value['target_id']);
+        $server = $node->get('field_servers')->getValue();
+        $bool = FALSE;
+
+        foreach ($server as $key => $value) {
+          if($value['target_id'] === $entity->id()) {
+            $bool = TRUE;
+          }
+        }
+
+        if(!$bool) {
+          $counter++;
+          $server[] = $entity->id();
+          $node->set('field_servers',$servers);
+          $node->save();
+          continue;
+        }
+      }
+
+      // die();
+    }
+
+    if(!$entity->get('field_decomision_date')->isEmpty()) {
+      $decommision = $entity->get('field_decomision_date');
+      kint($decommision);
+      kint($decommision->getValue()[0]['value']);
+
+      //Get list of applications and check date
+      $applications = $entity->get('field_application_list')->getValue();
+
+      foreach ($applications as $key => $value) {
+        $node = Node::load($value['target_id']);
+        kint($node);
+        kint($node->hasField('field_decomision_date'));
+        kint($node->get('field_decomision_date')->getValue());
+        drupal_set_message("This is null check");
+
+        if($node->get('field_decomision_date')->getValue()[0] === NULL) {
+          drupal_set_message("field is null");
+        } else {
+          $serverDate = $decommision->getValue()[0]['value'];
+          $appDate = $node->get('field_decomision_date')->getValue()[0]['value'];
+          drupal_set_message("This is the field: " . $node->get('field_decomision_date')->getValue()[0]['value']);
+          drupal_set_message("This is the servers decommission date: " . $decommision->getValue()[0]['value']);
+          drupal_set_message("Compare dates to see if field should be updated");
+
+          if($serverDate < $appDate) {
+            drupal_set_message("server date is sooner");
+            drupal_set_message("Updating date for application");
+            $node->set('field_decomision_date', $decommision->getValue()[0]['value']);
+            $node->save();
+          } else if ($serverDate > $appDate) {
+            drupal_set_message("server date is later");
+            drupal_set_message("application date remains the same");
+          } else {
+            drupal_set_message("server date is the same");
+          }
+
+        }
+        $app = $node->get('field_application_id');
+      }
+    }
+  }
+
+}

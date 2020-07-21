@@ -1,4 +1,4 @@
-uuid: 78a84d68-b62f-44cb-a9f1-5052b38dd8f2
+uuid: 8457ebb6-92fc-4814-8193-1e0c5a339887
 langcode: en
 status: true
 dependencies:
@@ -12,7 +12,7 @@ _core:
 id: wxt_bootstrap_page_title
 theme: wxt_bootstrap
 region: header
-weight: -8
+weight: -9
 provider: null
 plugin: page_title_block
 settings:

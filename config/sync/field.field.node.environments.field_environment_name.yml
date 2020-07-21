@@ -1,0 +1,19 @@
+uuid: 2fb4733d-8924-47d7-894a-a469842c29fa
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_environment_name
+    - node.type.environments
+id: node.environments.field_environment_name
+field_name: field_environment_name
+entity_type: node
+bundle: environments
+label: 'Environment Name'
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: string

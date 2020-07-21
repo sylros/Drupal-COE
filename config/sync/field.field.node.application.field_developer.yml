@@ -1,0 +1,28 @@
+uuid: f704f10f-8a8a-4a85-b6d2-dbada93c00e3
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_developer
+    - node.type.application
+    - node.type.employee
+id: node.application.field_developer
+field_name: field_developer
+entity_type: node
+bundle: application
+label: Developer
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings:
+  handler: 'default:node'
+  handler_settings:
+    target_bundles:
+      employee: employee
+    sort:
+      field: _none
+    auto_create: false
+    auto_create_bundle: ''
+field_type: entity_reference

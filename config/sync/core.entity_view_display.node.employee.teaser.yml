@@ -1,0 +1,40 @@
+uuid: a5ad46cb-7d1b-444f-b7ae-78ec58eb01d6
+langcode: en
+status: true
+dependencies:
+  config:
+    - core.entity_view_mode.node.teaser
+    - field.field.node.employee.field_application_list
+    - field.field.node.employee.field_data_centres
+    - field.field.node.employee.field_email
+    - field.field.node.employee.field_employee_id
+    - field.field.node.employee.field_is_currently_employed
+    - field.field.node.employee.field_name
+    - field.field.node.employee.field_roles
+    - field.field.node.employee.field_server_list
+    - field.field.node.employee.field_sub_role
+    - node.type.employee
+  module:
+    - user
+id: node.employee.teaser
+targetEntityType: node
+bundle: employee
+mode: teaser
+content:
+  links:
+    weight: 100
+    settings: {  }
+    third_party_settings: {  }
+    region: content
+hidden:
+  content_moderation_control: true
+  field_application_list: true
+  field_data_centres: true
+  field_email: true
+  field_employee_id: true
+  field_is_currently_employed: true
+  field_name: true
+  field_roles: true
+  field_server_list: true
+  field_sub_role: true
+  langcode: true

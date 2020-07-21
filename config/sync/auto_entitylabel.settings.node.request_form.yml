@@ -1,6 +1,0 @@
-status: 1
-pattern: Request
-escape: false
-dependencies:
-  config:
-    - node.type.request_form

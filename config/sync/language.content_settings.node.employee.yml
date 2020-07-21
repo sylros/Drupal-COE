@@ -1,0 +1,11 @@
+uuid: fc41eb37-cb97-45a8-9fd2-22b382d06109
+langcode: en
+status: true
+dependencies:
+  config:
+    - node.type.employee
+id: node.employee
+target_entity_type_id: node
+target_bundle: employee
+default_langcode: site_default
+language_alterable: false

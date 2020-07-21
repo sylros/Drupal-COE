@@ -1,0 +1,39 @@
+uuid: 21fd3c61-02bc-49b6-aeec-ed806555fcdc
+langcode: en
+status: true
+dependencies:
+  config:
+    - views.view.data_centres
+  module:
+    - node
+    - views
+    - wxt_library
+  theme:
+    - wxt_bootstrap
+id: views_block__data_centres_block_1
+theme: wxt_bootstrap
+region: content
+weight: 0
+provider: null
+plugin: 'views_block:data_centres-block_1'
+settings:
+  id: 'views_block:data_centres-block_1'
+  label: ''
+  provider: views
+  label_display: visible
+  views_label: ''
+  items_per_page: none
+  context_mapping: {  }
+visibility:
+  node_type:
+    id: node_type
+    bundles:
+      data_centre: data_centre
+    negate: false
+    context_mapping:
+      node: '@node.node_route_context:node'
+  panels_title:
+    id: panels_title
+    enabled: 0
+    negate: false
+    context_mapping: {  }

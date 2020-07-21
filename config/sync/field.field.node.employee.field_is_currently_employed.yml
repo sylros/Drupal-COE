@@ -1,0 +1,23 @@
+uuid: d5369c46-5b93-4b47-9922-00a68848950f
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_is_currently_employed
+    - node.type.employee
+id: node.employee.field_is_currently_employed
+field_name: field_is_currently_employed
+entity_type: node
+bundle: employee
+label: 'Is Currently Employed'
+description: ''
+required: true
+translatable: false
+default_value:
+  -
+    value: 1
+default_value_callback: ''
+settings:
+  on_label: 'On'
+  off_label: 'Off'
+field_type: boolean

@@ -102,8 +102,8 @@ class BooleanOperator extends FilterPluginBase {
     if (isset($this->definition['accept null'])) {
       $this->accept_null = (bool) $this->definition['accept null'];
     }
-    elseif (isset($this->options['null_is_false'])) {
-      $this->accept_null = (bool) $this->options['null_is_false'];
+    elseif (isset($this->definition['accept_null'])) {
+      $this->accept_null = (bool) $this->definition['accept_null'];
     }
     $this->valueOptions = NULL;
   }
@@ -143,19 +143,8 @@ class BooleanOperator extends FilterPluginBase {
     $options = parent::defineOptions();
 
     $options['value']['default'] = FALSE;
-    $options['null_is_false']['default'] = FALSE;
 
     return $options;
-  }
-
-  public function buildOptionsForm(&$form, FormStateInterface $form_state) {
-    parent::buildOptionsForm($form, $form_state);
-
-    $form['null_is_false'] = [
-      '#type' => 'checkbox',
-      '#title' => $this->t('Evaluate Null as False'),
-      '#default_value' => $this->options['null_is_false'],
-    ];
   }
 
   protected function valueForm(&$form, FormStateInterface $form_state) {
@@ -171,23 +160,17 @@ class BooleanOperator extends FilterPluginBase {
       // Configuring a filter: use radios for clarity.
       $filter_form_type = 'radios';
     }
-    $value = $this->value;
-
-    if ($value !== 'All') {
-      $value = (int) $value;
-    }
-
     $form['value'] = [
       '#type' => $filter_form_type,
       '#title' => $this->value_value,
       '#options' => $this->valueOptions,
-      '#default_value' => $value,
+      '#default_value' => $this->value,
     ];
     if (!empty($this->options['exposed'])) {
       $identifier = $this->options['expose']['identifier'];
       $user_input = $form_state->getUserInput();
       if ($exposed && !isset($user_input[$identifier])) {
-        $user_input[$identifier] = $value;
+        $user_input[$identifier] = $this->value;
         $form_state->setUserInput($user_input);
       }
       // If we're configuring an exposed filter, add an - Any - option.

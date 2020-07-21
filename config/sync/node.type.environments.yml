@@ -1,0 +1,21 @@
+uuid: aea74134-357c-4474-96b6-5124ad08ca61
+langcode: en
+status: true
+dependencies:
+  module:
+    - lightning_workflow
+    - menu_ui
+third_party_settings:
+  menu_ui:
+    available_menus:
+      - main
+    parent: 'main:'
+  lightning_workflow:
+    workflow: editorial
+name: Environments
+type: environments
+description: ''
+help: ''
+new_revision: true
+preview_mode: 1
+display_submitted: true

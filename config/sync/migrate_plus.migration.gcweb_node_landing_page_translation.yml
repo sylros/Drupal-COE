@@ -1,9 +1,9 @@
-uuid: 51849091-0324-4eb8-96db-fc54d3afd49b
+uuid: b03c1482-b44a-40e6-bfe6-8ebb5e9e06e1
 langcode: en
 status: true
 dependencies: {  }
 _core:
-  default_config_hash: xtbbi7uIc18CcdZJEyn5rGArOZ86KmJ4CEytwZ-UIcg
+  default_config_hash: iMBsMddR1_MERw98tQa4K6d4jU_45M_Ru-5kqkOzmmc
 id: gcweb_node_landing_page_translation
 class: null
 field_plugin_method: null
@@ -266,7 +266,7 @@ process:
     source: title
   nid:
     plugin: migration_lookup
-    migration: od_ext_node_landing_page
+    migration: gcweb_node_landing_page
     source: name
   uid:
     plugin: default_value

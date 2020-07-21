@@ -1,17 +1,18 @@
-uuid: ef36fb3e-da04-4301-b8af-7e70728261de
+uuid: 0e8337d9-126a-45d3-808e-37f2045945a5
 langcode: en
 status: true
 dependencies:
   config:
     - core.entity_form_mode.media.media_browser
     - field.field.media.slideshow.field_media_in_library
+    - field.field.media.slideshow.field_slideshow_style
     - field.field.media.slideshow.slideshow_items
     - media.type.slideshow
   module:
     - inline_entity_form
     - path
 _core:
-  default_config_hash: F6j6iJKyJ4E9FDSpZg4N5Ij7JHUslCU3RZW_fJrNnqQ
+  default_config_hash: yNJX8FRoNJ6pQgE2qktDG8UsmJ-c-zUM3MKxwnNL9L4
 id: media.slideshow.media_browser
 targetEntityType: media
 bundle: slideshow
@@ -19,10 +20,16 @@ mode: media_browser
 content:
   created:
     type: datetime_timestamp
-    weight: 3
+    weight: 4
     settings: {  }
     third_party_settings: {  }
     region: content
+  field_slideshow_style:
+    type: options_select
+    weight: 2
+    region: content
+    settings: {  }
+    third_party_settings: {  }
   name:
     type: string_textfield
     weight: 0
@@ -33,7 +40,7 @@ content:
     region: content
   path:
     type: path
-    weight: 30
+    weight: 5
     region: content
     settings: {  }
     third_party_settings: {  }
@@ -48,18 +55,22 @@ content:
       allow_new: true
       allow_existing: true
       match_operator: CONTAINS
+      revision: false
+      collapsible: false
+      collapsed: false
+      allow_duplicate: false
     third_party_settings: {  }
     region: content
   status:
     type: boolean_checkbox
     settings:
       display_label: true
-    weight: 100
+    weight: 6
     region: content
     third_party_settings: {  }
   uid:
     type: entity_reference_autocomplete
-    weight: 2
+    weight: 3
     settings:
       match_operator: CONTAINS
       size: 60

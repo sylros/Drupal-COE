@@ -1,0 +1,23 @@
+uuid: b4459eed-b0ce-471d-a525-266d2fdecc34
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_url
+    - node.type.environments
+  module:
+    - link
+id: node.environments.field_url
+field_name: field_url
+entity_type: node
+bundle: environments
+label: URL
+description: ''
+required: true
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings:
+  link_type: 16
+  title: 1
+field_type: link

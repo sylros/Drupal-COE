@@ -1,16 +1,18 @@
-uuid: 64c8040a-4047-422e-a4b3-9164075be4e8
+uuid: 3714085f-3023-4eee-9f75-40a6b281e9ab
 langcode: en
 status: true
 dependencies:
   config:
+    - entity_browser.browser.media_browser
     - field.field.media.slideshow.field_media_in_library
+    - field.field.media.slideshow.field_slideshow_style
     - field.field.media.slideshow.slideshow_items
     - media.type.slideshow
   module:
-    - inline_entity_form
+    - entity_browser
     - path
 _core:
-  default_config_hash: Y6Ht9gcAfHdEuDh5ZEl8sexi7t8126_zEOzUSaSfamU
+  default_config_hash: ieLAk9fBy8EeQRywXdgNLSBp8seL5zWAOi7QlEZ66t0
 id: media.slideshow.default
 targetEntityType: media
 bundle: slideshow
@@ -18,9 +20,15 @@ mode: default
 content:
   created:
     type: datetime_timestamp
-    weight: 3
+    weight: 4
     settings: {  }
     third_party_settings: {  }
+    region: content
+  field_slideshow_style:
+    weight: 2
+    settings: {  }
+    third_party_settings: {  }
+    type: options_select
     region: content
   name:
     type: string_textfield
@@ -32,7 +40,7 @@ content:
     region: content
   path:
     type: path
-    weight: 30
+    weight: 5
     region: content
     settings: {  }
     third_party_settings: {  }
@@ -55,12 +63,12 @@ content:
     type: boolean_checkbox
     settings:
       display_label: true
-    weight: 100
+    weight: 6
     region: content
     third_party_settings: {  }
   uid:
     type: entity_reference_autocomplete
-    weight: 2
+    weight: 3
     settings:
       match_operator: CONTAINS
       size: 60

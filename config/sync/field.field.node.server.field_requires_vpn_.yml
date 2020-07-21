@@ -1,0 +1,23 @@
+uuid: 7268f721-8631-4652-a9a4-fc04df3c945f
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_requires_vpn_
+    - node.type.server
+id: node.server.field_requires_vpn_
+field_name: field_requires_vpn_
+entity_type: node
+bundle: server
+label: 'Requires VPN?'
+description: ''
+required: false
+translatable: false
+default_value:
+  -
+    value: 0
+default_value_callback: ''
+settings:
+  on_label: 'On'
+  off_label: 'Off'
+field_type: boolean

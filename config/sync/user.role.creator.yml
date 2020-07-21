@@ -1,4 +1,4 @@
-uuid: cae5c32a-f9a7-473a-8601-a30aff1e4659
+uuid: f3aa229c-f459-4520-94b3-406d5c42134a
 langcode: en
 status: true
 dependencies: {  }
@@ -36,7 +36,6 @@ permissions:
   - 'update media'
   - 'use editorial transition create_new_draft'
   - 'use editorial transition review'
-  - 'use evaluate_claim transition register_claim'
   - 'use text format full_html'
   - 'use text format rich_text'
   - 'view all revisions'

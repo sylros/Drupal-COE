@@ -1,6 +1,0 @@
-status: 1
-pattern: 'Demo Chart Demo'
-escape: false
-dependencies:
-  config:
-    - node.type.chart_data

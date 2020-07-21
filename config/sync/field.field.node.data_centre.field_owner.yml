@@ -1,0 +1,28 @@
+uuid: c5a8a413-818b-4df2-9f75-868b5cfeb7dd
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_owner
+    - node.type.data_centre
+    - node.type.employee
+id: node.data_centre.field_owner
+field_name: field_owner
+entity_type: node
+bundle: data_centre
+label: Owner
+description: ''
+required: true
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings:
+  handler: 'default:node'
+  handler_settings:
+    target_bundles:
+      employee: employee
+    sort:
+      field: _none
+    auto_create: false
+    auto_create_bundle: ''
+field_type: entity_reference

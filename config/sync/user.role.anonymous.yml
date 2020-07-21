@@ -1,4 +1,4 @@
-uuid: 0615abac-a72e-49ae-9dd6-26e0dfc6ad14
+uuid: 68e0d2ed-42f7-4010-826d-0fef4b85ca25
 langcode: en
 status: true
 dependencies: {  }
@@ -13,8 +13,6 @@ permissions:
   - 'access content'
   - 'access site-wide contact form'
   - 'access user profiles'
-  - 'create request_form content'
   - 'search content'
-  - 'use process_request transition make_requests'
   - 'use search'
   - 'view media'

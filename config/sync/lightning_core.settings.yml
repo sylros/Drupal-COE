@@ -3,3 +3,5 @@ content_roles:
     enabled: false
   reviewer:
     enabled: false
+_core:
+  default_config_hash: dMQiuaM4y3nbtKRDw7398AieOZ1oW631hBhZHRCWfjg

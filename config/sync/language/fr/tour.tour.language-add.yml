@@ -1,7 +1,5 @@
-label: 'Ajout de langues'
 tips:
   language-add-overview:
-    label: 'Ajout de langues'
     body: '<p>Cette page donne la possibilité d''ajouter des langues communes sur votre site.</p><p>Si la langue souhaitée n''est pas disponible, vous pouvez ajouter une langue personnalisée.</p>'
   language-add-choose:
     label: 'Choisissez une langue'

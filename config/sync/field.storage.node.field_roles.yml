@@ -1,0 +1,39 @@
+uuid: 73aa5d19-affa-419d-8ef2-fba4bdfac6c8
+langcode: en
+status: true
+dependencies:
+  module:
+    - node
+    - options
+id: node.field_roles
+field_name: field_roles
+entity_type: node
+type: list_string
+settings:
+  allowed_values:
+    -
+      value: D
+      label: Developer
+    -
+      value: C
+      label: Client
+    -
+      value: U
+      label: User
+    -
+      value: M
+      label: Manager
+    -
+      value: S
+      label: 'System Administrator'
+    -
+      value: A
+      label: 'Application Administrator'
+  allowed_values_function: ''
+module: options
+locked: false
+cardinality: -1
+translatable: true
+indexes: {  }
+persist_with_no_fields: false
+custom_storage: false

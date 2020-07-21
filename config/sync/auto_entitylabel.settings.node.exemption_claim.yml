@@ -1,6 +1,0 @@
-status: 1
-pattern: 'Exemption Claim'
-escape: false
-dependencies:
-  config:
-    - node.type.exemption_claim

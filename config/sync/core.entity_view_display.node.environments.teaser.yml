@@ -1,0 +1,30 @@
+uuid: da3ad32b-d836-4153-a320-f5ebc85f3736
+langcode: en
+status: true
+dependencies:
+  config:
+    - core.entity_view_mode.node.teaser
+    - field.field.node.environments.field_application
+    - field.field.node.environments.field_environment_name
+    - field.field.node.environments.field_ip_address
+    - field.field.node.environments.field_url
+    - node.type.environments
+  module:
+    - user
+id: node.environments.teaser
+targetEntityType: node
+bundle: environments
+mode: teaser
+content:
+  links:
+    weight: 100
+    settings: {  }
+    third_party_settings: {  }
+    region: content
+hidden:
+  content_moderation_control: true
+  field_application: true
+  field_environment_name: true
+  field_ip_address: true
+  field_url: true
+  langcode: true

@@ -4,7 +4,6 @@ tips:
     label: Langues
     body: '<p>La page "Langues" vous permet d''ajouter, de modifier, de supprimer et réordonner les langues sur le site.</p>'
   language-add:
-    label: 'Ajout de langues'
     body: '<p>Pour ajouter plus de langues à votre site, cliquer sur le bouton "Ajouter une langue".</p><p>Les langues ajoutées seront affichées dans la liste des langues et pourront ensuite être modifiées ou supprimées.</p>'
   language-reorder:
     label: 'Réordonner les langues'

@@ -1,3 +1,13 @@
+## 2.7.0
+* Updated Simple GMap to 3.0.
+* Fixed a bug where new dependencies were not enabled during update. 
+  (Issue #3098556)
+
+## 2.6.0
+* Updated Simple GMap to 2.1-rc1.
+* Updated Layout Builder Restrictions to 2.7.
+* Updated Layout Builder Symmetric Translations to 1.0-alpha2.
+
 ## 2.5.0
 * Allowed Panelizer 5 to be installed alongside Lightning Layout. If you need
   to use Panelizer to add or edit default layouts, you can require Panelizer

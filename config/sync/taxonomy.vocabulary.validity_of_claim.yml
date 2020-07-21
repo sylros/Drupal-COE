@@ -1,8 +1,0 @@
-uuid: 00859427-8f50-4dea-8214-923ed4af4f87
-langcode: en
-status: true
-dependencies: {  }
-name: 'Validity of Claim'
-vid: validity_of_claim
-description: ''
-weight: 0

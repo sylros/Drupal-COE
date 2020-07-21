@@ -1,0 +1,28 @@
+uuid: bb6967c9-5293-487e-81a0-96b67761c7e5
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_servers
+    - node.type.data_centre
+    - node.type.server
+id: node.data_centre.field_servers
+field_name: field_servers
+entity_type: node
+bundle: data_centre
+label: Servers
+description: ''
+required: false
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings:
+  handler: 'default:node'
+  handler_settings:
+    target_bundles:
+      server: server
+    sort:
+      field: _none
+    auto_create: false
+    auto_create_bundle: ''
+field_type: entity_reference

@@ -1,0 +1,29 @@
+uuid: f3b9837c-ec5c-407f-b58b-6e66d0e4b239
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_features
+    - node.type.application
+    - taxonomy.vocabulary.application_features
+id: node.application.field_features
+field_name: field_features
+entity_type: node
+bundle: application
+label: Features
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings:
+  handler: 'default:taxonomy_term'
+  handler_settings:
+    target_bundles:
+      application_features: application_features
+    sort:
+      field: name
+      direction: asc
+    auto_create: false
+    auto_create_bundle: ''
+field_type: entity_reference

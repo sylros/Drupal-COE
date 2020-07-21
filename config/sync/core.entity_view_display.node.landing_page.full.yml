@@ -1,4 +1,4 @@
-uuid: c76489ba-0c9d-4545-b0b5-e10b84811529
+uuid: d6c34539-ceea-44c1-abda-38008deaf4ea
 langcode: en
 status: true
 dependencies:
@@ -429,7 +429,7 @@ third_party_settings:
   layout_library:
     enable: true
 _core:
-  default_config_hash: bLoSGDYNsrP1DViTgR6L7C_VCpRkDyRUZlW9gFqjpxQ
+  default_config_hash: d83Jic-g8eE88n6hk6kgqfzNI0Y-gEnPXKI5qed2hc0
 id: node.landing_page.full
 targetEntityType: node
 bundle: landing_page

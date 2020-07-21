@@ -1,0 +1,21 @@
+uuid: 56e5846b-f0ab-440f-9e12-80a9da95b766
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_type
+    - node.type.server
+  module:
+    - options
+id: node.server.field_type
+field_name: field_type
+entity_type: node
+bundle: server
+label: Type
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: list_string

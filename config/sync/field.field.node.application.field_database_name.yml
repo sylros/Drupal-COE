@@ -1,0 +1,19 @@
+uuid: 78d0e15a-8089-4834-b2d2-cf833cd0fed3
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_database_name
+    - node.type.application
+id: node.application.field_database_name
+field_name: field_database_name
+entity_type: node
+bundle: application
+label: 'Database Name'
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: string

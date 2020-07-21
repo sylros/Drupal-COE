@@ -1,13 +1,13 @@
 definitions:
   user__page:
     menu_name: account
-    parent: 'menu_link_content:ad9dfb2c-7ec3-4958-8e0a-d52584b53d5c'
+    parent: 'menu_link_content:ea5b8364-f2ae-4e3f-b908-4c9300c469ff'
     weight: -10
     expanded: false
     enabled: true
   user__logout:
     menu_name: account
-    parent: 'menu_link_content:ad9dfb2c-7ec3-4958-8e0a-d52584b53d5c'
+    parent: 'menu_link_content:ea5b8364-f2ae-4e3f-b908-4c9300c469ff'
     weight: 10
     expanded: false
     enabled: true

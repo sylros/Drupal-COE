@@ -1,4 +1,4 @@
-uuid: dc74b4ae-c96a-409c-9fbf-ffc7e26a4e59
+uuid: fef88564-e714-4e2e-b387-abc641216bfa
 langcode: en
 status: true
 dependencies:
@@ -12,7 +12,7 @@ _core:
 id: wxt_bootstrap_local_tasks
 theme: wxt_bootstrap
 region: header
-weight: -7
+weight: -8
 provider: null
 plugin: local_tasks_block
 settings:

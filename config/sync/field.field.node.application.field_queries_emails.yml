@@ -1,0 +1,19 @@
+uuid: f220fba5-38c7-452b-bb4a-ae27ee5bafd3
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_queries_emails
+    - node.type.application
+id: node.application.field_queries_emails
+field_name: field_queries_emails
+entity_type: node
+bundle: application
+label: 'Queries Emails'
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: email

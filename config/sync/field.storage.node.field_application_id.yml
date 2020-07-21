@@ -1,0 +1,20 @@
+uuid: 369b39e9-5fea-4a31-8186-f3debf35b422
+langcode: en
+status: true
+dependencies:
+  module:
+    - node
+id: node.field_application_id
+field_name: field_application_id
+entity_type: node
+type: integer
+settings:
+  unsigned: false
+  size: normal
+module: core
+locked: false
+cardinality: 1
+translatable: true
+indexes: {  }
+persist_with_no_fields: false
+custom_storage: false

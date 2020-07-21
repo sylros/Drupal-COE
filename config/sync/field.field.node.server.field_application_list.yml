@@ -1,0 +1,28 @@
+uuid: 3cf130f8-adea-4057-acb3-7b251f1d8170
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_application_list
+    - node.type.application
+    - node.type.server
+id: node.server.field_application_list
+field_name: field_application_list
+entity_type: node
+bundle: server
+label: 'Application List'
+description: ''
+required: false
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings:
+  handler: 'default:node'
+  handler_settings:
+    target_bundles:
+      application: application
+    sort:
+      field: _none
+    auto_create: false
+    auto_create_bundle: ''
+field_type: entity_reference

@@ -1,0 +1,19 @@
+uuid: c503853c-c13b-4b80-bdb5-8c1b5eb72373
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_os
+    - node.type.server
+id: node.server.field_os
+field_name: field_os
+entity_type: node
+bundle: server
+label: OS
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: string

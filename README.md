@@ -1,75 +1,43 @@
-Cloning the demo to your local environment
+Composer Project template for Drupal
 ====================================
+
+[![Build Status][ci-badge]][ci]
+
+Drupal WxT codebase for `<site-name>`.
 
 ## Requirements
 
-* [Drush][drush]
-* [Mysql][mysql]
+* [Composer][composer]
+* [Node][node]
 
-## Installation
+## New Project (stable tag)
 
-Copy the repo to the web root and run the following commands at the root of the repo
-
-* Create the sites folder
-
-```
-cp -R sites/default/ <docker volume>/
+```sh
+composer create-project drupalwxt/wxt-project:3.0.8 site-name
 ```
 
-* Create the settings.php file
+## New Project (dev)
 
-```
-cp sites/default/default.settings.php <docker volume>/settings.php
-```
-
-* Change settings.php permission for the install process
-
-```
-chmod 777 <docker volume>/settings.php
+```sh
+composer create-project drupalwxt/wxt-project:8.x-dev site-name
 ```
 
-* Run the site install process
+## Maintenance
 
-```
-drush si
-```
+List of common commands are as follows:
 
-* Import the database
+| Task                                            | Composer                                               |
+|-------------------------------------------------|--------------------------------------------------------|
+| Latest version of a contributed project         | ```composer require drupal/PROJECT_NAME:8.*```         |
+| Specific version of a contributed project       | ```composer require drupal/PROJECT_NAME:8.1.0-beta5``` |
+| Updating all projects including Drupal Core     | ```composer update```                                  |
+| Updating a single contributed project           | ```composer update drupal/PROJECT_NAME```              |
+| Updating Drupal Core exclusively                | ```composer update drupal/core```                      |
 
-```
-drush sql-cli < ../db.sql
-```
 
-* Import the configuration changes
-
-```
-drush cim -y
-```
-
-* Set the admin password
-
-```
-drush upwd admin <password>
-```
-
-* Reset the file permission for settings.php 
-
-```
-chmod 664 sites/default/settings.php
-```
-
-## Notes
-
-Until we have our own docker image for DCOE, you will need to install the php zip extension manually from the docker image. Run the following commands inside the PHP container and restart the docker container
-
-```
-apt-get update
-docker-php-ext-install zip
-```
-
-## Maintainers
-
-* [Patrick Gohard] - patrick.gohard@canada.ca
-
-[drush]:                    https://docs.drush.org/en/9.x/install/
-[mysql]:                    https://www.drupal.org/docs/8/install/step-3-create-a-database
+[ci]:                       https://travis-ci.org/drupalwxt/site-wxt
+[ci-badge]:                 https://travis-ci.org/drupalwxt/site-wxt.svg?branch=8.x
+[composer]:                 https://getcomposer.org
+[node]:                     https://nodejs.org
+[docker-scaffold-readme]:   https://github.com/drupal-composer-ext/drupal-scaffold-docker/blob/8.x/README.md
+[docker-readme]:            https://github.com/drupal-composer-ext/drupal-scaffold-docker/blob/8.x/template/docker/README.md

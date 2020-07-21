@@ -1,0 +1,8 @@
+uuid: dcaaea7a-4478-4bda-a661-014c6d2ed3c0
+langcode: en
+status: true
+dependencies: {  }
+name: 'Application Features'
+vid: application_features
+description: ''
+weight: 0

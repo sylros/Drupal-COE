@@ -1,4 +1,4 @@
-uuid: 650d41e3-2fa7-499f-9ff7-6fd4444d7a92
+uuid: 0a8d61e6-906b-4762-9ba0-7b0bc43993fb
 langcode: en
 status: true
 dependencies: {  }
@@ -14,8 +14,6 @@ permissions:
   - 'access shortcuts'
   - 'access site-wide contact form'
   - 'access user profiles'
-  - 'create request_form content'
   - 'post comments'
   - 'search content'
-  - 'use process_request transition make_requests'
   - 'view media'

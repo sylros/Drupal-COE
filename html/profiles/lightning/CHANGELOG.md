@@ -1,3 +1,16 @@
+## 4.1.5
+* Updated Lightning Layout to 2.6.
+* Security updated Drupal core to 8.8.8.
+
+## 4.1.4
+* Updated Lightning Core to 5.2:
+  * Security updated Drupal core to 8.8.6.
+* Ported the `lightning:subprofile` Drupal Console command to Drush. To generate a sub-profile,
+  run `drush generate lightning-subprofile`.
+
+## 4.1.3
+* Security updated Drupal core to 8.8.4.
+
 ## 4.1.2
 * Updated Drupal core to 8.8.2.
 * Fixed stale configuration of front page view created during installation.

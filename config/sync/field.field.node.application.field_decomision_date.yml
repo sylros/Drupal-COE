@@ -1,0 +1,21 @@
+uuid: 479db65b-40a1-4348-82fd-170c812900cd
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_decomision_date
+    - node.type.application
+  module:
+    - datetime
+id: node.application.field_decomision_date
+field_name: field_decomision_date
+entity_type: node
+bundle: application
+label: 'Decomision Date'
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: datetime

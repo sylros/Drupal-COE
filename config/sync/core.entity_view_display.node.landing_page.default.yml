@@ -1,4 +1,4 @@
-uuid: e3fb20f8-9918-4534-a8ab-2e6050dc2175
+uuid: eb4aabfd-f416-483c-a496-96d5fa1e5f85
 langcode: en
 status: true
 dependencies:
@@ -32,14 +32,14 @@ third_party_settings:
     enable: true
   layout_builder_restrictions:
     entity_view_mode_restriction:
-      allowed_blocks: {  }
+      whitelisted_blocks: {  }
       allowed_layouts:
         - layout_onecol
         - layout_twocol_section
         - layout_threecol_section
         - layout_fourcol_section
 _core:
-  default_config_hash: KNrs28OA6IqyPYfOOuVB_TtvU9cW6teRktxiPQAnjjg
+  default_config_hash: LSefcEOqN7djHmmcvteasL4ahegCSrEj1l0YLmj8vyY
 id: node.landing_page.default
 targetEntityType: node
 bundle: landing_page

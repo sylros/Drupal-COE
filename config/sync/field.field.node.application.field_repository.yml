@@ -1,0 +1,23 @@
+uuid: c1486820-0baa-4d9a-b72a-4cbb2eb561ac
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_repository
+    - node.type.application
+  module:
+    - link
+id: node.application.field_repository
+field_name: field_repository
+entity_type: node
+bundle: application
+label: Repository
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings:
+  link_type: 16
+  title: 1
+field_type: link

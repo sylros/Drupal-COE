@@ -1,0 +1,19 @@
+uuid: cb0bcb87-1cd5-4c47-9d90-888e679fc945
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_ip_address
+    - node.type.environments
+id: node.environments.field_ip_address
+field_name: field_ip_address
+entity_type: node
+bundle: environments
+label: 'IP Address'
+description: ''
+required: false
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: string

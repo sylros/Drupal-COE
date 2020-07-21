@@ -1,0 +1,25 @@
+uuid: 470d580f-1f06-459c-8baf-bb9dcbfd3dce
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_application_list
+    - node.type.employee
+id: node.employee.field_application_list
+field_name: field_application_list
+entity_type: node
+bundle: employee
+label: 'Application List'
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings:
+  handler: views
+  handler_settings:
+    view:
+      view_name: list_of_applications
+      display_name: entity_reference_1
+      arguments: {  }
+field_type: entity_reference

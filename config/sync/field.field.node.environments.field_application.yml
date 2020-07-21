@@ -1,0 +1,28 @@
+uuid: 0d669467-842d-4513-bd7b-79c42396bcbc
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_application
+    - node.type.application
+    - node.type.environments
+id: node.environments.field_application
+field_name: field_application
+entity_type: node
+bundle: environments
+label: Application
+description: ''
+required: true
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings:
+  handler: 'default:node'
+  handler_settings:
+    target_bundles:
+      application: application
+    sort:
+      field: _none
+    auto_create: false
+    auto_create_bundle: ''
+field_type: entity_reference

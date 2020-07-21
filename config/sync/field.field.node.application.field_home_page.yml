@@ -1,0 +1,23 @@
+uuid: 73f4986e-da94-4036-9efb-f67adfff4872
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_home_page
+    - node.type.application
+  module:
+    - link
+id: node.application.field_home_page
+field_name: field_home_page
+entity_type: node
+bundle: application
+label: 'Home Page'
+description: ''
+required: true
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings:
+  link_type: 16
+  title: 1
+field_type: link

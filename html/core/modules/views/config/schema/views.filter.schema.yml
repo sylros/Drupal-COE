@@ -7,10 +7,6 @@ views.filter.*:
 views.filter.boolean:
   type: views_filter
   label: 'Boolean'
-  mapping:
-    null_is_false:
-      type: boolean
-      label: 'Evaluate Null as False.'
 
 views_filter_boolean_string:
   type: views_filter

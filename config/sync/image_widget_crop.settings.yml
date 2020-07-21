@@ -6,5 +6,7 @@ settings:
   crop_types_required: {  }
   warn_multiple_usages: false
   show_default_crop: true
+  notify_apply: false
+  notify_update: true
 _core:
-  default_config_hash: JTiHOl3PIo9Nyv7j53xwY5OwbwJWwCItksgv_X-NcbE
+  default_config_hash: UYGkeE2iH3UGp9lBPsELb3VSgHz9vkMJeaGzcYwE7Uw

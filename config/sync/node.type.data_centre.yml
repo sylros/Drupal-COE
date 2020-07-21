@@ -1,0 +1,21 @@
+uuid: d49e7361-589e-482e-9e34-8367d9eb8368
+langcode: en
+status: true
+dependencies:
+  module:
+    - lightning_workflow
+    - menu_ui
+third_party_settings:
+  menu_ui:
+    available_menus:
+      - main
+    parent: 'main:'
+  lightning_workflow:
+    workflow: editorial
+name: 'Data Centre'
+type: data_centre
+description: ''
+help: ''
+new_revision: true
+preview_mode: 1
+display_submitted: true

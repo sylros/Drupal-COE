@@ -50,7 +50,7 @@ Source: https://www.drupal.org/files/issues/2020-01-09/regression-2715483-22.pat
 
 
 2759397 - Patch EntityReferenceItemNormalizer to prevent recursion
-Source: https://www.drupal.org/files/issues/2759397-1-entity_reference_recursion.patch
+Source: https://www.drupal.org/files/issues/2020-03-21/2759397-19-entityref_recursion.patch
 
 
 Enter drupal/core patch #2765297 description here

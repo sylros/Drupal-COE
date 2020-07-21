@@ -1,14 +1,15 @@
-uuid: d9c6db35-dace-42da-9d27-b56dfb0d35d5
+uuid: b8016ec1-c7ca-4cb8-bfd0-ee97905bafa4
 langcode: en
 status: true
 dependencies:
   config:
     - core.entity_view_mode.media.embedded
     - field.field.media.slideshow.field_media_in_library
+    - field.field.media.slideshow.field_slideshow_style
     - field.field.media.slideshow.slideshow_items
     - media.type.slideshow
 _core:
-  default_config_hash: w64w90QUGmaTwGTYym6WZpJC74q7JtiB6YrbeqD_kYc
+  default_config_hash: qemVCFFIqAhz8miJqNladLaa1vYl7gzIQVFnq3OEPmk
 id: media.slideshow.embedded
 targetEntityType: media
 bundle: slideshow
@@ -26,6 +27,7 @@ content:
 hidden:
   created: true
   field_media_in_library: true
+  field_slideshow_style: true
   langcode: true
   name: true
   thumbnail: true

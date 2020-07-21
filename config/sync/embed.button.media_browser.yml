@@ -1,4 +1,4 @@
-uuid: ba7847d8-a14f-41fc-8770-ef00551a42f3
+uuid: 42eb930f-f397-4257-ab77-7d240ef784cf
 langcode: en
 status: true
 dependencies:
@@ -25,4 +25,4 @@ type_settings:
   entity_browser_settings:
     display_review: false
 icon: {  }
-icon_uuid: 0737991b-ca13-4381-a6e0-f89e22e2e74a
+icon_uuid: 1f85fe8a-a522-407c-bccd-b86554b1cbbc

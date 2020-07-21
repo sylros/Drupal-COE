@@ -1,9 +1,0 @@
-uuid: b8e5efd3-812e-4480-9636-853210c954e2
-langcode: en
-status: true
-dependencies: {  }
-id: sds_non_compliances
-label: 'SDS non-compliances'
-icon_uuid: null
-description: ''
-behavior_plugins: {  }

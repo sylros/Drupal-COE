@@ -1,0 +1,19 @@
+uuid: 700640fb-5dde-4719-9892-d6117c7e7a5d
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_ip_address
+    - node.type.server
+id: node.server.field_ip_address
+field_name: field_ip_address
+entity_type: node
+bundle: server
+label: 'IP Address'
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: string

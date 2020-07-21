@@ -1,0 +1,6 @@
+status: 1
+pattern: '[node:field_name] - [node:field_email]'
+escape: false
+dependencies:
+  config:
+    - node.type.employee

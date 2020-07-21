@@ -67,6 +67,9 @@ display:
         name:
           separator: ', '
         edit_media:
+          alter:
+            text: 'Modifier {{ name }}'
+            alt: 'Modifier {{ name }}'
           text: Modifier
         delete_media:
           alter:

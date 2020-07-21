@@ -1,4 +1,4 @@
-uuid: 35b3bf11-6239-4f92-9c56-a80f6ca4f76e
+uuid: adb7ad03-d429-4a20-abf8-b626542a2d6d
 langcode: en
 status: true
 dependencies:
@@ -30,11 +30,11 @@ settings:
   title_field: false
   title_field_required: false
   default_image:
-    uuid: ''
-    alt: ''
+    uuid: ec8a28bc-72da-43f1-8dd2-ef6e8be9c180
+    alt: 'A generic silhouette of a person.'
     title: ''
-    width: null
-    height: null
+    width: 140
+    height: 140
   handler: 'default:file'
   handler_settings: {  }
 field_type: image
