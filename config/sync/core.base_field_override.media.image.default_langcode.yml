@@ -1,0 +1,22 @@
+uuid: c8c0cd1a-7269-4162-8031-6fc059a97a87
+langcode: en
+status: true
+dependencies:
+  config:
+    - media.type.image
+id: media.image.default_langcode
+field_name: default_langcode
+entity_type: media
+bundle: image
+label: 'Default translation'
+description: 'A flag indicating whether this is the default translation.'
+required: false
+translatable: true
+default_value:
+  -
+    value: 1
+default_value_callback: ''
+settings:
+  on_label: 'On'
+  off_label: 'Off'
+field_type: boolean

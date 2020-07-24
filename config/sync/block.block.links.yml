@@ -1,0 +1,37 @@
+uuid: 8c26ecea-cb35-40ff-83ba-341a64f77924
+langcode: en
+status: true
+dependencies:
+  content:
+    - 'block_content:basic:b2266cfa-3e8e-4c05-93f2-d46d208aa334'
+  module:
+    - block_content
+    - system
+    - wxt_library
+  theme:
+    - wxt_bootstrap
+id: links
+theme: wxt_bootstrap
+region: header
+weight: 0
+provider: null
+plugin: 'block_content:b2266cfa-3e8e-4c05-93f2-d46d208aa334'
+settings:
+  id: 'block_content:b2266cfa-3e8e-4c05-93f2-d46d208aa334'
+  label: Links
+  provider: block_content
+  label_display: visible
+  status: true
+  info: ''
+  view_mode: full
+visibility:
+  request_path:
+    id: request_path
+    pages: '<front>'
+    negate: false
+    context_mapping: {  }
+  panels_title:
+    id: panels_title
+    enabled: 0
+    negate: false
+    context_mapping: {  }

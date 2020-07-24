@@ -1,0 +1,17 @@
+uuid: dffcc5d4-9519-4b44-88b8-48aac149b755
+langcode: en
+status: true
+dependencies:
+  config:
+    - group.type.public_heath_agency_of
+  enforced:
+    config:
+      - user.role.pea_creator
+id: public_heath_agency_of-2c7cf83fa
+label: 'PEA Creator'
+weight: 6
+internal: true
+audience: outsider
+group_type: public_heath_agency_of
+permissions_ui: false
+permissions: {  }

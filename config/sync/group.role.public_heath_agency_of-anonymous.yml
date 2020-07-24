@@ -1,0 +1,14 @@
+uuid: 84ddc084-2353-45e1-992e-da6f519d55d8
+langcode: en
+status: true
+dependencies:
+  config:
+    - group.type.public_heath_agency_of
+id: public_heath_agency_of-anonymous
+label: Anonymous
+weight: -102
+internal: true
+audience: anonymous
+group_type: public_heath_agency_of
+permissions_ui: true
+permissions: {  }

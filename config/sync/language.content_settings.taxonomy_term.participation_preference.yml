@@ -1,0 +1,11 @@
+uuid: 06d3493c-4bdd-4318-b013-fe8840c12565
+langcode: en
+status: true
+dependencies:
+  config:
+    - taxonomy.vocabulary.participation_preference
+id: taxonomy_term.participation_preference
+target_entity_type_id: taxonomy_term
+target_bundle: participation_preference
+default_langcode: site_default
+language_alterable: false

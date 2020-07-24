@@ -1,0 +1,21 @@
+uuid: 2a80d652-6eea-4ada-b90c-1a9544aec5d0
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_event_date
+    - node.type.public_engagement_activity
+  module:
+    - datetime
+id: node.public_engagement_activity.field_event_date
+field_name: field_event_date
+entity_type: node
+bundle: public_engagement_activity
+label: 'Event Date'
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: datetime

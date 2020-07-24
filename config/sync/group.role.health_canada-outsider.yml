@@ -1,0 +1,14 @@
+uuid: ac44f6b4-3c1f-487d-98fa-e5909ae7ec07
+langcode: en
+status: true
+dependencies:
+  config:
+    - group.type.health_canada
+id: health_canada-outsider
+label: Outsider
+weight: -101
+internal: true
+audience: outsider
+group_type: health_canada
+permissions_ui: true
+permissions: {  }

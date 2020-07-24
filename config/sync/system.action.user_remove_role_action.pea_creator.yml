@@ -1,0 +1,14 @@
+uuid: 64d850ec-64f9-4aa4-8266-12039f550228
+langcode: en
+status: true
+dependencies:
+  config:
+    - user.role.pea_creator
+  module:
+    - user
+id: user_remove_role_action.pea_creator
+label: 'Remove the PEA Creator role from the selected user(s)'
+type: user
+plugin: user_remove_role_action
+configuration:
+  rid: pea_creator

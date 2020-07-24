@@ -1,0 +1,23 @@
+uuid: 083fbd73-c836-44a0-8b6c-1320d836f164
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.body
+    - node.type.public_engagement_activity
+  module:
+    - text
+id: node.public_engagement_activity.body
+field_name: body
+entity_type: node
+bundle: public_engagement_activity
+label: Body
+description: ''
+required: false
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings:
+  display_summary: true
+  required_summary: false
+field_type: text_with_summary

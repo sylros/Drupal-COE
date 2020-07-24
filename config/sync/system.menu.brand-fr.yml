@@ -1,0 +1,10 @@
+uuid: b8a3be88-b30b-4ea4-880e-b25e2351135d
+langcode: fr
+status: true
+dependencies: {  }
+_core:
+  default_config_hash: fL30ovH3b3Xwhz81RQHIrzA5iyrAtYDwd9EZy4A044s
+id: brand-fr
+label: 'Marque du site'
+description: 'Menu marque en francais.'
+locked: false

@@ -1,0 +1,20 @@
+uuid: 1ee22e9f-66b1-4ffb-ae12-0ee7866c4868
+langcode: en
+status: true
+dependencies:
+  module:
+    - group
+    - taxonomy
+id: group.field_area_of_interests
+field_name: field_area_of_interests
+entity_type: group
+type: entity_reference
+settings:
+  target_type: taxonomy_term
+module: core
+locked: false
+cardinality: -1
+translatable: true
+indexes: {  }
+persist_with_no_fields: false
+custom_storage: false

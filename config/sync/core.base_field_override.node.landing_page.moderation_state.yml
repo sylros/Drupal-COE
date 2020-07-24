@@ -1,0 +1,18 @@
+uuid: ea05f62c-9804-467e-a4bd-a9d7039915f2
+langcode: en
+status: true
+dependencies:
+  config:
+    - node.type.landing_page
+id: node.landing_page.moderation_state
+field_name: moderation_state
+entity_type: node
+bundle: landing_page
+label: 'Moderation state'
+description: 'The moderation state of this piece of content.'
+required: false
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: string

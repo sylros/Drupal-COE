@@ -1,0 +1,48 @@
+uuid: 5c477034-27db-49d7-a632-56a1779cefaa
+langcode: en
+status: true
+dependencies:
+  config:
+    - core.entity_view_mode.node.teaser
+    - field.field.node.public_engagement_activity.body
+    - field.field.node.public_engagement_activity.field_area_of_interest
+    - field.field.node.public_engagement_activity.field_event_date
+    - field.field.node.public_engagement_activity.field_event_location
+    - field.field.node.public_engagement_activity.field_files
+    - field.field.node.public_engagement_activity.field_forum_thread
+    - field.field.node.public_engagement_activity.field_list_of_interested_users
+    - field.field.node.public_engagement_activity.field_participant_list
+    - field.field.node.public_engagement_activity.field_target_audience
+    - node.type.public_engagement_activity
+  module:
+    - text
+    - user
+id: node.public_engagement_activity.teaser
+targetEntityType: node
+bundle: public_engagement_activity
+mode: teaser
+content:
+  body:
+    label: hidden
+    type: text_summary_or_trimmed
+    weight: 101
+    settings:
+      trim_length: 600
+    third_party_settings: {  }
+    region: content
+  links:
+    weight: 100
+    settings: {  }
+    third_party_settings: {  }
+    region: content
+hidden:
+  content_moderation_control: true
+  field_area_of_interest: true
+  field_event_date: true
+  field_event_location: true
+  field_files: true
+  field_forum_thread: true
+  field_list_of_interested_users: true
+  field_participant_list: true
+  field_target_audience: true
+  langcode: true

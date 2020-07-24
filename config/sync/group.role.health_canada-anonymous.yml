@@ -1,0 +1,14 @@
+uuid: b0a303ba-828d-4302-988b-302f23ba4a57
+langcode: en
+status: true
+dependencies:
+  config:
+    - group.type.health_canada
+id: health_canada-anonymous
+label: Anonymous
+weight: -102
+internal: true
+audience: anonymous
+group_type: health_canada
+permissions_ui: true
+permissions: {  }

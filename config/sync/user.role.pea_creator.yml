@@ -1,0 +1,25 @@
+uuid: cea5d3e9-d8ee-4627-acb9-12cdf79c5a1a
+langcode: en
+status: true
+dependencies:
+  module:
+    - lightning_core
+third_party_settings:
+  lightning_core:
+    description: ''
+id: pea_creator
+label: 'PEA Creator'
+weight: 6
+is_admin: null
+permissions:
+  - 'access group overview'
+  - 'create forum content'
+  - 'create public_engagement_activity content'
+  - 'edit own forum content'
+  - 'edit own public_engagement_activity content'
+  - 'schedule pea_workflow transition create_new_draft'
+  - 'schedule pea_workflow transition request_approval_from_manager'
+  - 'use pea_workflow transition create_new_draft'
+  - 'use pea_workflow transition request_approval_from_manager'
+  - 'view latest version'
+  - 'view own unpublished content'

@@ -1,0 +1,11 @@
+uuid: 2617e448-dec3-42e2-9559-007a1a6f8180
+langcode: en
+status: true
+dependencies:
+  config:
+    - node.type.public_engagement_activity
+id: node.public_engagement_activity
+target_entity_type_id: node
+target_bundle: public_engagement_activity
+default_langcode: site_default
+language_alterable: false

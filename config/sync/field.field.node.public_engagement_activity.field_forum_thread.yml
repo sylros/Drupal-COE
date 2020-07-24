@@ -1,0 +1,28 @@
+uuid: efc235c7-0082-4ff5-a08a-c4ff439fef0d
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_forum_thread
+    - node.type.forum
+    - node.type.public_engagement_activity
+id: node.public_engagement_activity.field_forum_thread
+field_name: field_forum_thread
+entity_type: node
+bundle: public_engagement_activity
+label: 'Forum Thread'
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings:
+  handler: 'default:node'
+  handler_settings:
+    target_bundles:
+      forum: forum
+    sort:
+      field: _none
+    auto_create: false
+    auto_create_bundle: ''
+field_type: entity_reference

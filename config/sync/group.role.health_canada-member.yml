@@ -1,0 +1,14 @@
+uuid: fb4133c6-d35e-49fd-8939-0fa96daaa697
+langcode: en
+status: true
+dependencies:
+  config:
+    - group.type.health_canada
+id: health_canada-member
+label: Member
+weight: -100
+internal: true
+audience: member
+group_type: health_canada
+permissions_ui: true
+permissions: {  }

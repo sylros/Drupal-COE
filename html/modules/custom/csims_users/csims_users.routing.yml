@@ -1,0 +1,11 @@
+entity.public_engagement_activity.attend:
+  path: '/node/{plublic_engagement_activity}/attend'
+  defaults:
+    _form: '\Drupal\csims_users\Form\AttendForm'
+    _title: 'Attend Event'
+  options:
+    parameters:
+      public_engagement_activity:
+        type: 'entity:public_engagement_activity'
+  requirements:
+    _access: 'TRUE'

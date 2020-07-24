@@ -1,0 +1,14 @@
+uuid: 1a365470-bdbf-44f4-8635-c177d576be60
+langcode: en
+status: true
+dependencies:
+  config:
+    - group.type.public_heath_agency_of
+id: public_heath_agency_of-outsider
+label: Outsider
+weight: -101
+internal: true
+audience: outsider
+group_type: public_heath_agency_of
+permissions_ui: true
+permissions: {  }

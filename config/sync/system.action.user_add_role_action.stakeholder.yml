@@ -1,0 +1,14 @@
+uuid: 9d34d617-e839-446c-9e24-8f60827714d0
+langcode: en
+status: true
+dependencies:
+  config:
+    - user.role.stakeholder
+  module:
+    - user
+id: user_add_role_action.stakeholder
+label: 'Add the Stakeholder role to the selected user(s)'
+type: user
+plugin: user_add_role_action
+configuration:
+  rid: stakeholder

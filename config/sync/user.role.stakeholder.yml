@@ -1,0 +1,16 @@
+uuid: 6e8eb2c7-dab9-485f-ad82-6389518b2f6e
+langcode: en
+status: true
+dependencies:
+  module:
+    - lightning_core
+third_party_settings:
+  lightning_core:
+    description: ''
+id: stakeholder
+label: Stakeholder
+weight: 7
+is_admin: null
+permissions:
+  - 'access group overview'
+  - 'create forum content'

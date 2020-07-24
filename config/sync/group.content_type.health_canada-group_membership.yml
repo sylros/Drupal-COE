@@ -1,0 +1,17 @@
+uuid: b132984d-0b56-4505-87dd-18e2c36827c3
+langcode: en
+status: true
+dependencies:
+  config:
+    - group.type.health_canada
+  module:
+    - user
+id: health_canada-group_membership
+label: 'Health Canada: Group membership'
+description: 'Adds users to groups as members.'
+group_type: health_canada
+content_plugin: group_membership
+plugin_config:
+  group_cardinality: 0
+  entity_cardinality: 1
+  use_creation_wizard: false

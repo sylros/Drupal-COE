@@ -1,0 +1,17 @@
+uuid: 14e3461b-37dc-4efa-84ba-4f2db17f3773
+langcode: en
+status: true
+dependencies:
+  config:
+    - group.type.public_heath_agency_of
+  enforced:
+    config:
+      - user.role.stakeholder
+id: public_heath_agency_of-7a1988880
+label: Stakeholder
+weight: 7
+internal: true
+audience: outsider
+group_type: public_heath_agency_of
+permissions_ui: false
+permissions: {  }

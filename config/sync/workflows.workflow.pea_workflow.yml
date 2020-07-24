@@ -1,0 +1,58 @@
+uuid: 7dca08f7-4693-43a1-8e20-d25edb2c496b
+langcode: en
+status: true
+dependencies:
+  config:
+    - node.type.public_engagement_activity
+  module:
+    - content_moderation
+id: pea_workflow
+label: 'PEA Workflow'
+type: content_moderation
+type_settings:
+  states:
+    draft:
+      label: Draft
+      published: false
+      default_revision: false
+      weight: -2
+    published:
+      label: Published
+      published: true
+      default_revision: true
+      weight: 0
+    request_approval:
+      published: false
+      default_revision: true
+      label: Approval
+      weight: -1
+  transitions:
+    approve_pea:
+      label: 'Approve PEA'
+      from:
+        - request_approval
+      to: published
+      weight: 1
+    create_new_draft:
+      label: 'Create New Draft'
+      to: draft
+      weight: -2
+      from:
+        - draft
+        - request_approval
+    new_draft:
+      label: 'New Draft'
+      from:
+        - published
+      to: draft
+      weight: 2
+    request_approval_from_manager:
+      label: 'Request Approval from Manager'
+      from:
+        - draft
+      to: request_approval
+      weight: -1
+  entity_types:
+    node:
+      - public_engagement_activity
+  default_moderation_state: draft

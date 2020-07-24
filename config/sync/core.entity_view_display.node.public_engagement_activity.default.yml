@@ -1,0 +1,105 @@
+uuid: d0246bcb-d43e-4642-b3ed-ed2d587c5aab
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.field.node.public_engagement_activity.body
+    - field.field.node.public_engagement_activity.field_area_of_interest
+    - field.field.node.public_engagement_activity.field_event_date
+    - field.field.node.public_engagement_activity.field_event_location
+    - field.field.node.public_engagement_activity.field_files
+    - field.field.node.public_engagement_activity.field_forum_thread
+    - field.field.node.public_engagement_activity.field_list_of_interested_users
+    - field.field.node.public_engagement_activity.field_participant_list
+    - field.field.node.public_engagement_activity.field_target_audience
+    - node.type.public_engagement_activity
+  module:
+    - datetime
+    - file
+    - text
+    - user
+id: node.public_engagement_activity.default
+targetEntityType: node
+bundle: public_engagement_activity
+mode: default
+content:
+  body:
+    label: hidden
+    type: text_default
+    weight: 101
+    settings: {  }
+    third_party_settings: {  }
+    region: content
+  field_area_of_interest:
+    weight: 102
+    label: above
+    settings:
+      link: true
+    third_party_settings: {  }
+    type: entity_reference_label
+    region: content
+  field_event_date:
+    weight: 106
+    label: above
+    settings:
+      format_type: medium
+      timezone_override: ''
+    third_party_settings: {  }
+    type: datetime_default
+    region: content
+  field_event_location:
+    weight: 107
+    label: above
+    settings:
+      link_to_entity: false
+    third_party_settings: {  }
+    type: string
+    region: content
+  field_files:
+    weight: 109
+    label: above
+    settings:
+      use_description_as_link_text: true
+    third_party_settings: {  }
+    type: file_default
+    region: content
+  field_forum_thread:
+    weight: 108
+    label: above
+    settings:
+      link: true
+    third_party_settings: {  }
+    type: entity_reference_label
+    region: content
+  field_list_of_interested_users:
+    weight: 104
+    label: above
+    settings:
+      link: true
+    third_party_settings: {  }
+    type: entity_reference_label
+    region: content
+  field_participant_list:
+    weight: 110
+    label: above
+    settings:
+      link: true
+    third_party_settings: {  }
+    type: entity_reference_label
+    region: content
+  field_target_audience:
+    weight: 103
+    label: above
+    settings:
+      link: true
+    third_party_settings: {  }
+    type: entity_reference_label
+    region: content
+  links:
+    weight: 100
+    settings: {  }
+    third_party_settings: {  }
+    region: content
+hidden:
+  content_moderation_control: true
+  langcode: true

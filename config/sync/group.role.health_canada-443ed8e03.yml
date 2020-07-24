@@ -1,0 +1,17 @@
+uuid: ca9ff0df-f35f-4ea3-b569-05d7efd4ba08
+langcode: en
+status: true
+dependencies:
+  config:
+    - group.type.health_canada
+  enforced:
+    config:
+      - user.role.manager
+id: health_canada-443ed8e03
+label: Manager
+weight: 8
+internal: true
+audience: outsider
+group_type: health_canada
+permissions_ui: false
+permissions: {  }

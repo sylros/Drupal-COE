@@ -1,0 +1,5 @@
+name: CSIMS Users
+type: module
+description: 'Module for managing users in the CSIMS System'
+package: CSIMS
+core: 8.x

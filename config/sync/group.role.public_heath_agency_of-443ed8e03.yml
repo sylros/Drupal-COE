@@ -1,0 +1,17 @@
+uuid: 83793f84-b0c1-4b1d-98b5-662cee2bc3d9
+langcode: en
+status: true
+dependencies:
+  config:
+    - group.type.public_heath_agency_of
+  enforced:
+    config:
+      - user.role.manager
+id: public_heath_agency_of-443ed8e03
+label: Manager
+weight: 8
+internal: true
+audience: outsider
+group_type: public_heath_agency_of
+permissions_ui: false
+permissions: {  }

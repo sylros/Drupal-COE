@@ -1,0 +1,54 @@
+<?php
+
+use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Entity\EntityTypeInterface;
+use Drupal\Core\Entity\EntityInterface;
+use Drupal\node\Entity\Node;
+use Drupal\user\Entity\User;
+use Drupal\commerce_order\Entity\Order;
+
+
+function csims_users_form_alter(&$form, FormStateInterface &$form_state, $form_id) {
+  if($form_id === 'node_public_engagement_activity_edit_form') {
+    //Add custom submit function to form
+    foreach (array_keys($form['actions']) as $action) {
+      if ($action != 'preview' && isset($form['actions'][$action]['#type']) && $form['actions'][$action]['#type'] === 'submit') {
+        $form['actions'][$action]['#submit'][] = 'csims_users_form_submit';
+      }
+    }
+  }
+}
+
+function csims_users_form_submit($form, FormStateInterface $form_state) {
+  $fromState = $form_state->getCompleteForm()['moderation_state']['widget'][0]['state']['#default_value'];
+  $toState = $form_state->getCompleteForm()['moderation_state']['widget'][0]['state']['#value'];
+  $areaOfInterest = $form_state->getCompleteForm()['field_area_of_interest']['widget']['#value'];
+
+  //If approval given generate list of interested users
+  if($fromState === 'request_approval' && $toState === 'published') {
+    //Generate list of interested users
+    $nid = $form_state->getformObject()->getEntity()->id();
+    $node_storage = \Drupal::entityTypeManager()->getStorage('node');
+    $node = $node_storage->load($nid);
+
+    $userIds = \Drupal::entityQuery('user')->condition('field_areas_of_interests',$areaOfInterest,'IN')->execute();
+    $users = \Drupal\user\Entity\User::loadMultiple($userIds);
+
+    $node->set('field_list_of_interested_users', $users);
+    // $node->save();
+
+    //Create forum topic for PEA
+    $topicTitle = $form_state->getCompleteForm()['title']['widget'][0]['value']['#default_value'];
+    $post = Node::create(array (
+      'type' => 'forum',
+      'title' => $topicTitle . ' discussion',
+      'langcode' => 'en',
+      'uid' => $user = \Drupal::currentUser()->id(),
+      'status' => 1,
+      'taxonomy_forums' => array(19),
+    ));
+
+    $node->set('field_forum_thread',$post);
+    $node->save();
+  }
+}

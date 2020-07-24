@@ -1,0 +1,48 @@
+uuid: 0ef1973a-49cd-477e-983c-9e82a3ea416f
+langcode: en
+status: true
+dependencies:
+  module:
+    - lightning_core
+third_party_settings:
+  lightning_core:
+    description: ''
+id: manager
+label: Manager
+weight: 8
+is_admin: null
+permissions:
+  - 'access group overview'
+  - 'administer group'
+  - 'bypass node access'
+  - 'create forum content'
+  - 'create health_canada group'
+  - 'create public_engagement_activity content'
+  - 'create public_heath_agency_of group'
+  - 'delete any forum content'
+  - 'delete any public_engagement_activity content'
+  - 'delete own forum content'
+  - 'delete own public_engagement_activity content'
+  - 'edit any forum content'
+  - 'edit any public_engagement_activity content'
+  - 'edit own forum content'
+  - 'edit own public_engagement_activity content'
+  - 'revert forum revisions'
+  - 'revert public_engagement_activity revisions'
+  - 'schedule pea_workflow transition approve_pea'
+  - 'schedule pea_workflow transition create_new_draft'
+  - 'schedule pea_workflow transition request_approval_from_manager'
+  - 'use editorial transition archive'
+  - 'use editorial transition archived_published'
+  - 'use editorial transition create_new_draft'
+  - 'use editorial transition publish'
+  - 'use editorial transition review'
+  - 'use pea_workflow transition approve_pea'
+  - 'use pea_workflow transition create_new_draft'
+  - 'use pea_workflow transition new_draft'
+  - 'use pea_workflow transition request_approval_from_manager'
+  - 'view any unpublished content'
+  - 'view forum revisions'
+  - 'view latest version'
+  - 'view own unpublished content'
+  - 'view public_engagement_activity revisions'

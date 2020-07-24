@@ -1,0 +1,43 @@
+uuid: 93a70089-283e-466a-a016-dc0532ce8b79
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.field.group.health_canada.field_area_of_interests
+    - group.type.health_canada
+  module:
+    - path
+id: group.health_canada.default
+targetEntityType: group
+bundle: health_canada
+mode: default
+content:
+  field_area_of_interests:
+    weight: 31
+    settings: {  }
+    third_party_settings: {  }
+    type: options_buttons
+    region: content
+  label:
+    type: string_textfield
+    weight: -5
+    region: content
+    settings:
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+  langcode:
+    type: language_select
+    weight: 2
+    region: content
+    settings:
+      include_locked: true
+    third_party_settings: {  }
+  path:
+    type: path
+    weight: 30
+    region: content
+    settings: {  }
+    third_party_settings: {  }
+hidden:
+  uid: true

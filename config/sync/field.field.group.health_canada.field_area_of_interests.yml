@@ -1,0 +1,29 @@
+uuid: 03b9e307-64a0-476a-87cf-682f861712c2
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.group.field_area_of_interests
+    - group.type.health_canada
+    - taxonomy.vocabulary.areas_of_interest
+id: group.health_canada.field_area_of_interests
+field_name: field_area_of_interests
+entity_type: group
+bundle: health_canada
+label: 'Area of Interests'
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings:
+  handler: 'default:taxonomy_term'
+  handler_settings:
+    target_bundles:
+      areas_of_interest: areas_of_interest
+    sort:
+      field: name
+      direction: asc
+    auto_create: false
+    auto_create_bundle: ''
+field_type: entity_reference

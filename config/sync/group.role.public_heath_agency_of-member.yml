@@ -1,0 +1,14 @@
+uuid: b68c88e2-f092-43d6-89f0-e3f20a2459db
+langcode: en
+status: true
+dependencies:
+  config:
+    - group.type.public_heath_agency_of
+id: public_heath_agency_of-member
+label: Member
+weight: -100
+internal: true
+audience: member
+group_type: public_heath_agency_of
+permissions_ui: true
+permissions: {  }

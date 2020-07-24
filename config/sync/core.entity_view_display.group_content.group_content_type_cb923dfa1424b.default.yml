@@ -1,0 +1,24 @@
+uuid: 1984c5d1-1cf6-4e0b-83bb-4a208868021b
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.field.group_content.group_content_type_cb923dfa1424b.group_roles
+    - group.content_type.group_content_type_cb923dfa1424b
+id: group_content.group_content_type_cb923dfa1424b.default
+targetEntityType: group_content
+bundle: group_content_type_cb923dfa1424b
+mode: default
+content:
+  group_roles:
+    label: above
+    type: entity_reference_label
+    settings:
+      link: false
+    weight: -4
+    third_party_settings: {  }
+    region: content
+hidden:
+  entity_id: true
+  langcode: true
+  uid: true

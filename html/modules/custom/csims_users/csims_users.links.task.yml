@@ -1,0 +1,5 @@
+entity.public_engagement_activity.attend:
+  route_name: entity.public_engagement_activity.attend
+  base_route: entity.public_engagement_activity.canonical
+  title: Attend Event
+  weight: 999

@@ -1,0 +1,17 @@
+uuid: 3a19d6d5-7414-42f1-bffd-5c5c62726cb1
+langcode: en
+status: true
+dependencies:
+  config:
+    - group.type.health_canada
+  enforced:
+    config:
+      - user.role.pea_creator
+id: health_canada-2c7cf83fa
+label: 'PEA Creator'
+weight: 6
+internal: true
+audience: outsider
+group_type: health_canada
+permissions_ui: false
+permissions: {  }

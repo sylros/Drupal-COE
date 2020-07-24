@@ -1,0 +1,17 @@
+uuid: 6ea11d96-e4ab-46c8-ba37-5fd473c6420e
+langcode: en
+status: true
+dependencies:
+  config:
+    - group.type.public_heath_agency_of
+  enforced:
+    config:
+      - user.role.administrator
+id: public_heath_agency_of-a416e6833
+label: Administrator
+weight: 2
+internal: true
+audience: outsider
+group_type: public_heath_agency_of
+permissions_ui: false
+permissions: {  }

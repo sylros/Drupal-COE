@@ -1,0 +1,17 @@
+uuid: 1f2612ed-3668-4156-ba7a-4b0a0f21a251
+langcode: en
+status: true
+dependencies:
+  config:
+    - group.type.health_canada
+  enforced:
+    config:
+      - user.role.stakeholder
+id: health_canada-7a1988880
+label: Stakeholder
+weight: 7
+internal: true
+audience: outsider
+group_type: health_canada
+permissions_ui: false
+permissions: {  }

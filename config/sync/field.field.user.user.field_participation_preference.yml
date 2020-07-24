@@ -1,0 +1,30 @@
+uuid: 482486aa-7b8f-4af2-a9c1-92d78e7e22fb
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.user.field_participation_preference
+    - taxonomy.vocabulary.participation_preference
+  module:
+    - user
+id: user.user.field_participation_preference
+field_name: field_participation_preference
+entity_type: user
+bundle: user
+label: 'Participation Preference'
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings:
+  handler: 'default:taxonomy_term'
+  handler_settings:
+    target_bundles:
+      participation_preference: participation_preference
+    sort:
+      field: name
+      direction: asc
+    auto_create: false
+    auto_create_bundle: ''
+field_type: entity_reference

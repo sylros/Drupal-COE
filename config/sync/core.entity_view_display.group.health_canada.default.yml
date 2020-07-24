@@ -1,0 +1,33 @@
+uuid: bedd8658-9a2e-4713-8e74-5296a01c64b2
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.field.group.health_canada.field_area_of_interests
+    - group.type.health_canada
+id: group.health_canada.default
+targetEntityType: group
+bundle: health_canada
+mode: default
+content:
+  field_area_of_interests:
+    weight: -4
+    label: above
+    settings:
+      link: true
+    third_party_settings: {  }
+    type: entity_reference_label
+    region: content
+  label:
+    label: hidden
+    type: string
+    weight: -5
+    region: content
+    settings:
+      link_to_entity: false
+    third_party_settings: {  }
+hidden:
+  changed: true
+  created: true
+  langcode: true
+  uid: true

@@ -1,0 +1,14 @@
+uuid: 66eba834-fe64-4029-8ae4-62c962ca303b
+langcode: en
+status: true
+dependencies:
+  config:
+    - user.role.stakeholder
+  module:
+    - user
+id: user_remove_role_action.stakeholder
+label: 'Remove the Stakeholder role from the selected user(s)'
+type: user
+plugin: user_remove_role_action
+configuration:
+  rid: stakeholder

@@ -1,0 +1,14 @@
+uuid: efce54c7-2ebb-4092-b197-0a8840356dc2
+langcode: en
+status: true
+dependencies:
+  module:
+    - lightning_core
+    - page_manager
+third_party_settings:
+  lightning_core:
+    internal: true
+id: page_variant.token
+label: Token
+targetEntityType: page_variant
+cache: true

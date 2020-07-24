@@ -1,0 +1,21 @@
+uuid: 587a709c-789f-4a72-b839-1f4ed4dcc3f5
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_participant_list
+    - node.type.public_engagement_activity
+id: node.public_engagement_activity.field_participant_list
+field_name: field_participant_list
+entity_type: node
+bundle: public_engagement_activity
+label: 'Participant List'
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings:
+  handler: 'default:user'
+  handler_settings: {  }
+field_type: entity_reference
