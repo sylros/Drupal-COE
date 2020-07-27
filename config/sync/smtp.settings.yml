@@ -5,8 +5,8 @@ smtp_port: '25'
 smtp_protocol: standard
 smtp_autotls: true
 smtp_timeout: 30
-smtp_username: ''
-smtp_password: ''
+smtp_username: admin
+smtp_password: Misha1995
 smtp_from: ''
 smtp_fromname: ''
 smtp_client_hostname: ''

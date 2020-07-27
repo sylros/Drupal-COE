@@ -141,7 +141,9 @@
         "drupal/commerce_moneris": "^2.0@RC",
         "drupal/smtp": "^1.0@RC",
         "phpoffice/phpspreadsheet": "^1.6",
-        "drupal/vbo_export": "^3.1"
+        "drupal/vbo_export": "^3.1",
+        "drupal/rabbitmq": "^2.1",
+        "php-amqplib/php-amqplib": "^2.11"
     },
     "autoload": {
         "classmap": [

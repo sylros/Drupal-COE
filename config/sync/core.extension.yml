@@ -36,7 +36,6 @@ module:
   content_moderation: 0
   contextual: 0
   cop_hpp_form: 0
-  cop_moneris: 0
   core_context: 0
   crop: 0
   ctools: 0
@@ -130,6 +129,8 @@ module:
   path_alias: 0
   profile: 0
   quickedit: 0
+  rabbitmq: 0
+  rabbitmq_test: 0
   rdf: 0
   redirect: 0
   responsive_image: 0

@@ -64,6 +64,7 @@ field_group: 3.0.0
 field_ui: 8.8.2
 file: 8.8.2
 filter: 8.8.2
+forum: 8.8.2
 help: 8.8.2
 history: 8.8.2
 image: 8.8.2
@@ -133,6 +134,8 @@ path_alias: 8.8.2
 pathauto: 1.6.0
 profile: 1.1.0
 quickedit: 8.8.2
+rabbitmq: 2.1.0
+rabbitmq_test: 0.0.0
 rdf: 8.8.2
 redirect: 1.5.0
 responsive_image: 8.8.2

@@ -1,0 +1,16 @@
+name: 'RabbitMQ Example'
+type: module
+hidden: TRUE
+description: 'RabbitMQ Integration for Drupal.'
+core: 8.x
+core_version_requirement: ^8
+package: Testing
+php: 7.0
+
+dependencies:
+  - rabbitmq:rabbitmq
+
+# Information added by Drupal.org packaging script on 2020-06-10
+version: '8.x-2.1'
+project: 'rabbitmq'
+datestamp: 1591795831

@@ -1,0 +1,7 @@
+rabbitmq_test_form:
+  path: '/rabbitmq_test'
+  defaults:
+    _form: '\Drupal\rabbitmq_test\Form\ExampleForm'
+    _title: 'RabbitMQ Example Form'
+  requirements:
+    _permission: 'access simple page'
