@@ -1,0 +1,43 @@
+uuid: ef9aabd1-5af9-4e1e-a97c-cbaf9f211f83
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_list_of_ceg
+    - node.type.application
+    - paragraphs.paragraphs_type.ceg_history
+  module:
+    - entity_reference_revisions
+id: node.application.field_list_of_ceg
+field_name: field_list_of_ceg
+entity_type: node
+bundle: application
+label: 'List of CEG'
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings:
+  handler: 'default:paragraph'
+  handler_settings:
+    negate: 0
+    target_bundles:
+      ceg_history: ceg_history
+    target_bundles_drag_drop:
+      appstore_information:
+        weight: 6
+        enabled: false
+      ceg_history:
+        enabled: true
+        weight: 7
+      client_history:
+        weight: 8
+        enabled: false
+      dev_history:
+        weight: 9
+        enabled: false
+      ip_information:
+        weight: 10
+        enabled: false
+field_type: entity_reference_revisions

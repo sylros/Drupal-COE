@@ -1,8 +1,9 @@
-uuid: eb3afa31-7b1a-4729-9a1f-dc0360a248ad
+uuid: 492569c9-9c99-4f5f-8bef-1e576dca23c6
 langcode: en
 status: true
 dependencies:
   module:
+    - block_class
     - system
     - user
     - wxt_library

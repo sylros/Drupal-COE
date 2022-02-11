@@ -1,0 +1,32 @@
+uuid: 9b43a83a-7d6e-49dc-b865-3635737c3645
+langcode: en
+status: true
+dependencies:
+  config:
+    - core.entity_view_mode.paragraph.current_responsible
+    - field.field.paragraph.client_history.field_client
+    - field.field.paragraph.client_history.field_end_date
+    - field.field.paragraph.client_history.field_start_date
+    - paragraphs.paragraphs_type.client_history
+  module:
+    - layout_builder
+third_party_settings:
+  layout_builder:
+    allow_custom: false
+    enabled: false
+id: paragraph.client_history.current_responsible
+targetEntityType: paragraph
+bundle: client_history
+mode: current_responsible
+content:
+  field_client:
+    weight: 0
+    label: above
+    settings:
+      link: true
+    third_party_settings: {  }
+    type: entity_reference_label
+    region: content
+hidden:
+  field_end_date: true
+  field_start_date: true

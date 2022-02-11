@@ -1,0 +1,19 @@
+uuid: c1d95025-fb4b-4917-b0e8-f707fddf2de0
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_vpn_ip_address
+    - node.type.server
+id: node.server.field_vpn_ip_address
+field_name: field_vpn_ip_address
+entity_type: node
+bundle: server
+label: 'VPN IP Address'
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: string

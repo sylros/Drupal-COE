@@ -1,0 +1,14 @@
+uuid: df39996a-3422-4d36-a886-efc0fa5f5ea6
+langcode: en
+status: true
+dependencies:
+  module:
+    - lightning_core
+    - paragraphs
+third_party_settings:
+  lightning_core:
+    description: ''
+id: paragraph.current_responsible
+label: 'Current Responsible'
+targetEntityType: paragraph
+cache: true

@@ -1,0 +1,28 @@
+uuid: fd9f8247-f10f-4f33-9808-ba4bd4b7a267
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.paragraph.field_ceg
+    - node.type.person
+    - paragraphs.paragraphs_type.ceg_history
+id: paragraph.ceg_history.field_ceg
+field_name: field_ceg
+entity_type: paragraph
+bundle: ceg_history
+label: CEG
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings:
+  handler: 'default:node'
+  handler_settings:
+    target_bundles:
+      person: person
+    sort:
+      field: _none
+    auto_create: false
+    auto_create_bundle: ''
+field_type: entity_reference

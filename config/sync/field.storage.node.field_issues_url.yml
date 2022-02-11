@@ -1,0 +1,20 @@
+uuid: 73598f8f-3591-4a25-9dba-5e678f8f6156
+langcode: en
+status: true
+dependencies:
+  module:
+    - node
+    - text
+id: node.field_issues_url
+field_name: field_issues_url
+entity_type: node
+type: text
+settings:
+  max_length: 255
+module: text
+locked: false
+cardinality: 1
+translatable: true
+indexes: {  }
+persist_with_no_fields: false
+custom_storage: false

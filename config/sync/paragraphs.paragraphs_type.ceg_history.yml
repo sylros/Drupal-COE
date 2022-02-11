@@ -1,0 +1,10 @@
+uuid: 4d8a4b54-8063-4551-8a70-a54376cf6546
+langcode: en
+status: true
+dependencies: {  }
+id: ceg_history
+label: 'Ceg History'
+icon_uuid: null
+icon_default: null
+description: ''
+behavior_plugins: {  }

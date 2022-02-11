@@ -5,10 +5,11 @@ dependencies:
   config:
     - node.type.application
     - node.type.data_centre
-    - node.type.employee
+    - node.type.domain
     - node.type.environments
     - node.type.landing_page
     - node.type.page
+    - node.type.person
     - node.type.server
   module:
     - content_moderation
@@ -80,8 +81,9 @@ type_settings:
     node:
       - application
       - data_centre
-      - employee
+      - domain
       - environments
       - landing_page
       - page
+      - person
       - server

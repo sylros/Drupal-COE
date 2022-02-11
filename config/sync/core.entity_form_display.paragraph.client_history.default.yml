@@ -1,0 +1,37 @@
+uuid: 9be12b1f-f95c-4820-ad65-bc42d24f9165
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.field.paragraph.client_history.field_client
+    - field.field.paragraph.client_history.field_end_date
+    - field.field.paragraph.client_history.field_start_date
+    - paragraphs.paragraphs_type.client_history
+  module:
+    - datetime
+id: paragraph.client_history.default
+targetEntityType: paragraph
+bundle: client_history
+mode: default
+content:
+  field_client:
+    weight: 0
+    settings: {  }
+    third_party_settings: {  }
+    type: options_select
+    region: content
+  field_end_date:
+    weight: 2
+    settings: {  }
+    third_party_settings: {  }
+    type: datetime_default
+    region: content
+  field_start_date:
+    weight: 1
+    settings: {  }
+    third_party_settings: {  }
+    type: datetime_default
+    region: content
+hidden:
+  created: true
+  status: true

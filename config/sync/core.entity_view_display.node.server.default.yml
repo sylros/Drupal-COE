@@ -3,52 +3,175 @@ langcode: en
 status: true
 dependencies:
   config:
-    - field.field.node.server.body
-    - field.field.node.server.field_application_list
-    - field.field.node.server.field_data_center
     - field.field.node.server.field_database
     - field.field.node.server.field_decomision_date
+    - field.field.node.server.field_environments
     - field.field.node.server.field_ip_address
+    - field.field.node.server.field_is_a_db_server
+    - field.field.node.server.field_list_of_ips
     - field.field.node.server.field_os
-    - field.field.node.server.field_owner
-    - field.field.node.server.field_requires_vpn_
     - field.field.node.server.field_type
-    - field.field.node.server.field_vpn
-    - field.field.node.server.field_vpn_access_email
+    - field.field.node.server.field_vpn_ip_address
     - node.type.server
   module:
+    - apm_blocks
+    - bootstrap_layouts
     - datetime
+    - entity_reference_revisions
+    - layout_builder
+    - layout_discovery
+    - layout_library
     - options
-    - text
     - user
+third_party_settings:
+  layout_builder:
+    allow_custom: false
+    enabled: true
+    sections:
+      -
+        layout_id: bs_1col
+        layout_settings:
+          label: ''
+          layout:
+            wrapper: div
+            classes:
+              row: row
+            add_layout_class: 1
+            attributes: ''
+          regions:
+            main:
+              wrapper: div
+              classes:
+                col-sm-12: col-sm-12
+              add_region_classes: 1
+              attributes: ''
+        components:
+          19e2d676-ac63-4bee-bd2a-371160075a98:
+            uuid: 19e2d676-ac63-4bee-bd2a-371160075a98
+            region: main
+            configuration:
+              id: 'field_block:node:server:title'
+              label: Title
+              provider: layout_builder
+              label_display: '0'
+              formatter:
+                label: hidden
+                type: string
+                settings:
+                  link_to_entity: true
+                third_party_settings: {  }
+              context_mapping:
+                entity: layout_builder.entity
+                view_mode: view_mode
+            additional: {  }
+            weight: 0
+          f50f9e1b-b0eb-4473-9a3f-c68e28656643:
+            uuid: f50f9e1b-b0eb-4473-9a3f-c68e28656643
+            region: main
+            configuration:
+              id: data_centre_block
+              label: 'Data Centre Block'
+              provider: apm_blocks
+              label_display: '0'
+              context_mapping: {  }
+            additional: {  }
+            weight: 2
+        third_party_settings: {  }
+      -
+        layout_id: bs_2col
+        layout_settings:
+          label: ''
+          layout:
+            wrapper: div
+            classes:
+              row: row
+            add_layout_class: 1
+            attributes: ''
+          regions:
+            left:
+              wrapper: div
+              classes:
+                col-sm-6: col-sm-6
+              add_region_classes: 1
+              attributes: ''
+            right:
+              wrapper: div
+              classes:
+                col-sm-6: col-sm-6
+              add_region_classes: 1
+              attributes: ''
+        components:
+          db9808ce-2dbc-4baf-8ad5-fce55661160c:
+            uuid: db9808ce-2dbc-4baf-8ad5-fce55661160c
+            region: left
+            configuration:
+              id: 'field_block:node:server:field_ip_address'
+              label: 'IP Address'
+              provider: layout_builder
+              label_display: '0'
+              formatter:
+                label: inline
+                type: string
+                settings:
+                  link_to_entity: false
+                third_party_settings: {  }
+              context_mapping:
+                entity: layout_builder.entity
+                view_mode: view_mode
+            additional: {  }
+            weight: 0
+          af13b9ef-26f7-40c5-b928-fd5f55e7336b:
+            uuid: af13b9ef-26f7-40c5-b928-fd5f55e7336b
+            region: right
+            configuration:
+              id: 'field_block:node:server:field_vpn_ip_address'
+              label: 'VPN IP Address'
+              provider: layout_builder
+              label_display: '0'
+              formatter:
+                label: inline
+                type: string
+                settings:
+                  link_to_entity: false
+                third_party_settings: {  }
+              context_mapping:
+                entity: layout_builder.entity
+                view_mode: view_mode
+            additional: {  }
+            weight: 0
+        third_party_settings: {  }
+      -
+        layout_id: layout_onecol
+        layout_settings:
+          label: ''
+        components:
+          60381697-2c8f-4a4a-bd7f-9cc420349cf8:
+            uuid: 60381697-2c8f-4a4a-bd7f-9cc420349cf8
+            region: content
+            configuration:
+              id: 'field_block:node:server:field_os'
+              label: 'OS Version'
+              provider: layout_builder
+              label_display: '0'
+              formatter:
+                label: inline
+                type: string
+                settings:
+                  link_to_entity: false
+                third_party_settings: {  }
+              context_mapping:
+                entity: layout_builder.entity
+                view_mode: view_mode
+            additional: {  }
+            weight: 0
+        third_party_settings: {  }
+  layout_library:
+    enable: false
 id: node.server.default
 targetEntityType: node
 bundle: server
 mode: default
 content:
-  body:
-    label: hidden
-    type: text_default
-    weight: 101
-    settings: {  }
-    third_party_settings: {  }
-    region: content
-  field_application_list:
-    weight: 104
-    label: above
-    settings:
-      link: true
-    third_party_settings: {  }
-    type: entity_reference_label
-    region: content
-  field_data_center:
-    weight: 111
-    label: above
-    settings:
-      link: true
-    third_party_settings: {  }
-    type: entity_reference_label
-    region: content
   field_database:
     weight: 110
     label: above
@@ -66,13 +189,40 @@ content:
     third_party_settings: {  }
     type: datetime_default
     region: content
+  field_environments:
+    weight: 114
+    label: above
+    settings:
+      link: true
+    third_party_settings: {  }
+    type: entity_reference_label
+    region: content
   field_ip_address:
-    weight: 105
+    weight: 117
     label: above
     settings:
       link_to_entity: false
     third_party_settings: {  }
     type: string
+    region: main
+  field_is_a_db_server:
+    weight: 115
+    label: above
+    settings:
+      format: default
+      format_custom_false: ''
+      format_custom_true: ''
+    third_party_settings: {  }
+    type: boolean
+    region: content
+  field_list_of_ips:
+    type: entity_reference_revisions_entity_view
+    weight: 116
+    label: above
+    settings:
+      view_mode: default
+      link: ''
+    third_party_settings: {  }
     region: content
   field_os:
     weight: 109
@@ -82,24 +232,6 @@ content:
     third_party_settings: {  }
     type: string
     region: content
-  field_owner:
-    weight: 113
-    label: above
-    settings:
-      link: true
-    third_party_settings: {  }
-    type: entity_reference_label
-    region: content
-  field_requires_vpn_:
-    weight: 106
-    label: above
-    settings:
-      format: default
-      format_custom_false: ''
-      format_custom_true: ''
-    third_party_settings: {  }
-    type: boolean
-    region: content
   field_type:
     weight: 102
     label: above
@@ -107,21 +239,14 @@ content:
     third_party_settings: {  }
     type: list_default
     region: content
-  field_vpn:
-    weight: 107
+  field_vpn_ip_address:
+    weight: 118
     label: above
     settings:
       link_to_entity: false
     third_party_settings: {  }
     type: string
-    region: content
-  field_vpn_access_email:
-    weight: 108
-    label: above
-    settings: {  }
-    third_party_settings: {  }
-    type: basic_string
-    region: content
+    region: main
   links:
     weight: 100
     settings: {  }

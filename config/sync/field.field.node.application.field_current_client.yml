@@ -1,0 +1,21 @@
+uuid: 78319e19-be12-4ced-b2e2-f5b0695b1277
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_current_client
+    - node.type.application
+id: node.application.field_current_client
+field_name: field_current_client
+entity_type: node
+bundle: application
+label: 'Current Client'
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings:
+  handler: 'default:node'
+  handler_settings: {  }
+field_type: entity_reference

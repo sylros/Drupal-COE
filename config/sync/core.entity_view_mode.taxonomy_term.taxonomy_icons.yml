@@ -1,0 +1,14 @@
+uuid: a5f233e6-f974-4fee-9130-2f9843305f03
+langcode: en
+status: true
+dependencies:
+  module:
+    - lightning_core
+    - taxonomy
+third_party_settings:
+  lightning_core:
+    description: ''
+id: taxonomy_term.taxonomy_icons
+label: 'Taxonomy Icons'
+targetEntityType: taxonomy_term
+cache: true

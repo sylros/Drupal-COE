@@ -1,0 +1,170 @@
+uuid: 2a3cfd3a-6b01-4063-b290-233af8323edb
+langcode: en
+status: true
+dependencies: {  }
+id: application_layout
+label: 'Application Layout'
+targetEntityType: node
+targetBundle: application
+layout:
+  -
+    layout_id: bs_1col_stacked
+    layout_settings:
+      label: ''
+      layout:
+        wrapper: div
+        classes:
+          row: row
+        add_layout_class: 1
+        attributes: ''
+      regions:
+        top:
+          wrapper: div
+          classes:
+            col-sm-12: col-sm-12
+          add_region_classes: 1
+          attributes: ''
+        main:
+          wrapper: div
+          classes:
+            col-sm-12: col-sm-12
+          add_region_classes: 1
+          attributes: ''
+        bottom:
+          wrapper: div
+          classes:
+            col-sm-12: col-sm-12
+          add_region_classes: 1
+          attributes: ''
+    components:
+      c552019f-391b-474f-8654-a4f3a9c8cfb0:
+        uuid: c552019f-391b-474f-8654-a4f3a9c8cfb0
+        region: bottom
+        configuration:
+          id: 'views_block:application_environments-block_1'
+          label: ''
+          provider: views
+          label_display: visible
+          views_label: ''
+          items_per_page: '40'
+          context_mapping: {  }
+        additional: {  }
+        weight: 0
+      5a653742-120a-4f50-8d21-94c3ecb7ed75:
+        uuid: 5a653742-120a-4f50-8d21-94c3ecb7ed75
+        region: bottom
+        configuration:
+          id: 'views_block:application_environments-block_1'
+          label: ''
+          provider: views
+          label_display: visible
+          views_label: ''
+          items_per_page: '40'
+          context_mapping: {  }
+        additional: {  }
+        weight: 1
+      067e4993-e618-43bb-8756-70ee27c413f6:
+        uuid: 067e4993-e618-43bb-8756-70ee27c413f6
+        region: bottom
+        configuration:
+          id: 'views_block:application_environments-block_1'
+          label: ''
+          provider: views
+          label_display: visible
+          views_label: ''
+          items_per_page: '40'
+          context_mapping: {  }
+        additional: {  }
+        weight: 2
+      d4f30c81-246b-4ccc-b826-b4e921385a35:
+        uuid: d4f30c81-246b-4ccc-b826-b4e921385a35
+        region: bottom
+        configuration:
+          id: 'views_block:application_environments-block_1'
+          label: ''
+          provider: views
+          label_display: visible
+          views_label: ''
+          items_per_page: none
+          context_mapping: {  }
+        additional: {  }
+        weight: 3
+      763cdfbc-3f0c-43e2-89a6-a0052b06518c:
+        uuid: 763cdfbc-3f0c-43e2-89a6-a0052b06518c
+        region: bottom
+        configuration:
+          id: 'views_block:application_environments-block_1'
+          label: ''
+          provider: views
+          label_display: visible
+          views_label: ''
+          items_per_page: none
+          context_mapping: {  }
+        additional: {  }
+        weight: 4
+      62556c04-119a-4e91-9d99-7dbaffa716ff:
+        uuid: 62556c04-119a-4e91-9d99-7dbaffa716ff
+        region: bottom
+        configuration:
+          id: 'views_block:application_environments-block_1'
+          label: ''
+          provider: views
+          label_display: visible
+          views_label: ''
+          items_per_page: none
+          context_mapping: {  }
+        additional: {  }
+        weight: 5
+      737b6471-8617-4ca2-885b-506ebf81e2b2:
+        uuid: 737b6471-8617-4ca2-885b-506ebf81e2b2
+        region: bottom
+        configuration:
+          id: 'views_block:application_environments-block_1'
+          label: ''
+          provider: views
+          label_display: visible
+          views_label: ''
+          items_per_page: none
+          context_mapping: {  }
+        additional: {  }
+        weight: 6
+      d3f4f38f-6a13-4854-ad50-345b0557b385:
+        uuid: d3f4f38f-6a13-4854-ad50-345b0557b385
+        region: bottom
+        configuration:
+          id: 'views_block:application_environments-block_1'
+          label: ''
+          provider: views
+          label_display: visible
+          views_label: ''
+          items_per_page: none
+          context_mapping: {  }
+        additional: {  }
+        weight: 7
+      35397f77-8bb8-402b-85c9-1c2b586ecfbe:
+        uuid: 35397f77-8bb8-402b-85c9-1c2b586ecfbe
+        region: bottom
+        configuration:
+          id: 'views_block:application_environments-block_1'
+          label: ''
+          provider: views
+          label_display: visible
+          views_label: ''
+          items_per_page: none
+          context_mapping: {  }
+        additional: {  }
+        weight: 8
+      87cc6196-0cca-4ef1-9cce-27e4312ad5bc:
+        uuid: 87cc6196-0cca-4ef1-9cce-27e4312ad5bc
+        region: bottom
+        configuration:
+          id: 'views_block:application_environments-block_1'
+          label: ''
+          provider: views
+          label_display: visible
+          views_label: ''
+          items_per_page: none
+          context_mapping: {  }
+        additional: {  }
+        weight: 9
+    third_party_settings: {  }

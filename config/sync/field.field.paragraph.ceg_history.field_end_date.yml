@@ -1,0 +1,21 @@
+uuid: e05bb011-9ef1-4ddd-a8c6-4fd0ca502a22
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.paragraph.field_end_date
+    - paragraphs.paragraphs_type.ceg_history
+  module:
+    - datetime
+id: paragraph.ceg_history.field_end_date
+field_name: field_end_date
+entity_type: paragraph
+bundle: ceg_history
+label: 'End Date'
+description: ''
+required: false
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: datetime

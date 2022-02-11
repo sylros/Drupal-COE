@@ -1,0 +1,21 @@
+uuid: 6f6a4db9-d4e2-459b-a7d3-49cfc12fdcb3
+langcode: en
+status: true
+dependencies:
+  module:
+    - entity_reference_revisions
+    - node
+    - paragraphs
+id: node.field_ip_addresses
+field_name: field_ip_addresses
+entity_type: node
+type: entity_reference_revisions
+settings:
+  target_type: paragraph
+module: entity_reference_revisions
+locked: false
+cardinality: -1
+translatable: true
+indexes: {  }
+persist_with_no_fields: false
+custom_storage: false

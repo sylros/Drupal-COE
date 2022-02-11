@@ -1,0 +1,14 @@
+uuid: 30b8be08-4f8e-4faf-8eb7-d5bca3c569a6
+langcode: en
+status: true
+dependencies:
+  module:
+    - lightning_core
+    - node
+third_party_settings:
+  lightning_core:
+    description: ''
+id: node.application_view
+label: 'Application View'
+targetEntityType: node
+cache: true

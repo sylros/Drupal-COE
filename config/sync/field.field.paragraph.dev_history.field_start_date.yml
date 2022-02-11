@@ -1,0 +1,24 @@
+uuid: c0c5e4e0-6ab0-49e9-b5a2-76bfb7b05b97
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.paragraph.field_start_date
+    - paragraphs.paragraphs_type.dev_history
+  module:
+    - datetime
+id: paragraph.dev_history.field_start_date
+field_name: field_start_date
+entity_type: paragraph
+bundle: dev_history
+label: 'Start Date'
+description: ''
+required: true
+translatable: false
+default_value:
+  -
+    default_date_type: now
+    default_date: now
+default_value_callback: ''
+settings: {  }
+field_type: datetime

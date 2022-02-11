@@ -1,0 +1,23 @@
+uuid: 6a300af1-644f-4911-8ad6-f0c1b57929a6
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.paragraph.field_apple_url
+    - paragraphs.paragraphs_type.appstore_information
+  module:
+    - link
+id: paragraph.appstore_information.field_apple_url
+field_name: field_apple_url
+entity_type: paragraph
+bundle: appstore_information
+label: 'Apple URL'
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings:
+  link_type: 16
+  title: 1
+field_type: link

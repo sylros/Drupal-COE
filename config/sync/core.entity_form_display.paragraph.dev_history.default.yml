@@ -1,0 +1,37 @@
+uuid: 564f2bb2-4c64-4574-8646-3def62d27a4f
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.field.paragraph.dev_history.field_end_date
+    - field.field.paragraph.dev_history.field_person
+    - field.field.paragraph.dev_history.field_start_date
+    - paragraphs.paragraphs_type.dev_history
+  module:
+    - datetime
+id: paragraph.dev_history.default
+targetEntityType: paragraph
+bundle: dev_history
+mode: default
+content:
+  field_end_date:
+    weight: 2
+    settings: {  }
+    third_party_settings: {  }
+    type: datetime_default
+    region: content
+  field_person:
+    weight: 0
+    settings: {  }
+    third_party_settings: {  }
+    type: options_select
+    region: content
+  field_start_date:
+    weight: 1
+    settings: {  }
+    third_party_settings: {  }
+    type: datetime_default
+    region: content
+hidden:
+  created: true
+  status: true

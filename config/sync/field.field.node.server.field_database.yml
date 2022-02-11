@@ -9,7 +9,7 @@ id: node.server.field_database
 field_name: field_database
 entity_type: node
 bundle: server
-label: Database
+label: 'Database Name'
 description: ''
 required: false
 translatable: false

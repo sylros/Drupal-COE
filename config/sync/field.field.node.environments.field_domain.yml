@@ -1,0 +1,46 @@
+uuid: 30c787af-d146-4094-af77-e908ede239c9
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_domain
+    - node.type.environments
+    - paragraphs.paragraphs_type.domain
+  module:
+    - entity_reference_revisions
+id: node.environments.field_domain
+field_name: field_domain
+entity_type: node
+bundle: environments
+label: Domain
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings:
+  handler: 'default:paragraph'
+  handler_settings:
+    negate: 0
+    target_bundles:
+      domain: domain
+    target_bundles_drag_drop:
+      appstore_information:
+        weight: 7
+        enabled: false
+      ceg_history:
+        weight: 8
+        enabled: false
+      client_history:
+        weight: 9
+        enabled: false
+      dev_history:
+        weight: 10
+        enabled: false
+      domain:
+        enabled: true
+        weight: 11
+      ip_information:
+        weight: 12
+        enabled: false
+field_type: entity_reference_revisions

@@ -13,13 +13,19 @@ settings:
   allowed_values:
     -
       value: D
-      label: Database
+      label: Dev
     -
-      value: A
-      label: Application
+      value: T
+      label: Test
     -
-      value: S
-      label: Service
+      value: P
+      label: Prod
+    -
+      value: C
+      label: Cate
+    -
+      value: R
+      label: Rate
   allowed_values_function: ''
 module: options
 locked: false

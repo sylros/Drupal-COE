@@ -1,0 +1,32 @@
+uuid: a1291945-342d-4552-b980-315d218b8061
+langcode: en
+status: true
+dependencies:
+  config:
+    - core.entity_view_mode.paragraph.current_responsible
+    - field.field.paragraph.ceg_history.field_ceg
+    - field.field.paragraph.ceg_history.field_end_date
+    - field.field.paragraph.ceg_history.field_start_date
+    - paragraphs.paragraphs_type.ceg_history
+  module:
+    - layout_builder
+third_party_settings:
+  layout_builder:
+    allow_custom: false
+    enabled: false
+id: paragraph.ceg_history.current_responsible
+targetEntityType: paragraph
+bundle: ceg_history
+mode: current_responsible
+content:
+  field_ceg:
+    weight: 0
+    label: above
+    settings:
+      link: true
+    third_party_settings: {  }
+    type: entity_reference_label
+    region: content
+hidden:
+  field_end_date: true
+  field_start_date: true

@@ -1,0 +1,28 @@
+uuid: 6a6684d6-ce81-4a3b-ad2d-1df8d919f4a0
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_server
+    - node.type.environments
+    - node.type.server
+id: node.environments.field_server
+field_name: field_server
+entity_type: node
+bundle: environments
+label: Server
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings:
+  handler: 'default:node'
+  handler_settings:
+    target_bundles:
+      server: server
+    sort:
+      field: _none
+    auto_create: false
+    auto_create_bundle: ''
+field_type: entity_reference

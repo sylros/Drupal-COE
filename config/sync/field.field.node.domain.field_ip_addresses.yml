@@ -1,0 +1,32 @@
+uuid: 44358c12-9439-492e-8bd2-b53afd7ff420
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_ip_addresses
+    - node.type.domain
+  module:
+    - entity_reference_revisions
+id: node.domain.field_ip_addresses
+field_name: field_ip_addresses
+entity_type: node
+bundle: domain
+label: 'IP Addresses'
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings:
+  handler: 'default:paragraph'
+  handler_settings:
+    negate: 0
+    target_bundles: {  }
+    target_bundles_drag_drop:
+      appstore_information:
+        weight: 3
+        enabled: false
+      ip_information:
+        enabled: true
+        weight: 4
+field_type: entity_reference_revisions

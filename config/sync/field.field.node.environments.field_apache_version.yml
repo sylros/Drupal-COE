@@ -1,0 +1,19 @@
+uuid: fd956d26-3ddc-47e8-a285-56742202ecd0
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_apache_version
+    - node.type.environments
+id: node.environments.field_apache_version
+field_name: field_apache_version
+entity_type: node
+bundle: environments
+label: 'Apache Version'
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: string

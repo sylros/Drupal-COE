@@ -1,10 +1,11 @@
-uuid: fd1608a5-8d58-4435-a889-df728e53e5ed
+uuid: 44c75624-73d3-4573-a932-cb75f52b00ff
 langcode: en
 status: true
 dependencies:
   config:
     - system.menu.brand
   module:
+    - block_class
     - system
   theme:
     - wxt_bootstrap

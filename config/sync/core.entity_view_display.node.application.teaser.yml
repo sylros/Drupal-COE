@@ -1,43 +1,29 @@
 uuid: 135930c7-83d4-401e-b677-78a599b0e1f6
 langcode: en
-status: true
+status: false
 dependencies:
   config:
     - core.entity_view_mode.node.teaser
-    - field.field.node.application.body
-    - field.field.node.application.field_application_id
-    - field.field.node.application.field_application_name
-    - field.field.node.application.field_ceg
-    - field.field.node.application.field_client
-    - field.field.node.application.field_database_name
+    - field.field.node.application.field_apm_id
+    - field.field.node.application.field_app_store
+    - field.field.node.application.field_current_ceg
+    - field.field.node.application.field_current_client
+    - field.field.node.application.field_current_developer
     - field.field.node.application.field_decomision_date
-    - field.field.node.application.field_developer
-    - field.field.node.application.field_environments
     - field.field.node.application.field_features
-    - field.field.node.application.field_home_page
-    - field.field.node.application.field_is_active
-    - field.field.node.application.field_login_url
-    - field.field.node.application.field_queries_emails
-    - field.field.node.application.field_repository
-    - field.field.node.application.field_servers
-    - field.field.node.application.field_users
+    - field.field.node.application.field_issues_url
+    - field.field.node.application.field_list_of_ceg
+    - field.field.node.application.field_list_of_clients
+    - field.field.node.application.field_list_of_developers
+    - field.field.node.application.field_repository_url
     - node.type.application
   module:
-    - text
     - user
 id: node.application.teaser
 targetEntityType: node
 bundle: application
 mode: teaser
 content:
-  body:
-    label: hidden
-    type: text_summary_or_trimmed
-    weight: 101
-    settings:
-      trim_length: 600
-    third_party_settings: {  }
-    region: content
   links:
     weight: 100
     settings: {  }
@@ -45,20 +31,16 @@ content:
     region: content
 hidden:
   content_moderation_control: true
-  field_application_id: true
-  field_application_name: true
-  field_ceg: true
-  field_client: true
-  field_database_name: true
+  field_apm_id: true
+  field_app_store: true
+  field_current_ceg: true
+  field_current_client: true
+  field_current_developer: true
   field_decomision_date: true
-  field_developer: true
-  field_environments: true
   field_features: true
-  field_home_page: true
-  field_is_active: true
-  field_login_url: true
-  field_queries_emails: true
-  field_repository: true
-  field_servers: true
-  field_users: true
+  field_issues_url: true
+  field_list_of_ceg: true
+  field_list_of_clients: true
+  field_list_of_developers: true
+  field_repository_url: true
   langcode: true

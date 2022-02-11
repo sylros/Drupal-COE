@@ -1,0 +1,10 @@
+uuid: ce4a5351-acc9-4879-b29c-bcbb3e2ccd7d
+langcode: en
+status: true
+dependencies: {  }
+id: appstore_information
+label: 'AppStore Information'
+icon_uuid: null
+icon_default: null
+description: ''
+behavior_plugins: {  }

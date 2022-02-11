@@ -1,0 +1,21 @@
+uuid: a58c6346-8303-4ede-882e-dd2060e7917a
+langcode: en
+status: true
+dependencies:
+  module:
+    - node
+id: node.field_vpn_ip_address
+field_name: field_vpn_ip_address
+entity_type: node
+type: string
+settings:
+  max_length: 15
+  is_ascii: false
+  case_sensitive: false
+module: core
+locked: false
+cardinality: 1
+translatable: true
+indexes: {  }
+persist_with_no_fields: false
+custom_storage: false

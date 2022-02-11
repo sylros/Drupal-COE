@@ -4,9 +4,17 @@ status: true
 dependencies:
   config:
     - core.entity_view_mode.node.teaser
+    - field.field.node.environments.field_apache_version
     - field.field.node.environments.field_application
-    - field.field.node.environments.field_environment_name
-    - field.field.node.environments.field_ip_address
+    - field.field.node.environments.field_database_name
+    - field.field.node.environments.field_database_server
+    - field.field.node.environments.field_domain
+    - field.field.node.environments.field_framework_and_version
+    - field.field.node.environments.field_php_version
+    - field.field.node.environments.field_server
+    - field.field.node.environments.field_server_path
+    - field.field.node.environments.field_supports_https
+    - field.field.node.environments.field_type
     - field.field.node.environments.field_url
     - node.type.environments
   module:
@@ -23,8 +31,16 @@ content:
     region: content
 hidden:
   content_moderation_control: true
+  field_apache_version: true
   field_application: true
-  field_environment_name: true
-  field_ip_address: true
+  field_database_name: true
+  field_database_server: true
+  field_domain: true
+  field_framework_and_version: true
+  field_php_version: true
+  field_server: true
+  field_server_path: true
+  field_supports_https: true
+  field_type: true
   field_url: true
   langcode: true

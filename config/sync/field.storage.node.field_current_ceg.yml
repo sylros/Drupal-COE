@@ -1,0 +1,19 @@
+uuid: baf0319b-623c-49c0-9462-f3888e672be7
+langcode: en
+status: true
+dependencies:
+  module:
+    - node
+id: node.field_current_ceg
+field_name: field_current_ceg
+entity_type: node
+type: entity_reference
+settings:
+  target_type: node
+module: core
+locked: false
+cardinality: 1
+translatable: true
+indexes: {  }
+persist_with_no_fields: false
+custom_storage: false

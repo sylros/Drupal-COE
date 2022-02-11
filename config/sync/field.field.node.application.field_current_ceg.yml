@@ -1,0 +1,28 @@
+uuid: 04c788a3-a1e0-41a6-958d-48fe2ed746a3
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_current_ceg
+    - node.type.application
+    - node.type.person
+id: node.application.field_current_ceg
+field_name: field_current_ceg
+entity_type: node
+bundle: application
+label: 'Current CEG'
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings:
+  handler: 'default:node'
+  handler_settings:
+    target_bundles:
+      person: person
+    sort:
+      field: _none
+    auto_create: false
+    auto_create_bundle: ''
+field_type: entity_reference

@@ -1,0 +1,28 @@
+uuid: 78f5056a-f5a4-442e-9845-f7e9a5eb65d9
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_application_list
+    - node.type.application
+    - node.type.person
+id: node.person.field_application_list
+field_name: field_application_list
+entity_type: node
+bundle: person
+label: 'Application List'
+description: ''
+required: false
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings:
+  handler: 'default:node'
+  handler_settings:
+    target_bundles:
+      application: application
+    sort:
+      field: _none
+    auto_create: false
+    auto_create_bundle: ''
+field_type: entity_reference

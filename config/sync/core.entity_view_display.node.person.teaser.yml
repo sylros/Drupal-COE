@@ -1,0 +1,32 @@
+uuid: f035cc8a-e55c-4de6-bcb1-bad757719f2c
+langcode: en
+status: false
+dependencies:
+  config:
+    - core.entity_view_mode.node.teaser
+    - field.field.node.person.field_application_list
+    - field.field.node.person.field_email
+    - field.field.node.person.field_is_currently_employed
+    - field.field.node.person.field_list_of_applications
+    - field.field.node.person.field_roles
+    - node.type.person
+  module:
+    - user
+id: node.person.teaser
+targetEntityType: node
+bundle: person
+mode: teaser
+content:
+  links:
+    weight: 100
+    settings: {  }
+    third_party_settings: {  }
+    region: content
+hidden:
+  content_moderation_control: true
+  field_application_list: true
+  field_email: true
+  field_is_currently_employed: true
+  field_list_of_applications: true
+  field_roles: true
+  langcode: true

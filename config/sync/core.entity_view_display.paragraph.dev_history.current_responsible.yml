@@ -1,0 +1,32 @@
+uuid: ddef3ac6-dcda-4fcf-a1d8-fe61b4925b45
+langcode: en
+status: true
+dependencies:
+  config:
+    - core.entity_view_mode.paragraph.current_responsible
+    - field.field.paragraph.dev_history.field_end_date
+    - field.field.paragraph.dev_history.field_person
+    - field.field.paragraph.dev_history.field_start_date
+    - paragraphs.paragraphs_type.dev_history
+  module:
+    - layout_builder
+third_party_settings:
+  layout_builder:
+    allow_custom: false
+    enabled: false
+id: paragraph.dev_history.current_responsible
+targetEntityType: paragraph
+bundle: dev_history
+mode: current_responsible
+content:
+  field_person:
+    weight: 0
+    label: above
+    settings:
+      link: true
+    third_party_settings: {  }
+    type: entity_reference_label
+    region: content
+hidden:
+  field_end_date: true
+  field_start_date: true

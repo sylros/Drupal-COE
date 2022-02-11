@@ -1,0 +1,32 @@
+uuid: 18de3f50-989f-4d17-933a-dc580fccdb28
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.field.node.domain.field_ip_addresses
+    - node.type.domain
+  module:
+    - entity_reference_revisions
+    - user
+id: node.domain.default
+targetEntityType: node
+bundle: domain
+mode: default
+content:
+  field_ip_addresses:
+    type: entity_reference_revisions_entity_view
+    weight: 101
+    label: above
+    settings:
+      view_mode: default
+      link: ''
+    third_party_settings: {  }
+    region: content
+  links:
+    weight: 100
+    settings: {  }
+    third_party_settings: {  }
+    region: content
+hidden:
+  content_moderation_control: true
+  langcode: true

@@ -3,16 +3,25 @@ langcode: en
 status: true
 dependencies:
   config:
+    - field.field.node.environments.field_apache_version
     - field.field.node.environments.field_application
-    - field.field.node.environments.field_environment_name
-    - field.field.node.environments.field_ip_address
+    - field.field.node.environments.field_database_name
+    - field.field.node.environments.field_database_server
+    - field.field.node.environments.field_domain
+    - field.field.node.environments.field_framework_and_version
+    - field.field.node.environments.field_php_version
+    - field.field.node.environments.field_server
+    - field.field.node.environments.field_server_path
+    - field.field.node.environments.field_supports_https
+    - field.field.node.environments.field_type
     - field.field.node.environments.field_url
     - node.type.environments
     - workflows.workflow.editorial
   module:
     - content_moderation
-    - link
+    - paragraphs
     - path
+    - text
 id: node.environments.default
 targetEntityType: node
 bundle: environments
@@ -24,6 +33,14 @@ content:
     region: content
     settings: {  }
     third_party_settings: {  }
+  field_apache_version:
+    weight: 28
+    settings:
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+    type: string_textfield
+    region: content
   field_application:
     weight: 11
     settings:
@@ -34,29 +51,90 @@ content:
     third_party_settings: {  }
     type: entity_reference_autocomplete
     region: content
-  field_environment_name:
-    weight: 10
+  field_database_name:
+    weight: 33
     settings:
       size: 60
       placeholder: ''
     third_party_settings: {  }
     type: string_textfield
     region: content
-  field_ip_address:
-    weight: 26
+  field_database_server:
+    weight: 32
+    settings:
+      match_operator: CONTAINS
+      match_limit: 10
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+    type: entity_reference_autocomplete
+    region: content
+  field_domain:
+    type: entity_reference_paragraphs
+    weight: 39
+    settings:
+      title: Paragraph
+      title_plural: Paragraphs
+      edit_mode: open
+      add_mode: dropdown
+      form_display_mode: default
+      default_paragraph_type: ''
+    third_party_settings: {  }
+    region: content
+  field_framework_and_version:
+    weight: 34
     settings:
       size: 60
       placeholder: ''
     third_party_settings: {  }
     type: string_textfield
+    region: content
+  field_php_version:
+    weight: 29
+    settings:
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+    type: string_textfield
+    region: content
+  field_server:
+    weight: 27
+    settings:
+      match_operator: CONTAINS
+      match_limit: 10
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+    type: entity_reference_autocomplete
+    region: content
+  field_server_path:
+    weight: 38
+    settings:
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+    type: text_textfield
+    region: content
+  field_supports_https:
+    weight: 30
+    settings:
+      display_label: true
+    third_party_settings: {  }
+    type: boolean_checkbox
+    region: content
+  field_type:
+    weight: 36
+    settings: {  }
+    third_party_settings: {  }
+    type: options_select
     region: content
   field_url:
-    weight: 12
+    weight: 37
     settings:
-      placeholder_url: ''
-      placeholder_title: ''
+      size: 60
+      placeholder: ''
     third_party_settings: {  }
-    type: link_default
+    type: text_textfield
     region: content
   langcode:
     type: language_select

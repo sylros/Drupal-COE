@@ -1,0 +1,10 @@
+uuid: 1c1f65ea-7a3f-417d-861b-900279c59fa2
+langcode: en
+status: true
+dependencies: {  }
+id: client_history
+label: 'Client History'
+icon_uuid: null
+icon_default: null
+description: ''
+behavior_plugins: {  }

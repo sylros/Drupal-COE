@@ -1,0 +1,28 @@
+uuid: 48063575-ac58-4f90-b1a8-17fbfb69c9ff
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.paragraph.field_client
+    - node.type.person
+    - paragraphs.paragraphs_type.client_history
+id: paragraph.client_history.field_client
+field_name: field_client
+entity_type: paragraph
+bundle: client_history
+label: Client
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings:
+  handler: 'default:node'
+  handler_settings:
+    target_bundles:
+      person: person
+    sort:
+      field: _none
+    auto_create: false
+    auto_create_bundle: ''
+field_type: entity_reference

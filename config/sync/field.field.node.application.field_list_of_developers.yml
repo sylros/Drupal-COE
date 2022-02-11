@@ -1,0 +1,37 @@
+uuid: 9ce28d63-05b7-46d9-9611-46e260686eb6
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_list_of_developers
+    - node.type.application
+    - paragraphs.paragraphs_type.dev_history
+  module:
+    - entity_reference_revisions
+id: node.application.field_list_of_developers
+field_name: field_list_of_developers
+entity_type: node
+bundle: application
+label: 'List of Developers'
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings:
+  handler: 'default:paragraph'
+  handler_settings:
+    negate: 0
+    target_bundles:
+      dev_history: dev_history
+    target_bundles_drag_drop:
+      appstore_information:
+        weight: 4
+        enabled: false
+      dev_history:
+        enabled: true
+        weight: 5
+      ip_information:
+        weight: 6
+        enabled: false
+field_type: entity_reference_revisions

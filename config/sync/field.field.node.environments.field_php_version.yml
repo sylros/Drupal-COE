@@ -1,0 +1,19 @@
+uuid: 4887322e-3c96-46b7-9021-a5cbf95f1099
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_php_version
+    - node.type.environments
+id: node.environments.field_php_version
+field_name: field_php_version
+entity_type: node
+bundle: environments
+label: 'PHP Version'
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: string

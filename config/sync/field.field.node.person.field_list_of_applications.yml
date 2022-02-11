@@ -1,0 +1,72 @@
+uuid: 6e24d5c3-2987-42cb-b710-2c22e41b616a
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_list_of_applications
+    - node.type.person
+  module:
+    - viewsreference
+id: node.person.field_list_of_applications
+field_name: field_list_of_applications
+entity_type: node
+bundle: person
+label: 'List of applications'
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings:
+  handler: 'default:view'
+  handler_settings:
+    target_bundles: null
+    auto_create: 0
+  plugin_types:
+    block: block
+    default: 0
+    page: 0
+    data_export: 0
+    feed: 0
+    entity_browser: 0
+    embed: 0
+  preselect_views:
+    application_list: application_list
+    applications: 0
+    application_details: 0
+    application_environments: 0
+    application_features: 0
+    app_feature: 0
+    blocks: 0
+    block_content: 0
+    comment: 0
+    comments_recent: 0
+    content: 0
+    content_moderation_dashboard_in_review: 0
+    content_recent: 0
+    data_centre: 0
+    data_centre_inventory: 0
+    data_centre_servers: 0
+    environments: 0
+    features_icons: 0
+    files: 0
+    former_developer_s: 0
+    frontpage: 0
+    landing_page: 0
+    list_of_servers: 0
+    media: 0
+    media_library: 0
+    moderated_content: 0
+    moderation_dashboard_recently_created: 0
+    moderation_dashboard_recent_changes: 0
+    moderation_history: 0
+    redirect: 0
+    server_list: 0
+    server_listing: 0
+    taxonomy_term: 0
+    user_admin_people: 0
+    watchdog: 0
+    webform_submissions: 0
+    who_s_new: 0
+    who_s_online: 0
+field_type: viewsreference

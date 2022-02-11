@@ -9,7 +9,7 @@ id: node.server.field_os
 field_name: field_os
 entity_type: node
 bundle: server
-label: OS
+label: 'OS Version'
 description: ''
 required: false
 translatable: false

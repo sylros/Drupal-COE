@@ -3,8 +3,7 @@ langcode: en
 status: true
 dependencies:
   config:
-    - field.field.node.data_centre.field_name
-    - field.field.node.data_centre.field_owner
+    - field.field.node.data_centre.field_abbreviation
     - field.field.node.data_centre.field_servers
     - node.type.data_centre
     - workflows.workflow.editorial
@@ -22,23 +21,13 @@ content:
     region: content
     settings: {  }
     third_party_settings: {  }
-  field_name:
-    weight: 121
+  field_abbreviation:
+    weight: 123
     settings:
       size: 60
       placeholder: ''
     third_party_settings: {  }
     type: string_textfield
-    region: content
-  field_owner:
-    weight: 123
-    settings:
-      match_operator: CONTAINS
-      match_limit: 10
-      size: 60
-      placeholder: ''
-    third_party_settings: {  }
-    type: entity_reference_autocomplete
     region: content
   field_servers:
     weight: 122

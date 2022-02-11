@@ -1,0 +1,66 @@
+uuid: 0fc48e69-91e9-489c-be1d-9b6e896ba430
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.field.paragraph.appstore_information.field_amazon_url
+    - field.field.paragraph.appstore_information.field_android_url
+    - field.field.paragraph.appstore_information.field_apple_url
+    - field.field.paragraph.appstore_information.field_windows_url
+    - paragraphs.paragraphs_type.appstore_information
+  module:
+    - link
+id: paragraph.appstore_information.default
+targetEntityType: paragraph
+bundle: appstore_information
+mode: default
+content:
+  field_amazon_url:
+    weight: 2
+    label: above
+    settings:
+      trim_length: 80
+      url_only: false
+      url_plain: false
+      rel: ''
+      target: ''
+    third_party_settings: {  }
+    type: link
+    region: content
+  field_android_url:
+    weight: 0
+    label: above
+    settings:
+      trim_length: 80
+      url_only: false
+      url_plain: false
+      rel: ''
+      target: ''
+    third_party_settings: {  }
+    type: link
+    region: content
+  field_apple_url:
+    weight: 1
+    label: above
+    settings:
+      trim_length: 80
+      url_only: false
+      url_plain: false
+      rel: ''
+      target: ''
+    third_party_settings: {  }
+    type: link
+    region: content
+  field_windows_url:
+    weight: 3
+    label: above
+    settings:
+      trim_length: 80
+      url_only: false
+      url_plain: false
+      rel: ''
+      target: ''
+    third_party_settings: {  }
+    type: link
+    region: content
+hidden: {  }

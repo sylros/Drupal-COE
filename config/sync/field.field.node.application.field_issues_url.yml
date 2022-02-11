@@ -1,0 +1,21 @@
+uuid: 8250db6a-2d52-4ee4-924d-6093d89d06fc
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_issues_url
+    - node.type.application
+  module:
+    - text
+id: node.application.field_issues_url
+field_name: field_issues_url
+entity_type: node
+bundle: application
+label: Issues
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: text

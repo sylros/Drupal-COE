@@ -1,0 +1,21 @@
+uuid: 18be476b-bcf5-4fe5-96ae-5cbf7ea537d6
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.paragraph.field_end_date
+    - paragraphs.paragraphs_type.dev_history
+  module:
+    - datetime
+id: paragraph.dev_history.field_end_date
+field_name: field_end_date
+entity_type: paragraph
+bundle: dev_history
+label: 'End Date'
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: datetime

@@ -1,0 +1,30 @@
+uuid: 5a36086f-f5c0-4ddb-96c5-04f1bf2d2856
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.field.paragraph.domain.field_domain
+    - field.field.paragraph.domain.field_ip_address
+    - paragraphs.paragraphs_type.domain
+id: paragraph.domain.default
+targetEntityType: paragraph
+bundle: domain
+mode: default
+content:
+  field_domain:
+    weight: 0
+    label: above
+    settings:
+      link_to_entity: false
+    third_party_settings: {  }
+    type: string
+    region: content
+  field_ip_address:
+    weight: 1
+    label: above
+    settings:
+      link_to_entity: false
+    third_party_settings: {  }
+    type: string
+    region: content
+hidden: {  }

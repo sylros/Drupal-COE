@@ -1,0 +1,23 @@
+uuid: a23e255e-664b-4a03-bdb0-d81fc452aaf1
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.paragraph.field_amazon_url
+    - paragraphs.paragraphs_type.appstore_information
+  module:
+    - link
+id: paragraph.appstore_information.field_amazon_url
+field_name: field_amazon_url
+entity_type: paragraph
+bundle: appstore_information
+label: 'Amazon URL'
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings:
+  link_type: 16
+  title: 1
+field_type: link

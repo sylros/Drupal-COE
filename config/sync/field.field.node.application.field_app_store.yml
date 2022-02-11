@@ -1,0 +1,31 @@
+uuid: 86ed9ca0-fa21-45a1-a150-40206ab50188
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_app_store
+    - node.type.application
+    - paragraphs.paragraphs_type.appstore_information
+  module:
+    - entity_reference_revisions
+id: node.application.field_app_store
+field_name: field_app_store
+entity_type: node
+bundle: application
+label: 'App Store'
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings:
+  handler: 'default:paragraph'
+  handler_settings:
+    negate: 0
+    target_bundles:
+      appstore_information: appstore_information
+    target_bundles_drag_drop:
+      appstore_information:
+        enabled: true
+        weight: 2
+field_type: entity_reference_revisions

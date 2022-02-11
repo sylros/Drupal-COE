@@ -1,30 +1,38 @@
-uuid: 3557304c-28e5-4760-9248-84e8fb869884
+uuid: 4f23afe8-a024-408c-9839-15b03277a781
 langcode: en
 status: true
 dependencies:
   config:
     - system.menu.sidebar
   module:
+    - menu_block
     - node
-    - system
   theme:
     - wxt_bootstrap
 _core:
-  default_config_hash: vYfhg01TGuydiQE8651UK9ZT2J2wwB5QmBDTc81bv88
+  default_config_hash: Q8HRgQXFJh9hpyh_TnN2noJqZWKPW23EnesieXMPDss
 id: sidebar
 theme: wxt_bootstrap
 region: sidebar_first
-weight: -8
+weight: 0
 provider: null
-plugin: 'system_menu_block:sidebar'
+plugin: 'menu_block:sidebar'
 settings:
-  id: 'system_menu_block:sidebar'
+  id: 'menu_block:sidebar'
   label: Sidebar
-  provider: system
+  provider: menu_block
   label_display: visible
+  follow: 1
+  follow_parent: child
   level: 1
   depth: 0
-  expand_all_items: false
+  expand: 1
+  parent: 'sidebar:'
+  suggestion: sidebar
+  custom_level: '1'
+  hide_children: 0
+  expand_only_active_trails: 1
+  render_parent: false
 visibility:
   node_type:
     id: node_type

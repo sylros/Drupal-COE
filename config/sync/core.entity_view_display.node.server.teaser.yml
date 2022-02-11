@@ -4,35 +4,23 @@ status: true
 dependencies:
   config:
     - core.entity_view_mode.node.teaser
-    - field.field.node.server.body
-    - field.field.node.server.field_application_list
-    - field.field.node.server.field_data_center
     - field.field.node.server.field_database
     - field.field.node.server.field_decomision_date
+    - field.field.node.server.field_environments
     - field.field.node.server.field_ip_address
+    - field.field.node.server.field_is_a_db_server
+    - field.field.node.server.field_list_of_ips
     - field.field.node.server.field_os
-    - field.field.node.server.field_owner
-    - field.field.node.server.field_requires_vpn_
     - field.field.node.server.field_type
-    - field.field.node.server.field_vpn
-    - field.field.node.server.field_vpn_access_email
+    - field.field.node.server.field_vpn_ip_address
     - node.type.server
   module:
-    - text
     - user
 id: node.server.teaser
 targetEntityType: node
 bundle: server
 mode: teaser
 content:
-  body:
-    label: hidden
-    type: text_summary_or_trimmed
-    weight: 101
-    settings:
-      trim_length: 600
-    third_party_settings: {  }
-    region: content
   links:
     weight: 100
     settings: {  }
@@ -40,15 +28,13 @@ content:
     region: content
 hidden:
   content_moderation_control: true
-  field_application_list: true
-  field_data_center: true
   field_database: true
   field_decomision_date: true
+  field_environments: true
   field_ip_address: true
+  field_is_a_db_server: true
+  field_list_of_ips: true
   field_os: true
-  field_owner: true
-  field_requires_vpn_: true
   field_type: true
-  field_vpn: true
-  field_vpn_access_email: true
+  field_vpn_ip_address: true
   langcode: true

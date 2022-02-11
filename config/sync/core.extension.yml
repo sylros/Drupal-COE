@@ -2,9 +2,16 @@ module:
   admin_toolbar: 0
   admin_toolbar_links_access_filter: 0
   admin_toolbar_tools: 0
+  apm_application: 0
+  apm_blocks: 0
+  apm_import: 0
+  apm_rest: 0
+  apm_taxonomy_form: 0
   apm_users: 0
+  apm_views: 0
   auto_entitylabel: 0
   autosave_form: 0
+  better_exposed_filters: 0
   bg_image_formatter: 0
   big_pipe: 0
   blazy: 0
@@ -24,9 +31,11 @@ module:
   conflict: 0
   contact: 0
   content_moderation: 0
+  contentimport: 0
   contextual: 0
   core_context: 0
   crop: 0
+  csv_serialization: 0
   ctools: 0
   ctools_block: 0
   datetime: 0
@@ -55,7 +64,12 @@ module:
   image_widget_crop: 0
   inline_entity_form: 0
   inline_form_errors: 0
-  kint: 0
+  jquery_ui: 0
+  jquery_ui_accordion: 0
+  jquery_ui_datepicker: 0
+  jquery_ui_slider: 0
+  jquery_ui_touch_punch: 0
+  jsonapi: 0
   language: 0
   layout_builder: 0
   layout_builder_restrictions: 0
@@ -104,6 +118,7 @@ module:
   moderation_sidebar: 0
   node: 0
   options: 0
+  other_view_filter: 0
   page_cache: 0
   page_manager: 0
   page_manager_ui: 0
@@ -116,7 +131,10 @@ module:
   rdf: 0
   redirect: 0
   responsive_image: 0
+  rest: 0
+  restui: 0
   search: 0
+  serialization: 0
   shortcut: 0
   simple_gmap: 0
   simple_sitemap: 0
@@ -135,10 +153,18 @@ module:
   user: 0
   video_embed_field: 0
   video_embed_media: 0
+  views_accordion: 0
+  views_base_url: 0
+  views_block_filter_block: 0
   views_bootstrap: 0
+  views_bulk_edit: 0
+  views_bulk_operations: 0
+  views_data_export: 0
   views_field_view: 0
+  views_fields_on_off: 0
   views_infinite_scroll: 0
   views_ui: 0
+  viewsreference: 0
   webform: 0
   webform_node: 0
   webform_ui: 0
@@ -172,13 +198,13 @@ module:
   paragraphs: 11
   wxt: 1000
 theme:
-  bootstrap: 0
   stable: 0
-  wxt_bootstrap: 0
   classy: 0
   bartik: 0
   claro: 0
   seven: 0
+  bootstrap: 0
+  wxt_bootstrap: 0
 profile: wxt
 _core:
   default_config_hash: R4IF-ClDHXxblLcG0L7MgsLvfBIMAvi_skumNFQwkDc

@@ -1,0 +1,14 @@
+uuid: 2b68013a-9527-4fad-b7fe-b3f8f5c15767
+langcode: en
+status: true
+dependencies:
+  module:
+    - lightning_core
+    - node
+third_party_settings:
+  lightning_core:
+    description: ''
+id: node.layout_test
+label: 'Layout Test'
+targetEntityType: node
+cache: true

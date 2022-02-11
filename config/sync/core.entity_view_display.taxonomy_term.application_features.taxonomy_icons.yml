@@ -1,0 +1,35 @@
+uuid: 65fdf9d8-caca-4ca4-b252-97c4daeb0483
+langcode: en
+status: true
+dependencies:
+  config:
+    - core.entity_view_mode.taxonomy_term.taxonomy_icons
+    - field.field.taxonomy_term.application_features.field_icon
+    - field.field.taxonomy_term.application_features.field_taxonomy_term
+    - image.style.thumbnail
+    - taxonomy.vocabulary.application_features
+  module:
+    - image
+    - layout_builder
+third_party_settings:
+  layout_builder:
+    allow_custom: false
+    enabled: false
+id: taxonomy_term.application_features.taxonomy_icons
+targetEntityType: taxonomy_term
+bundle: application_features
+mode: taxonomy_icons
+content:
+  field_icon:
+    weight: 0
+    label: hidden
+    settings:
+      image_style: thumbnail
+      image_link: ''
+    third_party_settings: {  }
+    type: image
+    region: content
+hidden:
+  description: true
+  field_taxonomy_term: true
+  langcode: true

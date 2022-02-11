@@ -1,0 +1,43 @@
+uuid: 066c9201-10b3-4fff-ab64-d48fd37a50b8
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_list_of_clients
+    - node.type.application
+    - paragraphs.paragraphs_type.client_history
+  module:
+    - entity_reference_revisions
+id: node.application.field_list_of_clients
+field_name: field_list_of_clients
+entity_type: node
+bundle: application
+label: 'List of Clients'
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings:
+  handler: 'default:paragraph'
+  handler_settings:
+    negate: 0
+    target_bundles:
+      client_history: client_history
+    target_bundles_drag_drop:
+      appstore_information:
+        weight: 6
+        enabled: false
+      ceg_history:
+        weight: 7
+        enabled: false
+      client_history:
+        enabled: true
+        weight: 8
+      dev_history:
+        weight: 9
+        enabled: false
+      ip_information:
+        weight: 10
+        enabled: false
+field_type: entity_reference_revisions

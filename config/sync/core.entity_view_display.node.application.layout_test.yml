@@ -1,0 +1,339 @@
+uuid: 621a7ce9-93c0-4f47-8829-6637e227200c
+langcode: en
+status: true
+dependencies:
+  config:
+    - core.entity_view_mode.node.layout_test
+    - field.field.node.application.field_apm_id
+    - field.field.node.application.field_app_store
+    - field.field.node.application.field_current_ceg
+    - field.field.node.application.field_current_client
+    - field.field.node.application.field_current_developer
+    - field.field.node.application.field_decomision_date
+    - field.field.node.application.field_features
+    - field.field.node.application.field_issues_url
+    - field.field.node.application.field_list_of_ceg
+    - field.field.node.application.field_list_of_clients
+    - field.field.node.application.field_list_of_developers
+    - field.field.node.application.field_repository_url
+    - node.type.application
+    - views.view.application_environments
+    - views.view.features_icons
+    - views.view.former_developer_s
+  module:
+    - bootstrap_layouts
+    - datetime
+    - entity_reference_revisions
+    - layout_builder
+    - layout_builder_restrictions
+    - layout_discovery
+    - layout_library
+    - text
+    - user
+    - views
+third_party_settings:
+  layout_builder:
+    allow_custom: false
+    enabled: true
+    sections:
+      -
+        layout_id: bs_2col
+        layout_settings:
+          label: ''
+          layout:
+            wrapper: div
+            classes:
+              row: row
+            add_layout_class: 1
+            attributes: ''
+          regions:
+            left:
+              wrapper: div
+              classes:
+                col-sm-6: col-sm-6
+              add_region_classes: 1
+              attributes: ''
+            right:
+              wrapper: div
+              classes:
+                col-sm-6: col-sm-6
+              add_region_classes: 1
+              attributes: ''
+        components:
+          3cf27b85-dd9a-4fe8-80c2-a3edd490c295:
+            uuid: 3cf27b85-dd9a-4fe8-80c2-a3edd490c295
+            region: left
+            configuration:
+              label_display: '0'
+              context_mapping:
+                entity: layout_builder.entity
+              id: 'field_block:node:application:field_current_developer'
+              formatter:
+                label: above
+                settings:
+                  link: true
+                third_party_settings: {  }
+                type: entity_reference_label
+            additional: {  }
+            weight: 0
+          9627e37c-e1c6-49f1-8994-dcee7dea0234:
+            uuid: 9627e37c-e1c6-49f1-8994-dcee7dea0234
+            region: left
+            configuration:
+              label_display: '0'
+              context_mapping:
+                entity: layout_builder.entity
+              id: 'field_block:node:application:field_current_ceg'
+              formatter:
+                label: above
+                settings:
+                  link: true
+                third_party_settings: {  }
+                type: entity_reference_label
+            additional: {  }
+            weight: 1
+          cffb5dfb-c907-450d-a4ce-2b9e99796ef2:
+            uuid: cffb5dfb-c907-450d-a4ce-2b9e99796ef2
+            region: right
+            configuration:
+              label_display: '0'
+              context_mapping:
+                entity: layout_builder.entity
+              id: 'field_block:node:application:field_current_client'
+              formatter:
+                label: above
+                settings:
+                  link: true
+                third_party_settings: {  }
+                type: entity_reference_label
+            additional: {  }
+            weight: 1
+          ed93cafe-d553-481e-91ce-3f7da2d33b55:
+            uuid: ed93cafe-d553-481e-91ce-3f7da2d33b55
+            region: right
+            configuration:
+              id: 'views_block:former_developer_s-block_1'
+              label: ''
+              provider: views
+              label_display: '0'
+              views_label: ''
+              items_per_page: none
+              context_mapping: {  }
+            additional: {  }
+            weight: 0
+        third_party_settings: {  }
+      -
+        layout_id: layout_onecol
+        layout_settings:
+          label: Features
+        components:
+          47678906-298d-4302-a838-541d6ee5622f:
+            uuid: 47678906-298d-4302-a838-541d6ee5622f
+            region: content
+            configuration:
+              id: 'views_block:features_icons-block_1'
+              label: ''
+              provider: views
+              label_display: visible
+              views_label: ''
+              items_per_page: none
+              context_mapping: {  }
+            additional: {  }
+            weight: 1
+          a489bf01-12b8-467a-bfb3-0d5dfd0eb030:
+            uuid: a489bf01-12b8-467a-bfb3-0d5dfd0eb030
+            region: content
+            configuration:
+              id: 'field_block:node:application:field_apm_id'
+              label: 'APM ID'
+              provider: layout_builder
+              label_display: '0'
+              formatter:
+                label: inline
+                type: string
+                settings:
+                  link_to_entity: false
+                third_party_settings: {  }
+              context_mapping:
+                entity: layout_builder.entity
+                view_mode: view_mode
+            additional: {  }
+            weight: 0
+        third_party_settings: {  }
+      -
+        layout_id: layout_onecol
+        layout_settings:
+          label: 'Code and Issues'
+        components:
+          dc204b60-2bf2-4297-9fa2-64fc5ce75fc3:
+            uuid: dc204b60-2bf2-4297-9fa2-64fc5ce75fc3
+            region: content
+            configuration:
+              id: 'field_block:node:application:field_issues_url'
+              label: Issues
+              provider: layout_builder
+              label_display: '0'
+              formatter:
+                label: inline
+                type: text_default
+                settings: {  }
+                third_party_settings: {  }
+              context_mapping:
+                entity: layout_builder.entity
+                view_mode: view_mode
+            additional: {  }
+            weight: 1
+          10d19dc5-3ac3-418c-aa58-84872f21023b:
+            uuid: 10d19dc5-3ac3-418c-aa58-84872f21023b
+            region: content
+            configuration:
+              id: 'field_block:node:application:field_repository_url'
+              label: Repository
+              provider: layout_builder
+              label_display: '0'
+              formatter:
+                label: inline
+                type: text_default
+                settings: {  }
+                third_party_settings: {  }
+              context_mapping:
+                entity: layout_builder.entity
+                view_mode: view_mode
+            additional: {  }
+            weight: 0
+        third_party_settings: {  }
+      -
+        layout_id: layout_onecol
+        layout_settings:
+          label: ''
+        components:
+          3a73869b-2c9e-442e-8dcb-9d606677bd41:
+            uuid: 3a73869b-2c9e-442e-8dcb-9d606677bd41
+            region: content
+            configuration:
+              id: 'views_block:application_environments-block_1'
+              label: ''
+              provider: views
+              label_display: visible
+              views_label: ''
+              items_per_page: none
+              context_mapping: {  }
+            additional: {  }
+            weight: 14
+        third_party_settings: {  }
+  layout_library:
+    enable: false
+  layout_builder_restrictions:
+    allowed_block_categories: {  }
+    entity_view_mode_restriction:
+      whitelisted_blocks: {  }
+      blacklisted_blocks: {  }
+      allowed_layouts: {  }
+id: node.application.layout_test
+targetEntityType: node
+bundle: application
+mode: layout_test
+content:
+  field_apm_id:
+    weight: 17
+    label: above
+    settings:
+      link_to_entity: false
+    third_party_settings: {  }
+    type: string
+    region: content
+  field_app_store:
+    type: entity_reference_revisions_entity_view
+    weight: 19
+    label: above
+    settings:
+      view_mode: default
+      link: ''
+    third_party_settings: {  }
+    region: content
+  field_current_ceg:
+    weight: 26
+    label: above
+    settings:
+      link: true
+    third_party_settings: {  }
+    type: entity_reference_label
+    region: content
+  field_current_client:
+    weight: 27
+    label: above
+    settings:
+      link: true
+    third_party_settings: {  }
+    type: entity_reference_label
+    region: content
+  field_current_developer:
+    weight: 25
+    label: above
+    settings:
+      link: true
+    third_party_settings: {  }
+    type: entity_reference_label
+    region: content
+  field_decomision_date:
+    weight: 16
+    label: above
+    settings:
+      format_type: medium
+      timezone_override: ''
+    third_party_settings: {  }
+    type: datetime_default
+    region: content
+  field_features:
+    weight: 7
+    label: above
+    settings:
+      link: true
+    third_party_settings: {  }
+    type: entity_reference_label
+    region: content
+  field_issues_url:
+    weight: 24
+    label: above
+    settings: {  }
+    third_party_settings: {  }
+    type: text_default
+    region: content
+  field_list_of_ceg:
+    type: entity_reference_revisions_entity_view
+    weight: 22
+    label: above
+    settings:
+      view_mode: default
+      link: ''
+    third_party_settings: {  }
+    region: content
+  field_list_of_clients:
+    type: entity_reference_revisions_entity_view
+    weight: 21
+    label: above
+    settings:
+      view_mode: default
+      link: ''
+    third_party_settings: {  }
+    region: content
+  field_list_of_developers:
+    type: entity_reference_revisions_entity_view
+    weight: 20
+    label: above
+    settings:
+      view_mode: default
+      link: ''
+    third_party_settings: {  }
+    region: content
+  field_repository_url:
+    weight: 23
+    label: above
+    settings: {  }
+    third_party_settings: {  }
+    type: text_default
+    region: content
+hidden:
+  content_moderation_control: true
+  langcode: true
+  links: true

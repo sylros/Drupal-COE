@@ -1,0 +1,23 @@
+uuid: c481d663-5c36-405d-b885-cbaaedeadf5d
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_supports_https
+    - node.type.environments
+id: node.environments.field_supports_https
+field_name: field_supports_https
+entity_type: node
+bundle: environments
+label: 'Supports HTTPS'
+description: ''
+required: false
+translatable: false
+default_value:
+  -
+    value: 0
+default_value_callback: ''
+settings:
+  on_label: 'On'
+  off_label: 'Off'
+field_type: boolean

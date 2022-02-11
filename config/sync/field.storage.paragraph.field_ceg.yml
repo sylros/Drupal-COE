@@ -1,0 +1,20 @@
+uuid: 0dd93b55-5be1-44ff-a031-2562ca2a144e
+langcode: en
+status: true
+dependencies:
+  module:
+    - node
+    - paragraphs
+id: paragraph.field_ceg
+field_name: field_ceg
+entity_type: paragraph
+type: entity_reference
+settings:
+  target_type: node
+module: core
+locked: false
+cardinality: 1
+translatable: true
+indexes: {  }
+persist_with_no_fields: false
+custom_storage: false

@@ -1,0 +1,10 @@
+uuid: 75293cbb-dbb5-4256-b8d5-cc5a03f942ec
+langcode: en
+status: true
+dependencies: {  }
+id: domain
+label: Domain
+icon_uuid: null
+icon_default: null
+description: ''
+behavior_plugins: {  }

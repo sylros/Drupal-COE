@@ -1,0 +1,41 @@
+uuid: 4f95d219-2d08-4ea9-8b78-372d879b9f4c
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_list_of_ips
+    - node.type.server
+  module:
+    - entity_reference_revisions
+id: node.server.field_list_of_ips
+field_name: field_list_of_ips
+entity_type: node
+bundle: server
+label: 'List of IPs'
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings:
+  handler: 'default:paragraph'
+  handler_settings:
+    negate: 0
+    target_bundles: {  }
+    target_bundles_drag_drop:
+      appstore_information:
+        weight: 6
+        enabled: false
+      ceg_history:
+        weight: 7
+        enabled: false
+      client_history:
+        weight: 8
+        enabled: false
+      dev_history:
+        weight: 9
+        enabled: false
+      ip_information:
+        enabled: true
+        weight: 10
+field_type: entity_reference_revisions

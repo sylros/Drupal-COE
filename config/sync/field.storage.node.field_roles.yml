@@ -18,17 +18,8 @@ settings:
       value: C
       label: Client
     -
-      value: U
-      label: User
-    -
-      value: M
-      label: Manager
-    -
-      value: S
-      label: 'System Administrator'
-    -
-      value: A
-      label: 'Application Administrator'
+      value: CEG
+      label: CEG
   allowed_values_function: ''
 module: options
 locked: false

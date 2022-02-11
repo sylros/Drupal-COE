@@ -4,8 +4,7 @@ status: true
 dependencies:
   config:
     - core.entity_view_mode.node.teaser
-    - field.field.node.data_centre.field_name
-    - field.field.node.data_centre.field_owner
+    - field.field.node.data_centre.field_abbreviation
     - field.field.node.data_centre.field_servers
     - node.type.data_centre
   module:
@@ -22,7 +21,6 @@ content:
     region: content
 hidden:
   content_moderation_control: true
-  field_name: true
-  field_owner: true
+  field_abbreviation: true
   field_servers: true
   langcode: true

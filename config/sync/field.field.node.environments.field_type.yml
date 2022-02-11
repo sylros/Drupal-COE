@@ -1,0 +1,21 @@
+uuid: 8e578e06-167f-43df-834d-5298a744fde0
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_type
+    - node.type.environments
+  module:
+    - options
+id: node.environments.field_type
+field_name: field_type
+entity_type: node
+bundle: environments
+label: Type
+description: ''
+required: false
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: list_string

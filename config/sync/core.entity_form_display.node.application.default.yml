@@ -3,29 +3,24 @@ langcode: en
 status: true
 dependencies:
   config:
-    - field.field.node.application.body
-    - field.field.node.application.field_application_id
-    - field.field.node.application.field_application_name
-    - field.field.node.application.field_ceg
-    - field.field.node.application.field_client
-    - field.field.node.application.field_database_name
+    - field.field.node.application.field_apm_id
+    - field.field.node.application.field_app_store
+    - field.field.node.application.field_current_ceg
+    - field.field.node.application.field_current_client
+    - field.field.node.application.field_current_developer
     - field.field.node.application.field_decomision_date
-    - field.field.node.application.field_developer
-    - field.field.node.application.field_environments
     - field.field.node.application.field_features
-    - field.field.node.application.field_home_page
-    - field.field.node.application.field_is_active
-    - field.field.node.application.field_login_url
-    - field.field.node.application.field_queries_emails
-    - field.field.node.application.field_repository
-    - field.field.node.application.field_servers
-    - field.field.node.application.field_users
+    - field.field.node.application.field_issues_url
+    - field.field.node.application.field_list_of_ceg
+    - field.field.node.application.field_list_of_clients
+    - field.field.node.application.field_list_of_developers
+    - field.field.node.application.field_repository_url
     - node.type.application
     - workflows.workflow.editorial
   module:
     - content_moderation
     - datetime
-    - link
+    - paragraphs
     - path
     - text
 id: node.application.default
@@ -33,50 +28,35 @@ targetEntityType: node
 bundle: application
 mode: default
 content:
-  body:
-    type: text_textarea_with_summary
-    weight: 12
-    settings:
-      rows: 9
-      summary_rows: 3
-      placeholder: ''
-      show_summary: false
-    third_party_settings: {  }
-    region: content
   created:
     type: datetime_timestamp
     weight: 3
     region: content
     settings: {  }
     third_party_settings: {  }
-  field_application_id:
+  field_apm_id:
     weight: 10
     settings:
-      placeholder: ''
-    third_party_settings: {  }
-    type: number
-    region: content
-  field_application_name:
-    weight: 11
-    settings:
       size: 60
       placeholder: ''
     third_party_settings: {  }
     type: string_textfield
     region: content
-  field_ceg:
-    weight: 15
-    settings:
-      match_operator: CONTAINS
-      match_limit: 10
-      size: 60
-      placeholder: ''
-    third_party_settings: {  }
-    type: entity_reference_autocomplete
-    region: content
-  field_client:
+  field_app_store:
+    type: entity_reference_paragraphs
     weight: 17
     settings:
+      title: Paragraph
+      title_plural: Paragraphs
+      edit_mode: open
+      add_mode: dropdown
+      form_display_mode: default
+      default_paragraph_type: ''
+    third_party_settings: {  }
+    region: content
+  field_current_ceg:
+    weight: 29
+    settings:
       match_operator: CONTAINS
       match_limit: 10
       size: 60
@@ -84,104 +64,89 @@ content:
     third_party_settings: {  }
     type: entity_reference_autocomplete
     region: content
-  field_database_name:
-    weight: 21
+  field_current_client:
+    weight: 30
     settings:
+      match_operator: CONTAINS
+      match_limit: 10
       size: 60
       placeholder: ''
     third_party_settings: {  }
-    type: string_textfield
+    type: entity_reference_autocomplete
+    region: content
+  field_current_developer:
+    weight: 28
+    settings:
+      match_operator: CONTAINS
+      match_limit: 10
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+    type: entity_reference_autocomplete
     region: content
   field_decomision_date:
-    weight: 26
+    weight: 18
     settings: {  }
     third_party_settings: {  }
     type: datetime_default
     region: content
-  field_developer:
-    weight: 16
-    settings:
-      match_operator: CONTAINS
-      match_limit: 10
-      size: 60
-      placeholder: ''
-    third_party_settings: {  }
-    type: entity_reference_autocomplete
-    region: content
-  field_environments:
-    weight: 20
-    settings:
-      match_operator: CONTAINS
-      match_limit: 10
-      size: 60
-      placeholder: ''
-    third_party_settings: {  }
-    type: entity_reference_autocomplete
-    region: content
   field_features:
-    weight: 22
+    weight: 11
     settings: {  }
     third_party_settings: {  }
     type: options_buttons
     region: content
-  field_home_page:
+  field_issues_url:
+    weight: 27
+    settings:
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+    type: text_textfield
+    region: content
+  field_list_of_ceg:
+    type: entity_reference_paragraphs
     weight: 14
     settings:
-      placeholder_url: ''
-      placeholder_title: ''
+      title: Paragraph
+      title_plural: Paragraphs
+      edit_mode: open
+      add_mode: dropdown
+      form_display_mode: default
+      default_paragraph_type: ''
     third_party_settings: {  }
-    type: link_default
     region: content
-  field_is_active:
-    weight: 25
+  field_list_of_clients:
+    type: entity_reference_paragraphs
+    weight: 15
     settings:
-      display_label: true
+      title: Paragraph
+      title_plural: Paragraphs
+      edit_mode: open
+      add_mode: dropdown
+      form_display_mode: default
+      default_paragraph_type: ''
     third_party_settings: {  }
-    type: boolean_checkbox
     region: content
-  field_login_url:
+  field_list_of_developers:
+    type: entity_reference_paragraphs
     weight: 13
     settings:
-      placeholder_url: ''
-      placeholder_title: ''
+      title: Paragraph
+      title_plural: Paragraphs
+      edit_mode: open
+      add_mode: dropdown
+      form_display_mode: default
+      default_paragraph_type: ''
     third_party_settings: {  }
-    type: link_default
     region: content
-  field_queries_emails:
-    weight: 23
+  field_repository_url:
+    weight: 26
     settings:
       size: 60
       placeholder: ''
     third_party_settings: {  }
-    type: email_default
-    region: content
-  field_repository:
-    weight: 24
-    settings:
-      placeholder_url: ''
-      placeholder_title: ''
-    third_party_settings: {  }
-    type: link_default
-    region: content
-  field_servers:
-    weight: 19
-    settings:
-      match_operator: CONTAINS
-      match_limit: 10
-      size: 60
-      placeholder: ''
-    third_party_settings: {  }
-    type: entity_reference_autocomplete
-    region: content
-  field_users:
-    weight: 18
-    settings:
-      match_operator: CONTAINS
-      match_limit: 10
-      size: 60
-      placeholder: ''
-    third_party_settings: {  }
-    type: entity_reference_autocomplete
+    type: text_textfield
     region: content
   langcode:
     type: language_select

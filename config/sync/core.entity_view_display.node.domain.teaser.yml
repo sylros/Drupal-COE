@@ -1,0 +1,24 @@
+uuid: a3cd36c3-c72f-4421-b92f-d46bf46128fa
+langcode: en
+status: true
+dependencies:
+  config:
+    - core.entity_view_mode.node.teaser
+    - field.field.node.domain.field_ip_addresses
+    - node.type.domain
+  module:
+    - user
+id: node.domain.teaser
+targetEntityType: node
+bundle: domain
+mode: teaser
+content:
+  links:
+    weight: 100
+    settings: {  }
+    third_party_settings: {  }
+    region: content
+hidden:
+  content_moderation_control: true
+  field_ip_addresses: true
+  langcode: true

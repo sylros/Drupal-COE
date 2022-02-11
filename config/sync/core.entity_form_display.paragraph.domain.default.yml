@@ -1,0 +1,32 @@
+uuid: c34da4cb-31e2-4669-97fd-26d97c66387a
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.field.paragraph.domain.field_domain
+    - field.field.paragraph.domain.field_ip_address
+    - paragraphs.paragraphs_type.domain
+id: paragraph.domain.default
+targetEntityType: paragraph
+bundle: domain
+mode: default
+content:
+  field_domain:
+    weight: 0
+    settings:
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+    type: string_textfield
+    region: content
+  field_ip_address:
+    weight: 1
+    settings:
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+    type: string_textfield
+    region: content
+hidden:
+  created: true
+  status: true

@@ -1,0 +1,37 @@
+uuid: 4fb0b08c-b894-4bc2-ab0d-de91d072588d
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.field.paragraph.ceg_history.field_ceg
+    - field.field.paragraph.ceg_history.field_end_date
+    - field.field.paragraph.ceg_history.field_start_date
+    - paragraphs.paragraphs_type.ceg_history
+  module:
+    - datetime
+id: paragraph.ceg_history.default
+targetEntityType: paragraph
+bundle: ceg_history
+mode: default
+content:
+  field_ceg:
+    weight: 0
+    settings: {  }
+    third_party_settings: {  }
+    type: options_select
+    region: content
+  field_end_date:
+    weight: 2
+    settings: {  }
+    third_party_settings: {  }
+    type: datetime_default
+    region: content
+  field_start_date:
+    weight: 1
+    settings: {  }
+    third_party_settings: {  }
+    type: datetime_default
+    region: content
+hidden:
+  created: true
+  status: true
