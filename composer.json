@@ -24,7 +24,8 @@
         "sebastian/phpcpd": "*",
         "squizlabs/php_codesniffer": "3.*",
         "symfony/css-selector": "~2.8|~3.0",
-        "symfony/phpunit-bridge": "^3.4.3"
+        "symfony/phpunit-bridge": "^3.4.3",
+	"kint-php/kint": "^3.3"
     },
     "config": {
         "secure-http": false,
@@ -122,9 +123,21 @@
         "drupalwxt/wxt": "3.0.12",
         "drupal/conditional_fields": "^1.0@alpha",
         "drupal/auto_entitylabel": "^3.0@beta",
-        "drupal/kint": "^2.1",
         "drupal/twig_tweak": "^2.6",
-        "drupal/views_field_view": "^1.0@beta"
+        "drupal/views_field_view": "^1.0@beta",
+        "drupal/views_data_export": "^1.0",
+        "drupal/restui": "^1.18",
+        "drupal/contentimport": "^9.3",
+        "drupal/views_bulk_operations": "^3.9",
+        "drupal/views_bulk_edit": "^2.4",
+        "drupal/views_fields_on_off": "^1.0@alpha",
+        "drupal/views_accordion": "^2.0",
+        "drupal/views_base_url": "^1.0",
+        "drupal/other_view_filter": "^1.1",
+        "drupal/views_block_filter_block": "^1.0",
+        "drupal/better_exposed_filters": "^5.0@beta",
+        "drupal/devel": "^4.1",
+        "drupal/viewsreference": "^1.7"
     },
     "autoload": {
         "classmap": [
