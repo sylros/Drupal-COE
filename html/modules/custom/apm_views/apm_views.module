@@ -1,0 +1,13 @@
+<?php
+
+use Drupal\views\ViewExecutable;
+
+function apm_views_views_pre_render(ViewExecutable $view) {
+  // kint($view->id());
+
+  if($view->id() === 'application_details') {
+    // kint($view);
+  }
+}
+
+ ?>

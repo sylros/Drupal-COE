@@ -1,0 +1,44 @@
+apm_rest.data_centre:
+  path: '/api/data_centre'
+  defaults:
+    _controller: '\Drupal\apm_rest\Controller\RestController::getDataCentre'
+  methods: [GET]
+  requirements:
+    _access: 'TRUE'
+apm_rest.server:
+  path: '/api/server'
+  defaults:
+    _controller: '\Drupal\apm_rest\Controller\RestController::getServer'
+  methods: [GET]
+  requirements:
+    _access: 'TRUE'
+apm_rest.environment:
+  path: '/api/environment'
+  defaults:
+    _controller: '\Drupal\apm_rest\Controller\RestController::getEnvironment'
+  methods: [GET]
+  requirements:
+    _access: 'TRUE'
+apm_rest.application:
+  path: '/api/application'
+  defaults:
+    _controller: '\Drupal\apm_rest\Controller\RestController::getApplication'
+  methods: [GET]
+  requirements:
+    _access: 'TRUE'
+apm_rest.person:
+  path: '/api/person'
+  defaults:
+    _controller: '\Drupal\apm_rest\Controller\RestController::getPerson'
+  methods: [GET]
+  requirements:
+    _access: 'TRUE'
+
+#Form displaying data from API calls
+apm_rest.form:
+  path: '/api/test_form'
+  defaults:
+    _title: 'Display API Call'
+    _form: '\Drupal\apm_rest\Form\APITestForm'
+  requirements:
+    _permission: 'access_content'

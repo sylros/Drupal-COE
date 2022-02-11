@@ -1,0 +1,7 @@
+name: APM-Lite Taxonomy Form
+type: module
+description: 'Module for handling taxonomy forms'
+package: APM-Lite
+core: 8.x
+dependencies:
+  - block

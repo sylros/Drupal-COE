@@ -1,0 +1,5 @@
+name: APM-Lite Views
+type: module
+description: 'Module that handles views for APM-Lite'
+package: APM-Lite
+core: 8.x

@@ -4,156 +4,315 @@ use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\node\Entity\Node;
+use Drupal\views\Views;
 
 function apm_users_form_alter(&$form, FormStateInterface $form_state, $form_id) {
-  // drupal_set_message("This is form id: $form_id");
-  if($form_id === 'node_server_form' || $form_id === 'node_server_edit_form') {
-    // kint($form['field_employee_id']['widget'][0]['value']['#default_value']);
-    // drupal_set_message("This is employee ID: " . $form['field_employee_id']['widget'][0]['value']['#default_value']);
+  //Add custom submit funciton to these forms to check two way entity reference are created
+  $listOfFormIds = array();
+  $listOfFormIds[] = 'node_server_form';
+  $listOfFormIds[] = 'node_server_edit_form';
+  $listOfFormIds[] = 'node_application_form';
+  $listOfFormIds[] = 'node_application_edit_form';
+  $listOfFormIds[] = 'node_data_centre_form';
+  $listOfFormIds[] = 'node_data_centre_edit_form';
+  $listOfFormIds[] = 'node_environment_form';
+  $listOfFormIds[] = 'node_environment_edit_form';
+  $listOfFormIds[] = 'node_person_form';
+  $listOfFormIds[] = 'node_person_edit_form';
 
-    // kint(\Drupal::currentUser());
+  if($form_id === 'node_person_form' || $form_id === 'node_person_edit_form') {
 
-    //Adds custom submit function to form
+    // Hide the list of application field - This field will be set by the role
+    $form['field_list_of_applications']['#attributes']['class'][] = 'hidden';
+
     foreach (array_keys($form['actions']) as $action) {
       if ($action != 'preview' && isset($form['actions'][$action]['#type']) && $form['actions'][$action]['#type'] === 'submit') {
-        $form['actions'][$action]['#submit'][] = 'apm_users_form_submit';
+        $form['actions'][$action]['#submit'][] = 'person_submit';
       }
     }
   }
 
-  if($form_id === 'node_application_edit_form' || $form_id === 'node_application_form') {
-    // kint($form);
-  }
-}
+  if($form_id === 'node_application_form' || $form_id === 'node_application_edit_form') {
+    if(array_key_exists('0',$form['field_list_of_developers']['widget']) &&
+       array_key_exists('0',$form['field_list_of_ceg']['widget']) &&
+       array_key_exists('0',$form['field_list_of_clients']['widget'])) {
 
-function apm_users_form_submit($form, FormStateInterface $form_state) {
-  // $employee_id = $form_state->getValue('field_employee_id');
-  $entity = $form_state->getformObject()->getEntity();
-  updateRelatedEntities($entity, $form_state);
+      $listOfDevelopers = filterUserList($form,'field_list_of_developers');
+      $listOfCeg = filterUserList($form,'field_list_of_ceg');
+      $listOfClients = filterUserList($form,'field_list_of_clients');
 
-}
+      $currentOptions = $form['field_list_of_developers']['widget'][0]['subform']['field_person']['widget']['#options'];
+      $counter = 0;
 
-function updateRelatedEntities(EntityInterface $entity, FormStateInterface $form_state) {
-  $entityType = $entity->bundle();
-  $node = NULL;
-  //Check the list of applications have the server
-  //Check that owner has the server listed
-  //Chek that the data centre as the server listed
-  //If decommission date is set, set decommission date for all applications
-  if($entityType === 'server') {
-    // kint($entity);
+      while(array_key_exists($counter,$form['field_list_of_developers']['widget'])) {
+        foreach ($currentOptions as $key => $value) {
+          if($key === '_none') {
+            continue;
+          }
 
-    if($entity->hasField('field_owner')) {
-      $owner = $entity->get('field_owner')->getValue()[0]['target_id'];
-      $node = Node::load($owner);
-      $servers = $node->get('field_server_list')->getValue(); // List of servers currently assigned to user
-      $bool = FALSE;
-
-      foreach ($servers as $key => $value) {
-        if($value['target_id'] === $entity->id()) {
-          $bool = TRUE;
-        }
-      }
-
-      if(!$bool) {
-        $servers[] = $entity->id();
-        $node->set('field_server_list',$servers);
-        $node->setNewRevision(TRUE);
-        $node->revision_log = 'Updated owner information based on changes made to server ' . $entity->get('title')->getValue()[0]['value'];
-        $node->setRevisionCreationTime(REQUEST_TIME);
-        $node->setRevisionUserId(\Drupal::currentUser()->id());
-        $node->save();
-      }
-    }
-
-    if($entity->hasField('field_data_center')) {
-      $datacentre = $entity->get('field_data_center')->getValue()[0]['target_id'];
-
-      $node = Node::load($datacentre);
-      $server = $node->get('field_servers')->getValue();
-      $bool = FALSE;
-
-      foreach ($server as $key => $value) {
-        if($value['target_id'] === $entity->id()) {
-          $bool = TRUE;
-        }
-      }
-
-      if(!$bool) {
-        $server[] = $entity->id();
-        $node->set('field_servers', $servers);
-        $node->save();
-      }
-    }
-
-    if($entity->hasField('field_application_list'))  {
-      $applications = $entity->get('field_application_list')->getValue();
-      // $bool = FALSE;
-      $counter = 1;
-      foreach ($applications as $key => $value) {
-        // kint($value['target_id']);
-        $node = Node::load($value['target_id']);
-        $server = $node->get('field_servers')->getValue();
-        $bool = FALSE;
-
-        foreach ($server as $key => $value) {
-          if($value['target_id'] === $entity->id()) {
-            $bool = TRUE;
+          if(!in_array($key,$listOfDevelopers)) {
+            unset($form['field_list_of_developers']['widget'][$counter]['subform']['field_person']['widget']['#options'][$key]);
           }
         }
 
-        if(!$bool) {
-          $counter++;
-          $server[] = $entity->id();
-          $node->set('field_servers',$servers);
-          $node->save();
-          continue;
-        }
+        $counter = $counter + 1;
       }
 
-      // die();
-    }
+      $currentOptions = $form['field_list_of_ceg']['widget'][0]['subform']['field_ceg']['widget']['#options'];
+      $counter = 0;
 
-    if(!$entity->get('field_decomision_date')->isEmpty()) {
-      $decommision = $entity->get('field_decomision_date');
-      kint($decommision);
-      kint($decommision->getValue()[0]['value']);
-
-      //Get list of applications and check date
-      $applications = $entity->get('field_application_list')->getValue();
-
-      foreach ($applications as $key => $value) {
-        $node = Node::load($value['target_id']);
-        kint($node);
-        kint($node->hasField('field_decomision_date'));
-        kint($node->get('field_decomision_date')->getValue());
-        drupal_set_message("This is null check");
-
-        if($node->get('field_decomision_date')->getValue()[0] === NULL) {
-          drupal_set_message("field is null");
-        } else {
-          $serverDate = $decommision->getValue()[0]['value'];
-          $appDate = $node->get('field_decomision_date')->getValue()[0]['value'];
-          drupal_set_message("This is the field: " . $node->get('field_decomision_date')->getValue()[0]['value']);
-          drupal_set_message("This is the servers decommission date: " . $decommision->getValue()[0]['value']);
-          drupal_set_message("Compare dates to see if field should be updated");
-
-          if($serverDate < $appDate) {
-            drupal_set_message("server date is sooner");
-            drupal_set_message("Updating date for application");
-            $node->set('field_decomision_date', $decommision->getValue()[0]['value']);
-            $node->save();
-          } else if ($serverDate > $appDate) {
-            drupal_set_message("server date is later");
-            drupal_set_message("application date remains the same");
-          } else {
-            drupal_set_message("server date is the same");
+      while(array_key_exists($counter,$form['field_list_of_ceg']['widget'])) {
+        foreach ($currentOptions as $key => $value) {
+          if($key === '_none') {
+            continue;
           }
 
+          if(!in_array($key,$listOfCeg)) {
+            unset($form['field_list_of_ceg']['widget'][$counter]['subform']['field_ceg']['widget']['#options'][$key]);
+          }
         }
-        $app = $node->get('field_application_id');
+
+        $counter = $counter + 1;
+      }
+
+      $currentOptions = $form['field_list_of_clients']['widget'][0]['subform']['field_client']['widget']['#options'];
+      $counter = 0;
+      while(array_key_exists($counter,$form['field_list_of_clients']['widget'])) {
+        foreach ($currentOptions as $key => $value) {
+          if($key === '_none') {
+            continue;
+          }
+
+          if(!in_array($key,$listOfClients)) {
+            unset($form['field_list_of_clients']['widget'][$counter]['subform']['field_client']['widget']['#options'][$key]);
+          }
+        }
+
+        $counter = $counter + 1;
       }
     }
   }
+}
 
+//Function returns form element with filtered user list for each field based on a person's role
+//Only return users which are currenty employed
+function filterUserList($form, $field) {
+  $list = array();
+  $list['_none'] = '- Select a value -';
+
+  if($field === 'field_list_of_developers') {
+    $nid = $form[$field]['widget'][0]['subform']['field_person']['widget']['#options'];
+    unset($nid['_none']);
+
+    $nodes = Node::loadMultiple(array_keys($nid));
+
+    foreach ($nodes as $key => $value) {
+      if($value->get('field_is_currently_employed')->getValue()[0]['value'] === '1') {
+        foreach ($value->get('field_roles')->getValue() as $k => $v) {
+          if($v['value'] === 'D') {
+            $list[] = $value->id();
+          }
+        }
+      }
+    }
+
+  } else if($field === 'field_list_of_ceg') {
+    $nid = $form[$field]['widget'][0]['subform']['field_ceg']['widget']['#options'];
+    unset($nid['_none']);
+    $nodes = Node::loadMultiple(array_keys($nid));
+
+    foreach ($nodes as $key => $value) {
+      if($value->get('field_is_currently_employed')->getValue()[0]['value'] === '1') {
+        foreach ($value->get('field_roles')->getValue() as $k => $v) {
+          if($v['value'] === 'CEG') {
+            $list[] = $value->id();
+          }
+        }
+      }
+    }
+  } else if($field === 'field_list_of_clients') {
+    $nid = $form[$field]['widget'][0]['subform']['field_client']['widget']['#options'];
+    unset($nid['_none']);
+    $nodes = Node::loadMultiple(array_keys($nid));
+
+    foreach ($nodes as $key => $value) {
+      if($value->get('field_is_currently_employed')->getValue()[0]['value'] === '1') {
+        foreach ($value->get('field_roles')->getValue() as $k => $v) {
+          if($v['value'] === 'C') {
+            $list[] = $value->id();
+          }
+        }
+      }
+    }
+  } else {
+    \Drupal::logger('apm_users')->error('Unknown field');
+  }
+
+  return $list;
+}
+
+//Custom submit function
+// function apm_users_form_submit($form, FormStateInterface $form_state) {
+//   $entity = $form_state->getformObject()->getEntity();
+//   updateRelatedEntities($entity, $form_state);
+// }
+
+// /** Function to update relationships between entities
+//  *  When an application adds a user to it's list of users add the application to the list of application for that user
+//  */
+// function updateRelatedEntities(EntityInterface $entity, FormStateInterface $form_state) {
+//   // Get content type
+//   $entityType = $entity->bundle();
+// //
+// //   //If content type is 'server'
+// //   //Check the list of applications have the server
+// //   //Check that owner has the server listed
+// //   //Chek that the data centre as the server listed
+// //   //If decommission date is set, set decommission date for all applications
+//   if($entityType === 'server') {
+// //
+// //     //Check the server list field for the owner
+// //     if($entity->hasField('field_owner')) {
+// //       $owner = $entity->get('field_owner')->getValue()[0]['target_id'];
+// //       $node = Node::load($owner);
+// //       $servers = $node->get('field_server_list')->getValue(); // List of servers currently assigned to user
+// //       $bool = FALSE;
+// //
+// //       foreach ($servers as $key => $value) {
+// //         if($value['target_id'] === $entity->id()) {
+// //           $bool = TRUE;
+// //         }
+// //       }
+// //
+// //       if(!$bool) {
+// //         $servers[] = $entity->id();
+// //         $node->set('field_server_list',$servers);
+// //         $node->setNewRevision(TRUE);
+// //         $node->revision_log = 'Updated owner information based on changes made to server ' . $entity->get('title')->getValue()[0]['value'];
+// //         $node->setRevisionCreationTime(REQUEST_TIME);
+// //         $node->setRevisionUserId(\Drupal::currentUser()->id());
+// //         $node->save();
+// //       }
+// //     }
+// //
+// //     //Check the server list field for the data centre
+// //     if($entity->hasField('field_data_center')) {
+// //       $datacentre = $entity->get('field_data_center')->getValue()[0]['target_id'];
+// //
+// //       $node = Node::load($datacentre);
+// //       $server = $node->get('field_servers')->getValue();
+// //       $bool = FALSE;
+// //
+// //       foreach ($server as $key => $value) {
+// //         if($value['target_id'] === $entity->id()) {
+// //           $bool = TRUE;
+// //         }
+// //       }
+// //
+// //       if(!$bool) {
+// //         $server[] = $entity->id();
+// //         $node->set('field_servers', $servers);
+// //         $node->save();
+// //       }
+// //     }
+// //
+// //     //Update this
+// //     //Check the decomission date for the applications in the applicaiton list
+// //     // if(!$entity->get('field_decomision_date')->isEmpty()) {
+// //     //   $decommision = $entity->get('field_decomision_date');
+// //     //
+// //     //   //Get list of applications and check date
+// //     //   $applications = $entity->get('field_application_list')->getValue();
+// //     //
+// //     //   foreach ($applications as $key => $value) {
+// //     //     $node = Node::load($value['target_id']);
+// //     //
+// //     //     if($node->get('field_decomision_date')->getValue()[0] === NULL) {
+// //     //       //Do nothing
+// //     //     } else {
+// //     //       $serverDate = $decommision->getValue()[0]['value'];
+// //     //       $appDate = $node->get('field_decomision_date')->getValue()[0]['value'];
+// //     //
+// //     //       if($serverDate < $appDate) {
+// //     //         $node->set('field_decomision_date', $decommision->getValue()[0]['value']);
+// //     //         $node->save();
+// //     //       }
+// //     //     }
+// //     //     $app = $node->get('field_application_id');
+// //     //   }
+// //     // }
+// //
+// //     //Check that the list of environments on the server is up to date
+// //     if($entity->hasField('field_environments')) {
+// //       $environments = $entity->get('field_environments')->getValue();
+// //
+// //       foreach ($environments as $key => $value) {
+// //         $node = Node::load($value['target_id']);
+// //         $server = $node->get('field_server')->getValue();
+// //         $bool = FALSE;
+// //
+// //         if(!empty($server) && $server['target_id'] === $entity->id()) {
+// //           $bool = TRUE;
+// //         }
+// //
+// //         if(!$bool) {
+// //           $node->set('field_server',$entity->id());
+// //           $node->setNewRevision(TRUE);
+// //           $node->revision_log = 'Updated environment value based on change made to server' . $entity->get('title')->getValue()[0]['value'];
+// //           $node->setRevisionCreationTime(REQUEST_TIME);
+// //           $node->setRevisionUserId(\Drupal::currentUser()->id());
+// //           $node->save();
+// //         }
+// //       }
+// //     }
+//   } else if ($entityType === 'person') {
+//     //Add Logic
+//   } else if ($entityType === 'data_centre') {
+//     //Add Logic
+//   } else if ($entityType === 'environments') {
+//     //Add Logic
+//   } else if ($entityType === 'application') {
+//     $values = $form_state->cleanValues()->getValues();
+//
+//     // dpm($values);
+//     // dpm($form_state);
+//     // dpm($entity);
+//
+//     $node = Node::load($values['field_current_ceg'][0]['target_id']);
+//     // dpm($node);
+//   }
+// }
+
+function person_submit($form, FormStateInterface $form_state) {
+  $node = Node::load($form_state->get('nid'));
+
+  $list = $node->get('field_list_of_applications')->getValue();
+
+  // Check if the field is already set
+  if(isset($list['x-default'])) {
+    return;
+  }
+
+  $values = $form_state->cleanValues()->getValues();
+  $r = $values['field_roles']['0']['value'];
+  $display = NULL;
+
+  // Determine the correct display id based on the user role.
+  if($r === 'C') {
+    $display = 'block_3';
+  } else if ($r === 'D') {
+    $display = 'block_1';
+  } else {
+    $display = 'block_2';
+  }
+
+  $view = 'application_list';
+
+  $list = array(
+    'target_id' => $view,
+    'display_id' => $display,
+  );
+
+  $node->field_list_of_applications = $list;
+  $node->save();
 }

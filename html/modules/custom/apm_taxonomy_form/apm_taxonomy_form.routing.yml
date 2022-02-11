@@ -1,0 +1,11 @@
+entity.taxonomy_term.taxonomy_form:
+  path: '/taxonomy/{taxonomy_term}'
+  defaults:
+    _form: '\Drupal\apm_taxonomy_form\Form\TaxonomyForm'
+    _title: 'Taxonomy Form'
+    #_title_callback: '\Drupal\taxonomy\Controller\TaxonomyController::termTitle'    
+  options:
+    _admin_route: TRUE
+  requirements:
+    _access: 'TRUE'
+    taxonomy_term: \d+

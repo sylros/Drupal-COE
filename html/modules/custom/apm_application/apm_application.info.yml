@@ -1,0 +1,5 @@
+name: APM-Lite Application Support
+type: module
+description: 'Module that handles viewing of application data'
+package: APM-Lite
+core: 8.x

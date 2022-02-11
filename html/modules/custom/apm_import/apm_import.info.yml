@@ -1,0 +1,5 @@
+name: APM-Lite Import
+type: module
+description: 'Module for importing data from a CSV files'
+package: APM-Lite
+core: 8.x

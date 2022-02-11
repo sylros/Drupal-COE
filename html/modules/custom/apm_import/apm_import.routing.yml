@@ -1,0 +1,7 @@
+apm_import.form:
+  path: '/check_relationships'
+  defaults:
+    _title: 'Check Relationships'
+    _form: '\Drupal\apm_import\Form\CheckRelationshipsForm'
+  requirements:
+    _permission: 'access_content'

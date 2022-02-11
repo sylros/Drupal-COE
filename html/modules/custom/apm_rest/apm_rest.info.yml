@@ -1,0 +1,5 @@
+name: APM-Lite Rest
+type: module
+description: 'Module that handles the RESTful interface for APM-Lite'
+package: APM-Lite
+core: 8.x

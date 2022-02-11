@@ -1,0 +1,5 @@
+name: APM-Lite Block Support
+type: module
+description: 'Module for additional blocks to display information'
+package: APM-Lite
+core: 8.x
