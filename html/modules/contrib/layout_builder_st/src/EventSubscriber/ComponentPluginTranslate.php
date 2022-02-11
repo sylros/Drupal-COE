@@ -82,9 +82,12 @@ final class ComponentPluginTranslate implements EventSubscriberInterface {
       $section_storage = $this->routeMatch->getParameter('section_storage');
     }
     else {
-      $section_storage = $this->getSectionStorageForEntity($entity);
+	$view_mode = NULL;
+          if (isset($contexts['view_mode'])) {
+            $view_mode = $contexts['view_mode']->getContextValue();
+          }
+         $section_storage = $this->getSectionStorageForEntity($entity, $view_mode);   
     }
-
     if (static::isTranslation($section_storage)) {
       if ($translated_plugin_configuration = $section_storage->getTranslatedComponentConfiguration($component->getUuid())) {
         $translated_plugin_configuration += $configuration;

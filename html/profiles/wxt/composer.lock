@@ -3984,9 +3984,6 @@
                         "status": "covered",
                         "message": "Covered by Drupal's security advisory policy"
                     }
-                },
-                "patches_applied": {
-                    "Enter drupal/field_group patch #3111107 description here": "https://www.drupal.org/files/issues/2020-02-04/3111107-2--fix-translations.patch"
                 }
             },
             "notification-url": "https://packages.drupal.org/8/downloads",
@@ -6655,7 +6652,6 @@
                 "patches_applied": {
                     "Enter drupal/panels patch #2667755 description here": "https://www.drupal.org/files/issues/bandaid.patch",
                     "Enter drupal/panels patch #2869412 description here": "https://www.drupal.org/files/issues/2018-03-19/panels--page_title_does_not_display--2869412-27.patch",
-                    "Enter drupal/panels patch #2900531 description here": "https://www.drupal.org/files/issues/classes_should_be_array-2900531-2.patch",
                     "Enter drupal/panels patch #2910704 description here": "https://www.drupal.org/files/issues/panels-ipe-card-flip-ie-error-2910704.diff",
                     "2878684 - Use String.match to correlate regions when switching Layouts in Panels IPE": "https://www.drupal.org/files/issues/panels-ipe-2878684-3.patch"
                 }

@@ -48,6 +48,9 @@ class VariableCommentSniff extends AbstractVariableSniff
             T_STRING,
             T_NS_SEPARATOR,
             T_NULLABLE,
+            T_TYPE_UNION,
+            T_FALSE,
+            T_NULL,
         ];
 
         $commentEnd = $phpcsFile->findPrevious($ignore, ($stackPtr - 1), null, true);
@@ -75,14 +78,6 @@ class VariableCommentSniff extends AbstractVariableSniff
             }
 
             return;
-        } else if ($tokens[$commentEnd]['code'] !== T_DOC_COMMENT_CLOSE_TAG) {
-            return;
-        } else {
-            // Make sure the comment we have found belongs to us.
-            $commentFor = $phpcsFile->findNext([T_VARIABLE, T_CLASS, T_INTERFACE], ($commentEnd + 1));
-            if ($commentFor !== $stackPtr) {
-                return;
-            }
         }//end if
 
         $commentStart = $tokens[$commentEnd]['comment_opener'];

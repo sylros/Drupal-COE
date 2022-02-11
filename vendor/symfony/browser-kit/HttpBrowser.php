@@ -91,7 +91,7 @@ class HttpBrowser extends AbstractBrowser
             return ['', []];
         }
 
-        return [http_build_query($fields, '', '&', PHP_QUERY_RFC1738), ['Content-Type' => 'application/x-www-form-urlencoded']];
+        return [http_build_query($fields, '', '&', \PHP_QUERY_RFC1738), ['Content-Type' => 'application/x-www-form-urlencoded']];
     }
 
     private function getHeaders(Request $request): array
@@ -100,7 +100,7 @@ class HttpBrowser extends AbstractBrowser
         foreach ($request->getServer() as $key => $value) {
             $key = strtolower(str_replace('_', '-', $key));
             $contentHeaders = ['content-length' => true, 'content-md5' => true, 'content-type' => true];
-            if (0 === strpos($key, 'http-')) {
+            if (str_starts_with($key, 'http-')) {
                 $headers[substr($key, 5)] = $value;
             } elseif (isset($contentHeaders[$key])) {
                 // CONTENT_* are not prefixed with HTTP_

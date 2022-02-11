@@ -237,10 +237,6 @@ class FunctionCommentSniff implements Sniff
                     $typeNames      = explode('|', $type);
                     $suggestedNames = [];
                     $hasNull        = false;
-                    $hasMultiple    = false;
-                    if (count($typeNames) > 0) {
-                        $hasMultiple = true;
-                    }
 
                     foreach ($typeNames as $i => $typeName) {
                         if (strtolower($typeName) === 'null') {
@@ -700,6 +696,13 @@ class FunctionCommentSniff implements Sniff
             }
 
             $suggestedType = implode('|', $suggestedNames);
+
+            // Support variadic arguments.
+            if (preg_match('/(\s+)\.{3}$/', $param['type'], $matches) === 1) {
+                $param['type_space'] = strlen($matches[1]);
+                $param['type']       = preg_replace('/\s+\.{3}$/', '', $param['type']);
+            }
+
             if (preg_match('/\s/', $param['type']) === 1) {
                 $error = 'Parameter type "%s" must not contain spaces';
                 $data  = [$param['type']];
@@ -777,6 +780,8 @@ class FunctionCommentSniff implements Sniff
                         && $typeHint !== '\stdClass'
                         // As of PHP 7.2, object is a valid type hint.
                         && $typeHint !== 'object'
+                        // As of PHP 8.0, mixed is a valid type hint.
+                        && $typeHint !== 'mixed'
                     ) {
                         $error = 'Unknown type hint "%s" found for %s';
                         $data  = [
