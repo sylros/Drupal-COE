@@ -1,0 +1,27 @@
+diff --git a/core/modules/views/src/ManyToOneHelper.php b/core/modules/views/src/ManyToOneHelper.php
+index cb2e575..6921799 100644
+--- a/core/modules/views/src/ManyToOneHelper.php
++++ b/core/modules/views/src/ManyToOneHelper.php
+@@ -308,18 +308,18 @@ public function addFilter() {
+           $placeholder .= '[]';
+
+           if ($operator == 'IS NULL') {
+-            $this->handler->query->addWhereExpression(0, "$field $operator");
++            $this->handler->query->addWhereExpression($options['group'], "$field $operator");
+           }
+           else {
+-            $this->handler->query->addWhereExpression(0, "$field $operator($placeholder)", [$placeholder => $value]);
++            $this->handler->query->addWhereExpression($options['group'], "$field $operator($placeholder)", [$placeholder => $value]);
+           }
+         }
+         else {
+           if ($operator == 'IS NULL') {
+-            $this->handler->query->addWhereExpression(0, "$field $operator");
++            $this->handler->query->addWhereExpression($options['group'], "$field $operator");
+           }
+           else {
+-            $this->handler->query->addWhereExpression(0, "$field $operator $placeholder", [$placeholder => $value]);
++            $this->handler->query->addWhereExpression($options['group'], "$field $operator $placeholder", [$placeholder => $value]);
+           }
+         }
+       }
